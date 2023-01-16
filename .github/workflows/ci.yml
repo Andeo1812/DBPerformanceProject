@@ -9,19 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make run-linter
-
-#  tests:
-#    needs: linter
-#    name: Tests
-#    runs-on: ubuntu-20.04
-#    container:
-#      image: lonkidely/golang_web_light
-#    steps:
-#      - uses: actions/checkout@v2
-#      - run: make run-tests
-
   build:
-    needs: tests
+    needs: linter
     name: Build
     runs-on: ubuntu-20.04
     container:
@@ -33,3 +22,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: cmd/*/*_bin
+  #  tests:
+  #    needs: build
+  #    name: Tests
+  #    runs-on: ubuntu-20.04
+  #    container:
+  #      image: lonkidely/golang_web_light
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - run: make run-tests
