@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonC8d74561DecodeDbPerformancEprojectInternalModels(in *jlexer.Lexer, out *Forum) {
+func easyjson3d0d1f69DecodeDbPerformancEprojectInternalForumDeliveryModels(in *jlexer.Lexer, out *ForumGetSlugDetailsResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -36,8 +36,6 @@ func easyjsonC8d74561DecodeDbPerformancEprojectInternalModels(in *jlexer.Lexer, 
 			continue
 		}
 		switch key {
-		case "id":
-			out.ID = uint32(in.Uint32())
 		case "title":
 			out.Title = string(in.String())
 		case "user":
@@ -62,89 +60,58 @@ func easyjsonC8d74561DecodeDbPerformancEprojectInternalModels(in *jlexer.Lexer, 
 		in.Consumed()
 	}
 }
-func easyjsonC8d74561EncodeDbPerformancEprojectInternalModels(out *jwriter.Writer, in Forum) {
+func easyjson3d0d1f69EncodeDbPerformancEprojectInternalForumDeliveryModels(out *jwriter.Writer, in ForumGetSlugDetailsResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if in.ID != 0 {
-		const prefix string = ",\"id\":"
-		first = false
-		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
-	}
-	if in.Title != "" {
+	{
 		const prefix string = ",\"title\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
-	if in.User != "" {
+	{
 		const prefix string = ",\"user\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.User))
 	}
-	if in.Slug != "" {
+	{
 		const prefix string = ",\"slug\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.Slug))
 	}
-	if in.Posts != 0 {
+	{
 		const prefix string = ",\"posts\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint32(uint32(in.Posts))
 	}
-	if in.Threads != 0 {
+	{
 		const prefix string = ",\"threads\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint32(uint32(in.Threads))
 	}
 	out.RawByte('}')
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v Forum) MarshalJSON() ([]byte, error) {
+func (v ForumGetSlugDetailsResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC8d74561EncodeDbPerformancEprojectInternalModels(&w, v)
+	easyjson3d0d1f69EncodeDbPerformancEprojectInternalForumDeliveryModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v Forum) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC8d74561EncodeDbPerformancEprojectInternalModels(w, v)
+func (v ForumGetSlugDetailsResponse) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson3d0d1f69EncodeDbPerformancEprojectInternalForumDeliveryModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *Forum) UnmarshalJSON(data []byte) error {
+func (v *ForumGetSlugDetailsResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC8d74561DecodeDbPerformancEprojectInternalModels(&r, v)
+	easyjson3d0d1f69DecodeDbPerformancEprojectInternalForumDeliveryModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *Forum) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC8d74561DecodeDbPerformancEprojectInternalModels(l, v)
+func (v *ForumGetSlugDetailsResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson3d0d1f69DecodeDbPerformancEprojectInternalForumDeliveryModels(l, v)
 }

@@ -10,8 +10,6 @@ import (
 
 //go:generate easyjson  -disallow_unknown_fields wrapper.go
 
-// ErrResponse is structure for giving answers with errors.
-//
 //easyjson:json
 type ErrResponse struct {
 	ErrMassage string `json:"message,omitempty" example:"some message"`

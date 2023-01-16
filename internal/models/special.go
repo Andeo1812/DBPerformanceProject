@@ -1,6 +1,6 @@
 package models
 
-//go:generate easyjson -all -disallow_unknown_fields requests.go
+//go:generate easyjson -all -disallow_unknown_fields special.go
 
 type StatusService struct {
 	User   uint32 `json:"user,omitempty"`
