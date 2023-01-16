@@ -1,0 +1,40 @@
+on:
+  push:
+    branches:
+      - main
+      - 'TP*'
+
+
+jobs:
+  linter:
+    name: Linter
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-linter
+
+#  tests:
+#    needs: linter
+#    name: Tests
+#    runs-on: ubuntu-20.04
+#    container:
+#      image: lonkidely/golang_web_light
+#    steps:
+#      - uses: actions/checkout@v2
+#      - run: make run-tests
+
+  build:
+    needs: tests
+    name: Build
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: cmd/*/*_bin
