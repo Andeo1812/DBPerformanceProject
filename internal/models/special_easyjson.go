@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels(in *jlexer.Lexer, out *StatusService) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels(in *jlexer.Lexer, out *StatusService) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -58,24 +58,18 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels(in *jlexer.Lexer, 
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels(out *jwriter.Writer, in StatusService) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels(out *jwriter.Writer, in StatusService) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if in.User != 0 {
+	{
 		const prefix string = ",\"user\":"
-		first = false
 		out.RawString(prefix[1:])
 		out.Uint32(uint32(in.User))
 	}
 	{
 		const prefix string = ",\"forum\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint32(uint32(in.Forum))
 	}
 	{
@@ -94,27 +88,27 @@ func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels(out *jwriter.Write
 // MarshalJSON supports json.Marshaler interface
 func (v StatusService) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels(&w, v)
+	easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v StatusService) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels(w, v)
+	easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *StatusService) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels(&r, v)
+	easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *StatusService) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels(l, v)
+	easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels(l, v)
 }
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels1(in *jlexer.Lexer, out *PostDetails) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels1(in *jlexer.Lexer, out *PostDetails) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -134,13 +128,13 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels1(in *jlexer.Lexer,
 		}
 		switch key {
 		case "post":
-			easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels2(in, &out.Post)
+			easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels2(in, &out.Post)
 		case "author":
-			easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels3(in, &out.Author)
+			easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels3(in, &out.Author)
 		case "thread":
-			easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels4(in, &out.Thread)
+			easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels4(in, &out.Thread)
 		case "forum":
-			easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels5(in, &out.Forum)
+			easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels5(in, &out.Forum)
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -155,45 +149,29 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels1(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels1(out *jwriter.Writer, in PostDetails) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels1(out *jwriter.Writer, in PostDetails) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if true {
+	{
 		const prefix string = ",\"post\":"
-		first = false
 		out.RawString(prefix[1:])
-		easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels2(out, in.Post)
+		easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels2(out, in.Post)
 	}
 	if true {
 		const prefix string = ",\"author\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels3(out, in.Author)
+		out.RawString(prefix)
+		easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels3(out, in.Author)
 	}
 	if true {
 		const prefix string = ",\"thread\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels4(out, in.Thread)
+		out.RawString(prefix)
+		easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels4(out, in.Thread)
 	}
 	if true {
 		const prefix string = ",\"forum\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels5(out, in.Forum)
+		out.RawString(prefix)
+		easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels5(out, in.Forum)
 	}
 	out.RawByte('}')
 }
@@ -201,27 +179,27 @@ func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels1(out *jwriter.Writ
 // MarshalJSON supports json.Marshaler interface
 func (v PostDetails) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels1(&w, v)
+	easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v PostDetails) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels1(w, v)
+	easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *PostDetails) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels1(&r, v)
+	easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *PostDetails) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels1(l, v)
+	easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels1(l, v)
 }
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels5(in *jlexer.Lexer, out *Forum) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels5(in *jlexer.Lexer, out *Forum) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -266,7 +244,7 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels5(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels5(out *jwriter.Writer, in Forum) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels5(out *jwriter.Writer, in Forum) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -302,7 +280,7 @@ func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels5(out *jwriter.Writ
 	}
 	out.RawByte('}')
 }
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels4(in *jlexer.Lexer, out *Thread) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels4(in *jlexer.Lexer, out *Thread) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -351,7 +329,7 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels4(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels4(out *jwriter.Writer, in Thread) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels4(out *jwriter.Writer, in Thread) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -397,7 +375,7 @@ func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels4(out *jwriter.Writ
 	}
 	out.RawByte('}')
 }
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels3(in *jlexer.Lexer, out *User) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels3(in *jlexer.Lexer, out *User) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -440,7 +418,7 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels3(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels3(out *jwriter.Writer, in User) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels3(out *jwriter.Writer, in User) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -471,7 +449,7 @@ func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels3(out *jwriter.Writ
 	}
 	out.RawByte('}')
 }
-func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels2(in *jlexer.Lexer, out *Post) {
+func easyjson8ebeb8efDecodeDbPerformanceProjectInternalModels2(in *jlexer.Lexer, out *Post) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -520,7 +498,7 @@ func easyjson8ebeb8efDecodeDbPerformancEprojectInternalModels2(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson8ebeb8efEncodeDbPerformancEprojectInternalModels2(out *jwriter.Writer, in Post) {
+func easyjson8ebeb8efEncodeDbPerformanceProjectInternalModels2(out *jwriter.Writer, in Post) {
 	out.RawByte('{')
 	first := true
 	_ = first

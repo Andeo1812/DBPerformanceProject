@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels(in *jlexer.Lexer, out *ForumCreateResponse) {
+func easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels(in *jlexer.Lexer, out *ForumCreateResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -60,7 +60,7 @@ func easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels(in *jl
 		in.Consumed()
 	}
 }
-func easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels(out *jwriter.Writer, in ForumCreateResponse) {
+func easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels(out *jwriter.Writer, in ForumCreateResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -95,27 +95,27 @@ func easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels(out *j
 // MarshalJSON supports json.Marshaler interface
 func (v ForumCreateResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels(&w, v)
+	easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ForumCreateResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels(w, v)
+	easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ForumCreateResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels(&r, v)
+	easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ForumCreateResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels(l, v)
+	easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels(l, v)
 }
-func easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumCreateRequest) {
+func easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumCreateRequest) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -154,7 +154,7 @@ func easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels1(in *j
 		in.Consumed()
 	}
 }
-func easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumCreateRequest) {
+func easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumCreateRequest) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -179,23 +179,23 @@ func easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels1(out *
 // MarshalJSON supports json.Marshaler interface
 func (v ForumCreateRequest) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels1(&w, v)
+	easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ForumCreateRequest) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson315bdd5EncodeDbPerformancEprojectInternalForumDeliveryModels1(w, v)
+	easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ForumCreateRequest) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels1(&r, v)
+	easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ForumCreateRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson315bdd5DecodeDbPerformancEprojectInternalForumDeliveryModels1(l, v)
+	easyjson369c8e19DecodeDbPerformanceProjectInternalForumDeliveryModels1(l, v)
 }

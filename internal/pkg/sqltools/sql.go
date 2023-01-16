@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"db-performanc-eproject/internal/pkg"
+	"db-performance-project/internal/pkg"
 
 	// justifying it
 	_ "github.com/jackc/pgx/stdlib"

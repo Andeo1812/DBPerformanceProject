@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"db-performanc-eproject/internal/forum/repository"
+	"db-performance-project/internal/forum/repository"
 
-	"db-performanc-eproject/internal/models"
+	"db-performance-project/internal/models"
 )
 
 type ForumService interface {

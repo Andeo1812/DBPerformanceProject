@@ -5,7 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"db-performanc-eproject/internal/models"
+	"db-performance-project/internal/models"
 )
 
 //go:generate easyjson -disallow_unknown_fields getslugthreads.go

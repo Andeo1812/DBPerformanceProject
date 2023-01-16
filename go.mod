@@ -1,4 +1,4 @@
-module db-performanc-eproject
+module db-performance-project
 
 go 1.19
 

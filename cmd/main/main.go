@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
-	"db-performanc-eproject/internal/pkg"
+	"db-performance-project/internal/pkg"
 )
 
 func main() {

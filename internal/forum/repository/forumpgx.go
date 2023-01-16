@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"db-performanc-eproject/internal/models"
-	"db-performanc-eproject/internal/pkg/sqltools"
+	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg/sqltools"
 )
 
 type ForumRepository interface {

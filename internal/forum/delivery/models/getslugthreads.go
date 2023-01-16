@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"db-performanc-eproject/internal/models"
-	"db-performanc-eproject/internal/pkg"
+	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 )
 
 //go:generate easyjson -disallow_unknown_fields getslugdetails.go

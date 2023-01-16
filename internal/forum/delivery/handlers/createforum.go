@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"db-performanc-eproject/internal/forum/service"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"db-performanc-eproject/internal/forum/delivery/models"
-	"db-performanc-eproject/internal/pkg"
+	"db-performance-project/internal/forum/delivery/models"
+	"db-performance-project/internal/forum/service"
+	"db-performance-project/internal/pkg"
 )
 
 type forumCreateHandler struct {

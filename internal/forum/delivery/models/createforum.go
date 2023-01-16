@@ -7,11 +7,11 @@ import (
 	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
-	"db-performanc-eproject/internal/models"
-	"db-performanc-eproject/internal/pkg"
+	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields forumcreate.go
+//go:generate easyjson -all -disallow_unknown_fields createforum.go
 
 type ForumCreateRequest struct {
 	Title string `json:"title"`

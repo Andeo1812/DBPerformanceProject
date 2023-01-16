@@ -12,20 +12,20 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields updateprofile.go
+//go:generate easyjson -all -disallow_unknown_fields createuser.go
 
-type ProfileUpdateRequest struct {
+type UserCreateRequest struct {
 	Nickname string
 	FullName string `json:"fullname"`
 	About    string `json:"about"`
 	Email    string `json:"email"`
 }
 
-func NewProfileUpdateRequest() *ProfileUpdateRequest {
-	return &ProfileUpdateRequest{}
+func NewUserCreateRequest() *UserCreateRequest {
+	return &UserCreateRequest{}
 }
 
-func (req *ProfileUpdateRequest) Bind(r *http.Request) error {
+func (req *UserCreateRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") == "" {
 	//	return pkg.ErrContentTypeUndefined
 	// }
@@ -61,7 +61,7 @@ func (req *ProfileUpdateRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ProfileUpdateRequest) GetUser() *models.User {
+func (req *UserCreateRequest) GetUser() *models.User {
 	return &models.User{
 		Nickname: req.Nickname,
 		FullName: req.FullName,
@@ -70,15 +70,15 @@ func (req *ProfileUpdateRequest) GetUser() *models.User {
 	}
 }
 
-type ProfileUpdateResponse struct {
+type UserCreateResponse struct {
 	Nickname string `json:"nickname"`
 	FullName string `json:"fullname"`
 	About    string `json:"about"`
 	Email    string `json:"email"`
 }
 
-func NEwProfileUpdateResponse(user *models.User) *ProfileUpdateResponse {
-	return &ProfileUpdateResponse{
+func NewUserCreateResponse(user *models.User) *UserCreateResponse {
+	return &UserCreateResponse{
 		Nickname: user.Nickname,
 		FullName: user.FullName,
 		About:    user.About,
