@@ -2,13 +2,16 @@
 
 all: run-linter build
 
-PKG_LINTERS = ./...
+PKG = ./...
 LINTER_CFG = ./configs/linter.yml
 
 run-linter:
-	$(GOPATH)/bin/golangci-lint run $(PKG_LINTERS) --config=$(LINTER_CFG)
-	go fmt $(PKG_LINTERS)
+	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTER_CFG)
+	go fmt $(PKG)
 
 build:
 	go build -o main.out cmd/main/main.go
 
+# easyjson
+generate:
+	go generate ${PKG}
