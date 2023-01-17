@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	stdErrors "github.com/pkg/errors"
+
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/forum/repository"
 	"db-performance-project/internal/models"
@@ -30,7 +31,7 @@ func NewForumService(r repository.ForumRepository) ForumService {
 func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	res, err := f.forumRepo.CreateForum(ctx, forum)
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "CreateForum")
+		return nil, errors.Wrap(err, "CreateForum")
 	}
 
 	return res, nil
@@ -39,7 +40,7 @@ func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*mo
 func (f forumService) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	res, err := f.forumRepo.GetDetailsForum(ctx, forum)
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "GetDetailsForum")
+		return nil, errors.Wrap(err, "GetDetailsForum")
 	}
 
 	return res, nil
@@ -48,7 +49,7 @@ func (f forumService) GetDetailsForum(ctx context.Context, forum *models.Forum) 
 func (f forumService) GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error) {
 	res, err := f.forumRepo.GetThreads(ctx, forum, params)
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "GetThreads")
+		return nil, errors.Wrap(err, "GetThreads")
 	}
 
 	return res, nil
@@ -57,7 +58,7 @@ func (f forumService) GetThreads(ctx context.Context, forum *models.Forum, param
 func (f forumService) GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error) {
 	res, err := f.forumRepo.GetUsers(ctx, forum, params)
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "GetUsers")
+		return nil, errors.Wrap(err, "GetUsers")
 	}
 
 	return res, nil
@@ -66,7 +67,7 @@ func (f forumService) GetUsers(ctx context.Context, forum *models.Forum, params 
 func (f forumService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	res, err := f.forumRepo.CreateThread(ctx, thread)
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "CreateThread")
+		return nil, errors.Wrap(err, "CreateThread")
 	}
 
 	return res, nil

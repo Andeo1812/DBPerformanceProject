@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	stdErrors "github.com/pkg/errors"
+
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
@@ -38,7 +39,7 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 	}
 
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "CreatePosts")
+		return nil, errors.Wrap(err, "CreatePosts")
 	}
 
 	return res, nil
@@ -55,7 +56,7 @@ func (t threadService) GetDetailsThread(ctx context.Context, thread *models.Thre
 	}
 
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "GetDetailsThread")
+		return nil, errors.Wrap(err, "GetDetailsThread")
 	}
 
 	return res, nil
@@ -72,7 +73,7 @@ func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, para
 	}
 
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "GetPosts")
+		return nil, errors.Wrap(err, "GetPosts")
 	}
 
 	return res, nil
@@ -89,7 +90,7 @@ func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) 
 	}
 
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "UpdateThread")
+		return nil, errors.Wrap(err, "UpdateThread")
 	}
 
 	return res, nil
@@ -106,7 +107,7 @@ func (t threadService) Vote(ctx context.Context, thread *models.Thread, params *
 	}
 
 	if err != nil {
-		return nil, stdErrors.Wrap(err, "Vote")
+		return nil, errors.Wrap(err, "Vote")
 	}
 
 	return res, nil
