@@ -1,30 +1,31 @@
 package models
 
 import (
+	"db-performance-project/internal/pkg"
+	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
+	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 
-	"github.com/mailru/easyjson"
-	"github.com/sirupsen/logrus"
-
 	"db-performance-project/internal/models"
-	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields createslug.go
+//go:generate easyjson -all -disallow_unknown_fields createthread.go
 
-type ForumSlugCreateRequest struct {
+type ForumCreateThreadRequest struct {
+	Slug    string
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Message string `json:"message"`
 	Created string `json:"created"`
 }
 
-func NewForumSlugCreateRequest() *ForumSlugCreateRequest {
-	return &ForumSlugCreateRequest{}
+func NewForumThreadCreateRequest() *ForumCreateThreadRequest {
+	return &ForumCreateThreadRequest{}
 }
 
-func (req *ForumSlugCreateRequest) Bind(r *http.Request) error {
+func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") == "" {
 	//	return pkg.ErrContentTypeUndefined
 	// }
@@ -32,6 +33,10 @@ func (req *ForumSlugCreateRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
+
+	vars := mux.Vars(r)
+
+	req.Slug = vars["slug"]
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -56,8 +61,9 @@ func (req *ForumSlugCreateRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ForumSlugCreateRequest) GetThread() *models.Thread {
+func (req *ForumCreateThreadRequest) GetThread() *models.Thread {
 	return &models.Thread{
+		Slug:    req.Slug,
 		Title:   req.Title,
 		Author:  req.Author,
 		Message: req.Message,
@@ -65,7 +71,7 @@ func (req *ForumSlugCreateRequest) GetThread() *models.Thread {
 	}
 }
 
-type ForumSlugCreateResponse struct {
+type ForumCreateThreadResponse struct {
 	ID      uint32 `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
@@ -76,8 +82,8 @@ type ForumSlugCreateResponse struct {
 	Votes   int32  `json:"votes"`
 }
 
-func NewForumSlugCreateResponse(forum *models.Thread) *ForumSlugCreateResponse {
-	return &ForumSlugCreateResponse{
+func NewForumCreateThreadResponse(forum *models.Thread) *ForumCreateThreadResponse {
+	return &ForumCreateThreadResponse{
 		ID:      forum.ID,
 		Title:   forum.Title,
 		Author:  forum.Author,

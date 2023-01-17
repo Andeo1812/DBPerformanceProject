@@ -10,7 +10,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -disallow_unknown_fields getslugusers.go
+//go:generate easyjson -disallow_unknown_fields getusers.go
 
 type ForumGetSlugUsersRequest struct {
 	Slug  string

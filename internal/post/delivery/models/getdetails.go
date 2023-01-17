@@ -1,7 +1,6 @@
 package models
 
 import (
-	"db-performance-project/internal/pkg"
 	"net/http"
 	"strconv"
 	"strings"
@@ -9,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 )
 
 //go:generate easyjson -disallow_unknown_fields getdetails.go
