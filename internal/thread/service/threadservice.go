@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	stdErrors "github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
@@ -27,21 +28,86 @@ func NewThreadService(r repository.ThreadRepository) ThreadService {
 }
 
 func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error) {
-	panic("implement me")
+	var err error
+	var res []*models.Post
+
+	if thread.Slug != "" {
+		res, err = t.threadRepo.CreatePostsBySlug(ctx, thread, posts)
+	} else {
+		res, err = t.threadRepo.CreatePostsByID(ctx, thread, posts)
+	}
+
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "CreatePosts")
+	}
+
+	return res, nil
 }
 
 func (t threadService) GetDetailsThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
-	panic("implement me")
+	var err error
+	var res *models.Thread
+
+	if thread.Slug != "" {
+		res, err = t.threadRepo.GetDetailsThreadBySlug(ctx, thread)
+	} else {
+		res, err = t.threadRepo.GetDetailsThreadByID(ctx, thread)
+	}
+
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "GetDetailsThread")
+	}
+
+	return res, nil
 }
 
 func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {
-	panic("implement me")
+	var err error
+	var res []*models.Post
+
+	if thread.Slug != "" {
+		res, err = t.threadRepo.GetPostsBySlug(ctx, thread, params)
+	} else {
+		res, err = t.threadRepo.GetPostsByID(ctx, thread, params)
+	}
+
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "GetPosts")
+	}
+
+	return res, nil
 }
 
 func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
-	panic("implement me")
+	var err error
+	var res *models.Thread
+
+	if thread.Slug != "" {
+		res, err = t.threadRepo.UpdateThreadBySlug(ctx, thread)
+	} else {
+		res, err = t.threadRepo.UpdateThreadByID(ctx, thread)
+	}
+
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "UpdateThread")
+	}
+
+	return res, nil
 }
 
 func (t threadService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
-	panic("implement me")
+	var err error
+	var res *models.Thread
+
+	if thread.Slug != "" {
+		res, err = t.threadRepo.VoteBySlug(ctx, thread, params)
+	} else {
+		res, err = t.threadRepo.VoteByID(ctx, thread, params)
+	}
+
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "Vote")
+	}
+
+	return res, nil
 }

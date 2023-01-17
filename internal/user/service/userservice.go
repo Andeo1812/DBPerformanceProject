@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	stdErrors "github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/user/repository"
@@ -24,13 +25,28 @@ func NewUserService(r repository.UserRepository) UserService {
 }
 
 func (u userService) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	res, err := u.userRepo.CreateUser(ctx, user)
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "CreateUser")
+	}
+
+	return res, nil
 }
 
 func (u userService) GetProfile(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	res, err := u.userRepo.GetProfile(ctx, user)
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "GetProfile")
+	}
+
+	return res, nil
 }
 
 func (u userService) UpdateProfile(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	res, err := u.userRepo.UpdateProfile(ctx, user)
+	if err != nil {
+		return nil, stdErrors.Wrap(err, "UpdateProfile")
+	}
+
+	return res, nil
 }

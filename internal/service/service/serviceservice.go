@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/service/repository"
 )
@@ -23,9 +22,9 @@ func NewService(r repository.ServiceRepository) Service {
 }
 
 func (s service) Clear(ctx context.Context) {
-	panic("implement me")
+	s.serviceRepo.Clear(ctx)
 }
 
 func (s service) GetStatus(ctx context.Context) *models.StatusService {
-	panic("implement me")
+	return s.serviceRepo.GetStatus(ctx)
 }
