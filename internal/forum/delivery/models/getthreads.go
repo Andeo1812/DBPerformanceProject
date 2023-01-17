@@ -12,18 +12,18 @@ import (
 
 //go:generate easyjson -disallow_unknown_fields getthreads.go
 
-type ForumGetSlugThreadsRequest struct {
+type ForumGetThreadsRequest struct {
 	Slug  string
 	Limit uint32
 	Since string
 	Desc  bool
 }
 
-func NewForumGetSlugThreadsRequest() *ForumGetSlugThreadsRequest {
-	return &ForumGetSlugThreadsRequest{}
+func NewForumGetThreadsRequest() *ForumGetThreadsRequest {
+	return &ForumGetThreadsRequest{}
 }
 
-func (req *ForumGetSlugThreadsRequest) Bind(r *http.Request) error {
+func (req *ForumGetThreadsRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != "" {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
@@ -73,14 +73,14 @@ func (req *ForumGetSlugThreadsRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ForumGetSlugThreadsRequest) GetForum() *models.Forum {
+func (req *ForumGetThreadsRequest) GetForum() *models.Forum {
 	return &models.Forum{
 		Slug: req.Slug,
 	}
 }
 
-func (req *ForumGetSlugThreadsRequest) GetParams() *pkg.GetSlugThreadsParams {
-	return &pkg.GetSlugThreadsParams{
+func (req *ForumGetThreadsRequest) GetParams() *pkg.GetThreadsParams {
+	return &pkg.GetThreadsParams{
 		Limit: req.Limit,
 		Since: req.Since,
 		Desc:  req.Desc,
@@ -88,7 +88,7 @@ func (req *ForumGetSlugThreadsRequest) GetParams() *pkg.GetSlugThreadsParams {
 }
 
 //easyjson:json
-type ForumGetSlugThreadsResponse struct {
+type ForumGetThreadsResponse struct {
 	ID      uint32 `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
@@ -100,13 +100,13 @@ type ForumGetSlugThreadsResponse struct {
 }
 
 //easyjson:json
-type ThreadsList []ForumGetSlugThreadsResponse
+type ThreadsList []ForumGetThreadsResponse
 
-func NewForumGetSlugThreadsResponse(threads []*models.Thread) ThreadsList {
-	res := make([]ForumGetSlugThreadsResponse, len(threads))
+func NewForumGetThreadsResponse(threads []*models.Thread) ThreadsList {
+	res := make([]ForumGetThreadsResponse, len(threads))
 
 	for idx, value := range threads {
-		res[idx] = ForumGetSlugThreadsResponse{
+		res[idx] = ForumGetThreadsResponse{
 			ID:      value.ID,
 			Title:   value.Title,
 			Author:  value.Author,

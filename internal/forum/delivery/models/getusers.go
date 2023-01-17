@@ -12,18 +12,18 @@ import (
 
 //go:generate easyjson -disallow_unknown_fields getusers.go
 
-type ForumGetSlugUsersRequest struct {
+type ForumGetUsersRequest struct {
 	Slug  string
 	Limit uint32
 	Since string
 	Desc  bool
 }
 
-func NewForumGetSlugUsersRequest() *ForumGetSlugUsersRequest {
-	return &ForumGetSlugUsersRequest{}
+func NewForumGetUsersRequest() *ForumGetUsersRequest {
+	return &ForumGetUsersRequest{}
 }
 
-func (req *ForumGetSlugUsersRequest) Bind(r *http.Request) error {
+func (req *ForumGetUsersRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != "" {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
@@ -73,14 +73,14 @@ func (req *ForumGetSlugUsersRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ForumGetSlugUsersRequest) GetForum() *models.Forum {
+func (req *ForumGetUsersRequest) GetForum() *models.Forum {
 	return &models.Forum{
 		Slug: req.Slug,
 	}
 }
 
-func (req *ForumGetSlugUsersRequest) GetParams() *pkg.GetSlugUsersParams {
-	return &pkg.GetSlugUsersParams{
+func (req *ForumGetUsersRequest) GetParams() *pkg.GetUsersParams {
+	return &pkg.GetUsersParams{
 		Limit: req.Limit,
 		Since: req.Since,
 		Desc:  req.Desc,
@@ -88,7 +88,7 @@ func (req *ForumGetSlugUsersRequest) GetParams() *pkg.GetSlugUsersParams {
 }
 
 //easyjson:json
-type ForumGetSlugUsersResponse struct {
+type ForumGetUsersResponse struct {
 	Nickname string `json:"nickname"`
 	FullName string `json:"fullname"`
 	About    string `json:"about"`
@@ -96,13 +96,13 @@ type ForumGetSlugUsersResponse struct {
 }
 
 //easyjson:json
-type UsersList []ForumGetSlugUsersResponse
+type UsersList []ForumGetUsersResponse
 
-func NewForumGetSlugUsersResponse(users []*models.User) UsersList {
-	res := make([]ForumGetSlugUsersResponse, len(users))
+func NewForumGetUsersResponse(users []*models.User) UsersList {
+	res := make([]ForumGetUsersResponse, len(users))
 
 	for idx, value := range users {
-		res[idx] = ForumGetSlugUsersResponse{
+		res[idx] = ForumGetUsersResponse{
 			Nickname: value.Nickname,
 			FullName: value.FullName,
 			About:    value.About,

@@ -7,7 +7,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mailru/easyjson"
-	"github.com/sirupsen/logrus"
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
@@ -34,25 +33,26 @@ func (req *ThreadVoteRequest) Bind(r *http.Request) error {
 
 	req.SlugOrID = vars["slug_or_id"]
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return pkg.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
+	body, _ := io.ReadAll(r.Body)
+	// if err != nil {
+	//	return pkg.ErrBadBodyRequest
+	// }
+	// defer func() {
+	//	err = r.Body.Close()
+	//	if err != nil {
+	//		logrus.Error(err)
+	//	}
+	// }()
 
 	// if len(body) == 0 {
 	//	return pkg.ErrEmptyBody
 	// }
 
-	err = easyjson.Unmarshal(body, req)
-	if err != nil {
-		return pkg.ErrJSONUnexpectedEnd
-	}
+	easyjson.Unmarshal(body, req)
+	// err = easyjson.Unmarshal(body, req)
+	// if err != nil {
+	//	return pkg.ErrJSONUnexpectedEnd
+	// }
 
 	return nil
 }
@@ -60,10 +60,8 @@ func (req *ThreadVoteRequest) Bind(r *http.Request) error {
 func (req *ThreadVoteRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
-		res := uint32(id)
-
 		return &models.Thread{
-			ID: res,
+			ID: uint32(id),
 		}
 	}
 

@@ -34,7 +34,7 @@ func easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels(in *j
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v1 ForumGetSlugUsersResponse
+			var v1 ForumGetUsersResponse
 			(v1).UnmarshalEasyJSON(in)
 			*out = append(*out, v1)
 			in.WantComma()
@@ -83,7 +83,7 @@ func (v *UsersList) UnmarshalJSON(data []byte) error {
 func (v *UsersList) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels(l, v)
 }
-func easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumGetSlugUsersResponse) {
+func easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumGetUsersResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -124,7 +124,7 @@ func easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *
 		in.Consumed()
 	}
 }
-func easyjsonB031c678EncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumGetSlugUsersResponse) {
+func easyjsonB031c678EncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumGetUsersResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -152,25 +152,25 @@ func easyjsonB031c678EncodeDbPerformanceProjectInternalForumDeliveryModels1(out 
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v ForumGetSlugUsersResponse) MarshalJSON() ([]byte, error) {
+func (v ForumGetUsersResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjsonB031c678EncodeDbPerformanceProjectInternalForumDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v ForumGetSlugUsersResponse) MarshalEasyJSON(w *jwriter.Writer) {
+func (v ForumGetUsersResponse) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjsonB031c678EncodeDbPerformanceProjectInternalForumDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *ForumGetSlugUsersResponse) UnmarshalJSON(data []byte) error {
+func (v *ForumGetUsersResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *ForumGetSlugUsersResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *ForumGetUsersResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonB031c678DecodeDbPerformanceProjectInternalForumDeliveryModels1(l, v)
 }

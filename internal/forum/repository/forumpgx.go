@@ -4,17 +4,16 @@ import (
 	"context"
 
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/pkg/sqltools"
 )
 
 type ForumRepository interface {
 	CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
-	GetDetails(ctx context.Context) error
-	GetSlugThreads(ctx context.Context) error
-	GetSlugUsers(ctx context.Context) error
-	CreateSlug(ctx context.Context) error
-	GetCollectionNotAuthorized(ctx context.Context) error
-	GetSimilarFilms(ctx context.Context) error
+	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
+	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
+	GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error)
+	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 }
 
 type forumPostgres struct {
@@ -27,30 +26,22 @@ func NewForumPostgres(database *sqltools.Database) ForumRepository {
 	}
 }
 
-func (r forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
+func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	panic("implement me")
 }
 
-func (r forumPostgres) GetDetails(ctx context.Context) error {
+func (f forumPostgres) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	panic("implement me")
 }
 
-func (r forumPostgres) GetSlugThreads(ctx context.Context) error {
+func (f forumPostgres) GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error) {
 	panic("implement me")
 }
 
-func (r forumPostgres) GetSlugUsers(ctx context.Context) error {
+func (f forumPostgres) GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error) {
 	panic("implement me")
 }
 
-func (r forumPostgres) CreateSlug(ctx context.Context) error {
-	panic("implement me")
-}
-
-func (r forumPostgres) GetCollectionNotAuthorized(ctx context.Context) error {
-	panic("implement me")
-}
-
-func (r forumPostgres) GetSimilarFilms(ctx context.Context) error {
+func (f forumPostgres) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	panic("implement me")
 }

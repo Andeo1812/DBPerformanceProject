@@ -7,13 +7,11 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mailru/easyjson"
-	"github.com/sirupsen/logrus"
 
 	"db-performance-project/internal/models"
-	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -disallow_unknown_fields createthread.go
+//go:generate easyjson -disallow_unknown_fields createposts.go
 
 //easyjson:json
 type PostRequest struct {
@@ -25,16 +23,16 @@ type PostRequest struct {
 //easyjson:json
 type PostsRequestList []PostRequest
 
-type ThreadCreateRequest struct {
+type ThreadCreatePostsRequest struct {
 	SlugOrID string
 	Posts    PostsRequestList
 }
 
-func NewThreadCreateRequest() *ThreadCreateRequest {
-	return &ThreadCreateRequest{}
+func NewThreadCreatePostsRequest() *ThreadCreatePostsRequest {
+	return &ThreadCreatePostsRequest{}
 }
 
-func (req *ThreadCreateRequest) Bind(r *http.Request) error {
+func (req *ThreadCreatePostsRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") == "" {
 	//	return pkg.ErrContentTypeUndefined
 	// }
@@ -47,31 +45,32 @@ func (req *ThreadCreateRequest) Bind(r *http.Request) error {
 
 	req.SlugOrID = vars["slug_or_id"]
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return pkg.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
+	body, _ := io.ReadAll(r.Body)
+	// if err != nil {
+	//	return pkg.ErrBadBodyRequest
+	// }
+	// defer func() {
+	//	err = r.Body.Close()
+	//	if err != nil {
+	//		logrus.Error(err)
+	//	}
+	// }()
 
 	// if len(body) == 0 {
 	//	return pkg.ErrEmptyBody
 	// }
 
-	err = easyjson.Unmarshal(body, &req.Posts)
-	if err != nil {
-		return pkg.ErrJSONUnexpectedEnd
-	}
+	easyjson.Unmarshal(body, &req.Posts)
+	// err = easyjson.Unmarshal(body, req)
+	// if err != nil {
+	//	return pkg.ErrJSONUnexpectedEnd
+	// }
 
 	return nil
 }
 
-func (req *ThreadCreateRequest) GetPosts() []*models.Post {
-	res := make([]*models.Post, len(req.SlugOrID))
+func (req *ThreadCreatePostsRequest) GetPosts() []*models.Post {
+	res := make([]*models.Post, len(req.Posts))
 
 	for idx, value := range req.Posts {
 		res[idx] = &models.Post{
@@ -86,13 +85,11 @@ func (req *ThreadCreateRequest) GetPosts() []*models.Post {
 	return res
 }
 
-func (req *ThreadCreateRequest) GetThread() *models.Thread {
+func (req *ThreadCreatePostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
-		res := uint32(id)
-
 		return &models.Thread{
-			ID: res,
+			ID: uint32(id),
 		}
 	}
 
@@ -116,7 +113,7 @@ type PostResponse struct {
 //easyjson:json
 type PostsResponseList []PostResponse
 
-func NewThreadCreateResponse(posts []*models.Post) PostsResponseList {
+func NewThreadCreatePostsResponse(posts []*models.Post) PostsResponseList {
 	res := make([]PostResponse, len(posts))
 
 	for idx, value := range posts {

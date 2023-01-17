@@ -1,12 +1,11 @@
 package models
 
 import (
-	"db-performance-project/internal/pkg"
-	"github.com/gorilla/mux"
-	"github.com/mailru/easyjson"
-	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 
 	"db-performance-project/internal/models"
 )
@@ -21,7 +20,7 @@ type ForumCreateThreadRequest struct {
 	Created string `json:"created"`
 }
 
-func NewForumThreadCreateRequest() *ForumCreateThreadRequest {
+func NewForumCreateThreadRequest() *ForumCreateThreadRequest {
 	return &ForumCreateThreadRequest{}
 }
 
@@ -38,25 +37,26 @@ func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 
 	req.Slug = vars["slug"]
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return pkg.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
+	body, _ := io.ReadAll(r.Body)
+	// if err != nil {
+	//	return pkg.ErrBadBodyRequest
+	// }
+	// defer func() {
+	//	err = r.Body.Close()
+	//	if err != nil {
+	//		logrus.Error(err)
+	//	}
+	// }()
 
 	// if len(body) == 0 {
 	//	return pkg.ErrEmptyBody
 	// }
 
-	err = easyjson.Unmarshal(body, req)
-	if err != nil {
-		return pkg.ErrJSONUnexpectedEnd
-	}
+	easyjson.Unmarshal(body, req)
+	// err = easyjson.Unmarshal(body, req)
+	// if err != nil {
+	//	return pkg.ErrJSONUnexpectedEnd
+	// }
 
 	return nil
 }

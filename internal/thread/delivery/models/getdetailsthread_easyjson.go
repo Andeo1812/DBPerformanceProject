@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson92d26832DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *jlexer.Lexer, out *ThreadGetDetailsResponse) {
+func easyjson2c177166DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *jlexer.Lexer, out *ThreadGetDetailsResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -66,7 +66,7 @@ func easyjson92d26832DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *
 		in.Consumed()
 	}
 }
-func easyjson92d26832EncodeDbPerformanceProjectInternalThreadDeliveryModels(out *jwriter.Writer, in ThreadGetDetailsResponse) {
+func easyjson2c177166EncodeDbPerformanceProjectInternalThreadDeliveryModels(out *jwriter.Writer, in ThreadGetDetailsResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -116,23 +116,23 @@ func easyjson92d26832EncodeDbPerformanceProjectInternalThreadDeliveryModels(out 
 // MarshalJSON supports json.Marshaler interface
 func (v ThreadGetDetailsResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson92d26832EncodeDbPerformanceProjectInternalThreadDeliveryModels(&w, v)
+	easyjson2c177166EncodeDbPerformanceProjectInternalThreadDeliveryModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ThreadGetDetailsResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson92d26832EncodeDbPerformanceProjectInternalThreadDeliveryModels(w, v)
+	easyjson2c177166EncodeDbPerformanceProjectInternalThreadDeliveryModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ThreadGetDetailsResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson92d26832DecodeDbPerformanceProjectInternalThreadDeliveryModels(&r, v)
+	easyjson2c177166DecodeDbPerformanceProjectInternalThreadDeliveryModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ThreadGetDetailsResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson92d26832DecodeDbPerformanceProjectInternalThreadDeliveryModels(l, v)
+	easyjson2c177166DecodeDbPerformanceProjectInternalThreadDeliveryModels(l, v)
 }

@@ -27,11 +27,12 @@ func (h *forumCreateHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 func (h *forumCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 	request := models.NewForumCreateRequest()
 
-	err := request.Bind(r)
-	if err != nil {
-		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
-		return
-	}
+	request.Bind(r)
+	// err := request.Bind(r)
+	// if err != nil {
+	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+	//	return
+	// }
 
 	forum, err := h.forumService.CreateForum(r.Context(), request.GetForum())
 	if err != nil {

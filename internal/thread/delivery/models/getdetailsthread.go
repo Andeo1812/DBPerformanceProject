@@ -9,7 +9,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields getdetails.go
+//go:generate easyjson -disallow_unknown_fields getdetailsthread.go
 
 type ThreadGetDetailsRequest struct {
 	SlugOrID string
@@ -34,10 +34,8 @@ func (req *ThreadGetDetailsRequest) Bind(r *http.Request) error {
 func (req *ThreadGetDetailsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
-		res := uint32(id)
-
 		return &models.Thread{
-			ID: res,
+			ID: uint32(id),
 		}
 	}
 

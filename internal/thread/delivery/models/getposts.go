@@ -20,7 +20,7 @@ type ThreadGetPostsRequest struct {
 	Sort     string
 }
 
-func NewForumGetSlugThreadsRequest() *ThreadGetPostsRequest {
+func NewThreadGetPostsRequest() *ThreadGetPostsRequest {
 	return &ThreadGetPostsRequest{}
 }
 
@@ -82,10 +82,8 @@ func (req *ThreadGetPostsRequest) Bind(r *http.Request) error {
 func (req *ThreadGetPostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
-		res := uint32(id)
-
 		return &models.Thread{
-			ID: res,
+			ID: uint32(id),
 		}
 	}
 

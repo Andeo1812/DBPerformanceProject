@@ -5,10 +5,8 @@ import (
 	"net/http"
 
 	"github.com/mailru/easyjson"
-	"github.com/sirupsen/logrus"
 
 	"db-performance-project/internal/models"
-	"db-performance-project/internal/pkg"
 )
 
 //go:generate easyjson -all -disallow_unknown_fields createforum.go
@@ -32,25 +30,26 @@ func (req *ForumCreateRequest) Bind(r *http.Request) error {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return pkg.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
+	body, _ := io.ReadAll(r.Body)
+	// if err != nil {
+	//	return pkg.ErrBadBodyRequest
+	// }
+	// defer func() {
+	//	err = r.Body.Close()
+	//	if err != nil {
+	//		logrus.Error(err)
+	//	}
+	// }()
 
 	// if len(body) == 0 {
 	//	return pkg.ErrEmptyBody
 	// }
 
-	err = easyjson.Unmarshal(body, req)
-	if err != nil {
-		return pkg.ErrJSONUnexpectedEnd
-	}
+	easyjson.Unmarshal(body, req)
+	// err = easyjson.Unmarshal(body, req)
+	// if err != nil {
+	//	return pkg.ErrJSONUnexpectedEnd
+	// }
 
 	return nil
 }

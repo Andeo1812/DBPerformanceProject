@@ -34,7 +34,7 @@ func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels(in *jl
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v1 ForumGetSlugThreadsResponse
+			var v1 ForumGetThreadsResponse
 			(v1).UnmarshalEasyJSON(in)
 			*out = append(*out, v1)
 			in.WantComma()
@@ -83,7 +83,7 @@ func (v *ThreadsList) UnmarshalJSON(data []byte) error {
 func (v *ThreadsList) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels(l, v)
 }
-func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumGetSlugThreadsResponse) {
+func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumGetThreadsResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -132,7 +132,7 @@ func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(in *j
 		in.Consumed()
 	}
 }
-func easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumGetSlugThreadsResponse) {
+func easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumGetThreadsResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -180,25 +180,25 @@ func easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(out *
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v ForumGetSlugThreadsResponse) MarshalJSON() ([]byte, error) {
+func (v ForumGetThreadsResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v ForumGetSlugThreadsResponse) MarshalEasyJSON(w *jwriter.Writer) {
+func (v ForumGetThreadsResponse) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *ForumGetSlugThreadsResponse) UnmarshalJSON(data []byte) error {
+func (v *ForumGetThreadsResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *ForumGetSlugThreadsResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *ForumGetThreadsResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(l, v)
 }

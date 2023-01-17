@@ -1,12 +1,12 @@
 package pkg
 
-type GetSlugThreadsParams struct {
+type GetThreadsParams struct {
 	Limit uint32
 	Since string
 	Desc  bool
 }
 
-type GetSlugUsersParams struct {
+type GetUsersParams struct {
 	Limit uint32
 	Since string
 	Desc  bool
@@ -24,6 +24,6 @@ type VoteParams struct {
 	Voice    int32
 }
 
-type PostDetails struct {
+type PostDetailsParams struct {
 	Related []string
 }

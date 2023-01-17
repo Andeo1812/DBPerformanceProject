@@ -10,36 +10,37 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-type forumCreateSlugHandler struct {
+type forumCreateThreadHandler struct {
 	forumService service.ForumService
 }
 
-func NewForumCreateSlugHandler(s service.ForumService) pkg.Handler {
-	return &forumCreateSlugHandler{
+func NewForumCreateThreadHandler(s service.ForumService) pkg.Handler {
+	return &forumCreateThreadHandler{
 		s,
 	}
 }
 
-func (h *forumCreateSlugHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/forum/create", h.Action).Methods(http.MethodPost)
+func (h *forumCreateThreadHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
+	r.HandleFunc("/forum/{slug}/create", h.Action).Methods(http.MethodPost)
 }
 
-func (h *forumCreateSlugHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewForumCreateRequest()
+func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request) {
+	request := models.NewForumCreateThreadRequest()
 
-	err := request.Bind(r)
+	request.Bind(r)
+	// err := request.Bind(r)
+	// if err != nil {
+	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+	//	return
+	// }
+
+	thread, err := h.forumService.CreateThread(r.Context(), request.GetThread())
 	if err != nil {
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	forum, err := h.forumService.CreateForum(r.Context(), request.GetForum())
-	if err != nil {
-		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
-		return
-	}
-
-	response := models.NewForumCreateResponse(forum)
+	response := models.NewForumCreateThreadResponse(thread)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

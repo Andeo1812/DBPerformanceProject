@@ -2,28 +2,27 @@ package service
 
 import (
 	"context"
-	"db-performance-project/internal/forum/repository"
 
+	"db-performance-project/internal/forum/repository"
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 )
 
 type ForumService interface {
 	CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
-	GetDetails(ctx context.Context) error
-	GetSlugThreads(ctx context.Context) error
-	GetSlugUsers(ctx context.Context) error
-	CreateSlug(ctx context.Context) error
-	GetCollectionNotAuthorized(ctx context.Context) error
-	GetSimilarFilms(ctx context.Context) error
+	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
+	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
+	GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error)
+	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 }
 
 type forumService struct {
-	collectionRepo repository.ForumRepository
+	forumRepo repository.ForumRepository
 }
 
 func NewForumService(r repository.ForumRepository) ForumService {
 	return &forumService{
-		collectionRepo: r,
+		forumRepo: r,
 	}
 }
 
@@ -31,26 +30,18 @@ func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*mo
 	panic("implement me")
 }
 
-func (f forumService) GetDetails(ctx context.Context) error {
+func (f forumService) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	panic("implement me")
 }
 
-func (f forumService) GetSlugThreads(ctx context.Context) error {
+func (f forumService) GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error) {
 	panic("implement me")
 }
 
-func (f forumService) GetSlugUsers(ctx context.Context) error {
+func (f forumService) GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error) {
 	panic("implement me")
 }
 
-func (f forumService) CreateSlug(ctx context.Context) error {
-	panic("implement me")
-}
-
-func (f forumService) GetCollectionNotAuthorized(ctx context.Context) error {
-	panic("implement me")
-}
-
-func (f forumService) GetSimilarFilms(ctx context.Context) error {
+func (f forumService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	panic("implement me")
 }

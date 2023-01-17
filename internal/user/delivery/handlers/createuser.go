@@ -10,22 +10,22 @@ import (
 	"db-performance-project/internal/user/service"
 )
 
-type userGetProfileHandler struct {
+type userCreateHandler struct {
 	userService service.UserService
 }
 
-func NewUserGetProfileHandler(s service.UserService) pkg.Handler {
-	return &userGetProfileHandler{
+func NewUserCreateHandler(s service.UserService) pkg.Handler {
+	return &userCreateHandler{
 		s,
 	}
 }
 
-func (h *userGetProfileHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/user/{nickname}/profile", h.Action).Methods(http.MethodGet)
+func (h *userCreateHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
+	r.HandleFunc("/user/{nickname}/create", h.Action).Methods(http.MethodPost)
 }
 
-func (h *userGetProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewProfileGetRequest()
+func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
+	request := models.NewUserCreateRequest()
 
 	request.Bind(r)
 	// err := request.Bind(r)
@@ -34,13 +34,13 @@ func (h *userGetProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
 	//	return
 	// }
 
-	user, err := h.userService.GetProfile(r.Context(), request.GetUser())
+	user, err := h.userService.CreateUser(r.Context(), request.GetUser())
 	if err != nil {
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	response := models.NewProfileGetResponse(user)
+	response := models.NewUserCreateResponse(user)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

@@ -11,7 +11,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -disallow_unknown_fields getdetails.go
+//go:generate easyjson -disallow_unknown_fields getdetailspost.go
 
 type PostGetDetailsRequest struct {
 	ID      uint32
@@ -56,8 +56,8 @@ func (req *PostGetDetailsRequest) GetPost() *models.Post {
 	}
 }
 
-func (req *PostGetDetailsRequest) GetParams() *pkg.PostDetails {
-	return &pkg.PostDetails{
+func (req *PostGetDetailsRequest) GetParams() *pkg.PostDetailsParams {
+	return &pkg.PostDetailsParams{
 		Related: req.Related,
 	}
 }
@@ -111,7 +111,7 @@ type PostGetDetailsResponse struct {
 	Forum  PostGetDetailsForumResponse  `json:"forum"`
 }
 
-func NewThreadGetDetailsResponse(postDetails *models.PostDetails) *PostGetDetailsResponse {
+func NewPostDetailsResponse(postDetails *models.PostDetails) *PostGetDetailsResponse {
 	return &PostGetDetailsResponse{
 		Post: PostGetDetailsPostResponse{
 			ID:       postDetails.Post.ID,

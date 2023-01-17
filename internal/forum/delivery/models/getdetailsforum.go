@@ -8,17 +8,17 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields getthreads.go
+//go:generate easyjson -disallow_unknown_fields getdetailsforum.go
 
-type ForumGetSlugDetailsRequest struct {
+type ForumGetDetailsRequest struct {
 	Slug string
 }
 
-func NewForumGetSlugDetailsRequest() *ForumGetSlugDetailsRequest {
-	return &ForumGetSlugDetailsRequest{}
+func NewForumGetDetailsRequest() *ForumGetDetailsRequest {
+	return &ForumGetDetailsRequest{}
 }
 
-func (req *ForumGetSlugDetailsRequest) Bind(r *http.Request) error {
+func (req *ForumGetDetailsRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != "" {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
@@ -30,14 +30,14 @@ func (req *ForumGetSlugDetailsRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ForumGetSlugDetailsRequest) GetForum() *models.Forum {
+func (req *ForumGetDetailsRequest) GetForum() *models.Forum {
 	return &models.Forum{
 		Slug: req.Slug,
 	}
 }
 
 //easyjson:json
-type ForumGetSlugDetailsResponse struct {
+type ForumGetDetailsResponse struct {
 	Title   string `json:"title"`
 	User    string `json:"user"`
 	Slug    string `json:"slug"`
@@ -45,8 +45,8 @@ type ForumGetSlugDetailsResponse struct {
 	Threads uint32 `json:"threads"`
 }
 
-func NewForumGetSlugDetailsResponse(forum *models.Forum) *ForumGetSlugDetailsResponse {
-	return &ForumGetSlugDetailsResponse{
+func NewForumGetDetailsResponse(forum *models.Forum) *ForumGetDetailsResponse {
+	return &ForumGetDetailsResponse{
 		Title:   forum.Title,
 		User:    forum.User,
 		Slug:    forum.Slug,
