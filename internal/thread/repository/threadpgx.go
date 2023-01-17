@@ -13,13 +13,11 @@ type ThreadRepository interface {
 	GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 	GetPostsByID(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
 	UpdateThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	VoteByID(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error)
 
 	CreatePostsBySlug(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error)
 	GetDetailsThreadBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 	GetPostsBySlug(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
 	UpdateThreadBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	VoteBySlug(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error)
 }
 
 type threadPostgres struct {
@@ -48,10 +46,6 @@ func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thr
 	panic("implement me")
 }
 
-func (t threadPostgres) VoteByID(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
-	panic("implement me")
-}
-
 func (t threadPostgres) CreatePostsBySlug(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error) {
 	panic("implement me")
 }
@@ -65,9 +59,5 @@ func (t threadPostgres) GetPostsBySlug(ctx context.Context, thread *models.Threa
 }
 
 func (t threadPostgres) UpdateThreadBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
-	panic("implement me")
-}
-
-func (t threadPostgres) VoteBySlug(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
 	panic("implement me")
 }

@@ -15,7 +15,6 @@ type ThreadService interface {
 	GetDetailsThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 	GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
 	UpdateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error)
 }
 
 type threadService struct {
@@ -91,23 +90,6 @@ func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) 
 
 	if err != nil {
 		return nil, errors.Wrap(err, "UpdateThread")
-	}
-
-	return res, nil
-}
-
-func (t threadService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
-	var err error
-	var res *models.Thread
-
-	if thread.Slug != "" {
-		res, err = t.threadRepo.VoteBySlug(ctx, thread, params)
-	} else {
-		res, err = t.threadRepo.VoteByID(ctx, thread, params)
-	}
-
-	if err != nil {
-		return nil, errors.Wrap(err, "Vote")
 	}
 
 	return res, nil

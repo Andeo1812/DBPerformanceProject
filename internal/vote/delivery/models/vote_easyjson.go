@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *jlexer.Lexer, out *ThreadVoteResponse) {
+func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels(in *jlexer.Lexer, out *VoteResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -66,7 +66,7 @@ func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *
 		in.Consumed()
 	}
 }
-func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels(out *jwriter.Writer, in ThreadVoteResponse) {
+func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels(out *jwriter.Writer, in VoteResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -114,29 +114,29 @@ func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels(out 
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v ThreadVoteResponse) MarshalJSON() ([]byte, error) {
+func (v VoteResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels(&w, v)
+	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v ThreadVoteResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels(w, v)
+func (v VoteResponse) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *ThreadVoteResponse) UnmarshalJSON(data []byte) error {
+func (v *VoteResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels(&r, v)
+	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *ThreadVoteResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels(l, v)
+func (v *VoteResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels(l, v)
 }
-func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in *jlexer.Lexer, out *ThreadVoteRequest) {
+func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels1(in *jlexer.Lexer, out *VoteRequest) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -175,7 +175,7 @@ func easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in 
 		in.Consumed()
 	}
 }
-func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out *jwriter.Writer, in ThreadVoteRequest) {
+func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels1(out *jwriter.Writer, in VoteRequest) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -198,25 +198,25 @@ func easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v ThreadVoteRequest) MarshalJSON() ([]byte, error) {
+func (v VoteRequest) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels1(&w, v)
+	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v ThreadVoteRequest) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalThreadDeliveryModels1(w, v)
+func (v VoteRequest) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonE3ecfa40EncodeDbPerformanceProjectInternalVoteDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *ThreadVoteRequest) UnmarshalJSON(data []byte) error {
+func (v *VoteRequest) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels1(&r, v)
+	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *ThreadVoteRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalThreadDeliveryModels1(l, v)
+func (v *VoteRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonE3ecfa40DecodeDbPerformanceProjectInternalVoteDeliveryModels1(l, v)
 }

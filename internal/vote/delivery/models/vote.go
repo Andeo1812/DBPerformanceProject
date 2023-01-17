@@ -14,17 +14,17 @@ import (
 
 //go:generate easyjson -all -disallow_unknown_fields vote.go
 
-type ThreadVoteRequest struct {
+type VoteRequest struct {
 	SlugOrID string
 	Nickname string `json:"nickname"`
 	Voice    int32  `json:"voice"`
 }
 
-func NewThreadVoteRequest() *ThreadVoteRequest {
-	return &ThreadVoteRequest{}
+func NewVoteRequest() *VoteRequest {
+	return &VoteRequest{}
 }
 
-func (req *ThreadVoteRequest) Bind(r *http.Request) error {
+func (req *VoteRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != "" {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
@@ -57,7 +57,7 @@ func (req *ThreadVoteRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (req *ThreadVoteRequest) GetThread() *models.Thread {
+func (req *VoteRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
 		return &models.Thread{
@@ -70,14 +70,14 @@ func (req *ThreadVoteRequest) GetThread() *models.Thread {
 	}
 }
 
-func (req *ThreadVoteRequest) GetParams() *pkg.VoteParams {
+func (req *VoteRequest) GetParams() *pkg.VoteParams {
 	return &pkg.VoteParams{
 		Nickname: req.Nickname,
 		Voice:    req.Voice,
 	}
 }
 
-type ThreadVoteResponse struct {
+type VoteResponse struct {
 	ID      uint32 `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
@@ -88,8 +88,8 @@ type ThreadVoteResponse struct {
 	Votes   int32  `json:"votes"`
 }
 
-func NewThreadVoteResponse(thread *models.Thread) *ThreadVoteResponse {
-	return &ThreadVoteResponse{
+func NewVoteResponse(thread *models.Thread) *VoteResponse {
+	return &VoteResponse{
 		ID:      thread.ID,
 		Title:   thread.Title,
 		Author:  thread.Author,
