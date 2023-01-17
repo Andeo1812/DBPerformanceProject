@@ -3,7 +3,7 @@ package models
 type Post struct {
 	ID       uint32
 	Parent   uint32
-	Author   string
+	Author   User
 	Message  string
 	IsEdited bool
 	Forum    string

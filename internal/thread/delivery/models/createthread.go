@@ -77,7 +77,9 @@ func (req *ThreadCreateRequest) GetPosts() []*models.Post {
 		res[idx] = &models.Post{
 			Parent:  value.Parent,
 			Message: value.Message,
-			Author:  value.Author,
+			Author: models.User{
+				Nickname: value.Author,
+			},
 		}
 	}
 
@@ -121,7 +123,7 @@ func NewThreadCreateResponse(posts []*models.Post) PostsResponseList {
 		res[idx] = PostResponse{
 			ID:       value.ID,
 			Parent:   value.Parent,
-			Author:   value.Author,
+			Author:   value.Author.Nickname,
 			Forum:    value.Forum,
 			IsEdited: value.IsEdited,
 			Message:  value.Message,
