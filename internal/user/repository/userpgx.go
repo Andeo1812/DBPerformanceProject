@@ -2,8 +2,12 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/pkg/sqltools"
 )
 
@@ -25,7 +29,26 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 }
 
 func (u userPostgres) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		rowUser := tx.QueryRowContext(ctx, createUser, user.Nickname, user.FullName, user.About, user.Email)
+		if errors.Is(rowUser.Err(), sql.ErrTxDone) {
+			return pkg.ErrSuchUserExist
+		}
+
+		// else {
+		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
+		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
+		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
+		// }
+
+		return nil
+	})
+
+	// if errMain != nil {
+	//	return nil, errMain
+	// }
+
+	return user, nil
 }
 
 func (u userPostgres) GetUserByEmailOrNickname(ctx context.Context, user *models.User) ([]*models.User, error) {

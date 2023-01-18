@@ -76,6 +76,8 @@ type UserCreateResponse struct {
 	Email    string `json:"email"`
 }
 
+type UsersList []UserCreateResponse
+
 func NewUserCreateResponse(user *models.User) *UserCreateResponse {
 	return &UserCreateResponse{
 		Nickname: user.Nickname,
@@ -83,4 +85,17 @@ func NewUserCreateResponse(user *models.User) *UserCreateResponse {
 		About:    user.About,
 		Email:    user.Email,
 	}
+}
+
+func NewUsersCreateResponse(users []*models.User) UsersList {
+	res := make([]UserCreateResponse, len(users))
+
+	for idx, value := range users {
+		res[idx].Nickname = value.Nickname
+		res[idx].FullName = value.FullName
+		res[idx].About = value.About
+		res[idx].Email = value.Email
+	}
+
+	return res
 }

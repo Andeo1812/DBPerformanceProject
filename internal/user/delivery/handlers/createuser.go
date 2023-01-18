@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/user/delivery/models"
@@ -34,13 +35,21 @@ func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 	//	return
 	// }
 
-	user, err := h.userService.CreateUser(r.Context(), request.GetUser())
-	if err != nil {
-		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+	users, err := h.userService.CreateUser(r.Context(), request.GetUser())
+	if errors.Is(errors.Cause(err), pkg.ErrSuchUserExist) {
+		response := models.NewUsersCreateResponse(users)
+
+		pkg.Response(r.Context(), w, http.StatusConflict, response)
+
 		return
 	}
 
-	response := models.NewUserCreateResponse(user)
+	// else {
+	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+	//	return
+	// }
 
-	pkg.Response(r.Context(), w, http.StatusOK, response)
+	response := models.NewUserCreateResponse(users[0])
+
+	pkg.Response(r.Context(), w, http.StatusCreated, response)
 }

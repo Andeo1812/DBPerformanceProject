@@ -1,6 +1,7 @@
 package pkg
 
-// Global
+import "database/sql"
+
 const (
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
@@ -8,6 +9,20 @@ const (
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 1
 )
+
+// DB
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}
+
+// TxInsertOptions for Postgres
+var TxInsertOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  false,
+}
 
 type ContextKeyType string
 
