@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	CreateUser(ctx context.Context, user *models.User) ([]*models.User, error)
 	GetProfile(ctx context.Context, user *models.User) (*models.User, error)
 	UpdateProfile(ctx context.Context, user *models.User) (*models.User, error)
 }
@@ -25,7 +25,7 @@ func NewUserService(r repository.UserRepository) UserService {
 	}
 }
 
-func (u userService) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
+func (u userService) CreateUser(ctx context.Context, user *models.User) ([]*models.User, error) {
 	res, err := u.userRepo.CreateUser(ctx, user)
 	if err != nil {
 		return nil, errors.Wrap(err, "CreateUser")
@@ -37,7 +37,7 @@ func (u userService) CreateUser(ctx context.Context, user *models.User) (*models
 func (u userService) GetProfile(ctx context.Context, user *models.User) (*models.User, error) {
 	res, err := u.userRepo.GetProfile(ctx, user)
 	if err != nil {
-		return nil, errors.Wrap(err, "GetProfile")
+		return nil, errors.Wrap(err, "GetUserByEmailOrNickname")
 	}
 
 	return res, nil
@@ -46,7 +46,7 @@ func (u userService) GetProfile(ctx context.Context, user *models.User) (*models
 func (u userService) UpdateProfile(ctx context.Context, user *models.User) (*models.User, error) {
 	res, err := u.userRepo.UpdateProfile(ctx, user)
 	if err != nil {
-		return nil, errors.Wrap(err, "UpdateProfile")
+		return nil, errors.Wrap(err, "UpdateUser")
 	}
 
 	return res, nil

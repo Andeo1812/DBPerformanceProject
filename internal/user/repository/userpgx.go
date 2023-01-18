@@ -9,8 +9,9 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
-	GetProfile(ctx context.Context, user *models.User) (*models.User, error)
-	UpdateProfile(ctx context.Context, user *models.User) (*models.User, error)
+	GetUserByEmailOrNickname(ctx context.Context, user *models.User) ([]*models.User, error)
+	GetUserByNickname(ctx context.Context, user *models.User) (*models.User, error)
+	UpdateUser(ctx context.Context, user *models.User) (*models.User, error)
 }
 
 type userPostgres struct {
@@ -27,10 +28,14 @@ func (u userPostgres) CreateUser(ctx context.Context, user *models.User) (*model
 	panic("implement me")
 }
 
-func (u userPostgres) GetProfile(ctx context.Context, user *models.User) (*models.User, error) {
+func (u userPostgres) GetUserByEmailOrNickname(ctx context.Context, user *models.User) ([]*models.User, error) {
 	panic("implement me")
 }
 
-func (u userPostgres) UpdateProfile(ctx context.Context, user *models.User) (*models.User, error) {
+func (u userPostgres) GetUserByNickname(ctx context.Context, user *models.User) (*models.User, error) {
+	panic("implement me")
+}
+
+func (u userPostgres) UpdateUser(ctx context.Context, user *models.User) (*models.User, error) {
 	panic("implement me")
 }
