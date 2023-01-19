@@ -5,16 +5,16 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"db-performance-project/internal/forum/delivery/models"
-	"db-performance-project/internal/forum/service"
 	"db-performance-project/internal/pkg"
+	"db-performance-project/internal/thread/delivery/models"
+	"db-performance-project/internal/thread/service"
 )
 
 type forumCreateThreadHandler struct {
-	forumService service.ForumService
+	threadService service.ThreadService
 }
 
-func NewForumCreateThreadHandler(s service.ForumService) pkg.Handler {
+func NewForumCreateThreadHandler(s service.ThreadService) pkg.Handler {
 	return &forumCreateThreadHandler{
 		s,
 	}
@@ -34,7 +34,7 @@ func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request
 	//	return
 	// }
 
-	thread, err := h.forumService.CreateThread(r.Context(), request.GetThread())
+	thread, err := h.threadService.CreateThread(r.Context(), request.GetThread())
 	if err != nil {
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

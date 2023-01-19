@@ -7,8 +7,8 @@ import (
 )
 
 type Service interface {
-	Clear(ctx context.Context)
-	GetStatus(ctx context.Context) *models.StatusService
+	Clear(ctx context.Context) error
+	GetStatus(ctx context.Context) (*models.StatusService, error)
 }
 
 type service struct {
@@ -21,10 +21,20 @@ func NewService(r repository.ServiceRepository) Service {
 	}
 }
 
-func (s service) Clear(ctx context.Context) {
-	s.serviceRepo.Clear(ctx)
+func (s service) Clear(ctx context.Context) error {
+	err := s.serviceRepo.Clear(ctx)
+	// if err != nil {
+	//	return errors.Wrap(err, "Clear")
+	// }
+
+	return err
 }
 
-func (s service) GetStatus(ctx context.Context) *models.StatusService {
-	return s.serviceRepo.GetStatus(ctx)
+func (s service) GetStatus(ctx context.Context) (*models.StatusService, error) {
+	res, _ := s.serviceRepo.GetStatus(ctx)
+	// if err != nil {
+	//	return nil, errors.Wrap(err, "GetStatus")
+	// }
+
+	return res, nil
 }

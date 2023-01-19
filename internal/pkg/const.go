@@ -2,6 +2,7 @@ package pkg
 
 import "database/sql"
 
+// Delivery
 const (
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
@@ -9,20 +10,6 @@ const (
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 1
 )
-
-// DB
-
-// TxDefaultOptions for Postgres
-var TxDefaultOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  true,
-}
-
-// TxInsertOptions for Postgres
-var TxInsertOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  false,
-}
 
 type ContextKeyType string
 
@@ -36,3 +23,23 @@ var RequestIDKey ContextKeyType = RequestID
 
 // LoggerKey for ctx in global middleware
 var LoggerKey ContextKeyType = "logger"
+
+// Repository
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}
+
+// TxInsertOptions for Postgres
+var TxInsertOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  false,
+}
+
+const (
+	TypeSortFlat       = "flat"
+	TypeSortTree       = "tree"
+	TypeSortParentTree = "parent_tree"
+)

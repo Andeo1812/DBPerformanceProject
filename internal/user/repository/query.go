@@ -12,7 +12,7 @@ WHERE nickname = $1
    OR email = $2;`
 
 	getUserByNickname = `
-SELECT nickname, fullname, about, email
+SELECT fullname, about, email
 FROM users
 where nickname = $1;`
 

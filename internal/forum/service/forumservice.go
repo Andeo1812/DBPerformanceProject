@@ -15,7 +15,6 @@ type ForumService interface {
 	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
 	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
 	GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error)
-	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 }
 
 type forumService struct {
@@ -59,15 +58,6 @@ func (f forumService) GetUsers(ctx context.Context, forum *models.Forum, params 
 	res, err := f.forumRepo.GetUsers(ctx, forum, params)
 	if err != nil {
 		return nil, errors.Wrap(err, "GetUsers")
-	}
-
-	return res, nil
-}
-
-func (f forumService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
-	res, err := f.forumRepo.CreateThread(ctx, thread)
-	if err != nil {
-		return nil, errors.Wrap(err, "CreateThread")
 	}
 
 	return res, nil

@@ -33,6 +33,12 @@ var (
 	ErrSuchUserExist          = errors.New("such user exist")
 	ErrSuchUserNotFound       = errors.New("such user not fount")
 	ErrUpdateUserDataConflict = errors.New("impossible update such user data")
+
+	// Thread
+	ErrSuchThreadNotFound = errors.New("such thread not fount")
+
+	// Post
+	ErrNoSuchRuleSortPosts = errors.New("no such rule for sort posts")
 )
 
 type ErrHTTPClassifier struct {
@@ -69,6 +75,12 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrSuchUserExist.Error()] = http.StatusConflict
 	res[ErrSuchUserNotFound.Error()] = http.StatusNotFound
 	res[ErrUpdateUserDataConflict.Error()] = http.StatusConflict
+
+	// Thread
+	res[ErrSuchThreadNotFound.Error()] = http.StatusNotFound
+
+	// Thread
+	res[ErrNoSuchRuleSortPosts.Error()] = http.StatusNotFound
 
 	return ErrHTTPClassifier{
 		table: res,

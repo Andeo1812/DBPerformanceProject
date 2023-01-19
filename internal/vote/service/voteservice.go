@@ -7,7 +7,8 @@ import (
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
-	"db-performance-project/internal/vote/repository"
+	threadRepo "db-performance-project/internal/thread/repository"
+	voteRepo "db-performance-project/internal/vote/repository"
 )
 
 type VoteService interface {
@@ -15,28 +16,47 @@ type VoteService interface {
 }
 
 type voteService struct {
-	voteRepo repository.VoteRepository
+	voteRepo   voteRepo.VoteRepository
+	threadRepo threadRepo.ThreadRepository
 }
 
-func NewVoteService(r repository.VoteRepository) VoteService {
+func NewVoteService(vr voteRepo.VoteRepository, tr threadRepo.ThreadRepository) VoteService {
 	return &voteService{
-		voteRepo: r,
+		voteRepo:   vr,
+		threadRepo: tr,
 	}
 }
 
-func (t voteService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
+func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
 	var err error
-	var res *models.Thread
+
+	threadID := thread
 
 	if thread.Slug != "" {
-		res, err = t.voteRepo.VoteBySlug(ctx, thread, params)
+		threadID, err = v.threadRepo.GetThreadIDBySlug(ctx, thread)
+		if err != nil {
+			return nil, errors.Wrap(err, "Vote")
+		}
+	}
+
+	exist, _ := v.voteRepo.CheckExistVote(ctx, threadID, params)
+	// if err != nil {
+	//	return nil, errors.Wrap(err, "Vote")
+	// }
+
+	if exist {
+		v.voteRepo.UpdateVote(ctx, threadID, params)
 	} else {
-		res, err = t.voteRepo.VoteByID(ctx, thread, params)
+		v.voteRepo.CreateVote(ctx, threadID, params)
 	}
+	// if err != nil {
+	//	return nil, errors.Wrap(err, "Vote")
+	// }
 
-	if err != nil {
-		return nil, errors.Wrap(err, "Vote")
-	}
+	threadUPD, _ := v.threadRepo.GetDetailsThreadByID(ctx, threadID)
+	// if err != nil {
+	//	return nil, errors.Wrap(err, "Vote")
+	// }
 
-	return res, nil
+	return threadUPD, nil
 }

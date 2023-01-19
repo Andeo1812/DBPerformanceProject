@@ -72,6 +72,12 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrSuchUserNotFound.Error()] = errLogLevel
 	res[ErrUpdateUserDataConflict.Error()] = errLogLevel
 
+	// Thread
+	res[ErrSuchThreadNotFound.Error()] = errLogLevel
+
+	// Thread
+	res[ErrNoSuchRuleSortPosts.Error()] = errLogLevel
+
 	return ErrLogClassifier{
 		table: res,
 	}

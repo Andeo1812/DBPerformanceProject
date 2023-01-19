@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels(in *jlexer.Lexer, out *ForumCreateThreadResponse) {
+func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *jlexer.Lexer, out *ForumCreateThreadResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -66,7 +66,7 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels(in *j
 		in.Consumed()
 	}
 }
-func easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels(out *jwriter.Writer, in ForumCreateThreadResponse) {
+func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(out *jwriter.Writer, in ForumCreateThreadResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -116,27 +116,27 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels(out *
 // MarshalJSON supports json.Marshaler interface
 func (v ForumCreateThreadResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels(&w, v)
+	easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ForumCreateThreadResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels(w, v)
+	easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ForumCreateThreadResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels(&r, v)
+	easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ForumCreateThreadResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels(l, v)
+	easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels(l, v)
 }
-func easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *jlexer.Lexer, out *ForumCreateThreadRequest) {
+func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in *jlexer.Lexer, out *ForumCreateThreadRequest) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -179,7 +179,7 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels1(in *
 		in.Consumed()
 	}
 }
-func easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels1(out *jwriter.Writer, in ForumCreateThreadRequest) {
+func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out *jwriter.Writer, in ForumCreateThreadRequest) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -214,23 +214,23 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels1(out 
 // MarshalJSON supports json.Marshaler interface
 func (v ForumCreateThreadRequest) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels1(&w, v)
+	easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ForumCreateThreadRequest) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9d4b6d10EncodeDbPerformanceProjectInternalForumDeliveryModels1(w, v)
+	easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ForumCreateThreadRequest) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels1(&r, v)
+	easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ForumCreateThreadRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9d4b6d10DecodeDbPerformanceProjectInternalForumDeliveryModels1(l, v)
+	easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(l, v)
 }

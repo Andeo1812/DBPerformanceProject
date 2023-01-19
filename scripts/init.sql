@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS forums
 (
-    user_id       serial,
+    forum_id      serial,
     title         text NOT NULL,
     user_nickname text NOT NULL REFERENCES users (nickname),
     slug          text NOT NULL PRIMARY KEY,
@@ -20,25 +20,25 @@ CREATE TABLE IF NOT EXISTS forums
 
 CREATE TABLE IF NOT EXISTS threads
 (
-    user_id serial PRIMARY KEY NOT NULL,
-    title   text               NOT NULL,
-    author  text               NOT NULL REFERENCES users (nickname),
-    forum   text               NOT NULL REFERENCES forums (slug),
-    message text               NOT NULL,
-    votes   integer                  DEFAULT 0,
-    slug    text,
-    created timestamp with time zone DEFAULT now()
+    thread_id serial PRIMARY KEY NOT NULL,
+    title     text               NOT NULL,
+    author    text               NOT NULL REFERENCES users (nickname),
+    forum     text               NOT NULL REFERENCES forums (slug),
+    message   text               NOT NULL,
+    votes     integer                  DEFAULT 0,
+    slug      text,
+    created   timestamp with time zone DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    user_id   serial PRIMARY KEY NOT NULL UNIQUE,
+    post_id   serial PRIMARY KEY NOT NULL UNIQUE,
     parent    int                      DEFAULT 0,
     author    text               NOT NULL REFERENCES users (nickname),
     message   text               NOT NULL,
     is_edited bool                     DEFAULT FALSE,
     forum     text REFERENCES forums (slug),
-    thread    integer REFERENCES threads (user_id),
+    thread_id integer REFERENCES threads (thread_id),
     created   timestamp with time zone DEFAULT now(),
     path      bigint[]                 DEFAULT ARRAY []::INTEGER[]
 );
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS posts
 CREATE TABLE IF NOT EXISTS user_votes
 (
     nickname  text NOT NULL REFERENCES users (nickname),
-    thread_id int  NOT NULL REFERENCES threads (user_id),
+    thread_id int  NOT NULL REFERENCES threads (thread_id),
     voice     int  NOT NULL
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS user_forums
 CREATE OR REPLACE FUNCTION path_update() RETURNS TRIGGER AS
 $$
 BEGIN
-    new.path = (SELECT path FROM posts WHERE user_id = new.parent) || new.user_id;
+    new.path = (SELECT path FROM posts WHERE post_id = new.parent) || new.post_id;
     RETURN new;
 END;
 $$ LANGUAGE plpgsql;
@@ -85,7 +85,7 @@ $$
 BEGIN
     UPDATE threads
     SET votes = votes + NEW.voice
-    WHERE user_id = NEW.thread_id;
+    WHERE thread_id = NEW.thread_id;
     RETURN NEW;
 END;
 $$ language plpgsql;
@@ -102,7 +102,7 @@ $$
 BEGIN
     UPDATE threads
     SET votes = votes + NEW.voice - OLD.voice
-    WHERE user_id = NEW.thread_id;
+    WHERE thread_id = NEW.thread_id;
     RETURN NEW;
 END;
 $$ language plpgsql;

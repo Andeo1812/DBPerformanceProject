@@ -29,7 +29,7 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 }
 
 func (u userPostgres) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowUser := tx.QueryRowContext(ctx, createUser, user.Nickname, user.FullName, user.About, user.Email)
 		if errors.Is(rowUser.Err(), sql.ErrTxDone) {
 			return pkg.ErrSuchUserExist
@@ -44,21 +44,105 @@ func (u userPostgres) CreateUser(ctx context.Context, user *models.User) (*model
 		return nil
 	})
 
-	// if errMain != nil {
-	//	return nil, errMain
-	// }
+	if errMain != nil {
+		return nil, errMain
+	}
 
 	return user, nil
 }
 
 func (u userPostgres) GetUserByEmailOrNickname(ctx context.Context, user *models.User) ([]*models.User, error) {
-	panic("implement me")
+	res := make([]*models.User, 0)
+
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowsUsers, _ := conn.QueryContext(ctx, getUserByEmailOrNickname, user.Nickname, user.FullName, user.About, user.Email)
+		// if err != nil {
+		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
+		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
+		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
+		// }
+		defer rowsUsers.Close()
+
+		for rowsUsers.Next() {
+			values := &models.User{}
+
+			err := rowsUsers.Scan(
+				&values.Nickname,
+				&values.FullName,
+				&values.About,
+				&values.Email)
+			if err != nil {
+				return err
+			}
+
+			res = append(res, values)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return nil, errMain
+	}
+
+	return res, nil
 }
 
 func (u userPostgres) GetUserByNickname(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowUser := conn.QueryRowContext(ctx, getUserByNickname, user.Nickname)
+		if errors.Is(rowUser.Err(), sql.ErrNoRows) {
+			return pkg.ErrSuchUserNotFound
+		}
+
+		// if rowUser.err() != nil {
+		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
+		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
+		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
+		// }
+
+		err := rowUser.Scan(
+			&user.FullName,
+			&user.About,
+			&user.Email)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return nil, errMain
+	}
+
+	return user, nil
 }
 
 func (u userPostgres) UpdateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	panic("implement me")
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowUser := conn.QueryRowContext(ctx, updateUser, user.FullName, user.About, user.Email)
+
+		// if rowUser.err() != nil {
+		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
+		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
+		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
+		// }
+
+		err := rowUser.Scan(
+			&user.FullName,
+			&user.About,
+			&user.Email)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return nil, errMain
+	}
+
+	return user, nil
 }

@@ -26,7 +26,6 @@ func (h *serviceClearHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 func (h *serviceClearHandler) Action(w http.ResponseWriter, r *http.Request) {
 	h.service.Clear(r.Context())
 
-	//  err := h.forumService.CreateForum(r.Context(), request.GetForum())
 	// if err != nil {
 	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 	//	return

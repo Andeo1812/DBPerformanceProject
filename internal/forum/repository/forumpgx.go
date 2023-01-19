@@ -13,7 +13,6 @@ type ForumRepository interface {
 	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
 	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
 	GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error)
-	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 }
 
 type forumPostgres struct {
@@ -39,9 +38,5 @@ func (f forumPostgres) GetThreads(ctx context.Context, forum *models.Forum, para
 }
 
 func (f forumPostgres) GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error) {
-	panic("implement me")
-}
-
-func (f forumPostgres) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	panic("implement me")
 }
