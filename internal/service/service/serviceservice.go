@@ -4,6 +4,7 @@ import (
 	"context"
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/service/repository"
+	"github.com/pkg/errors"
 )
 
 type Service interface {
@@ -23,18 +24,18 @@ func NewService(r repository.ServiceRepository) Service {
 
 func (s service) Clear(ctx context.Context) error {
 	err := s.serviceRepo.Clear(ctx)
-	// if err != nil {
-	//	return errors.Wrap(err, "Clear")
-	// }
+	if err != nil {
+		return errors.Wrap(err, "Clear")
+	}
 
 	return err
 }
 
 func (s service) GetStatus(ctx context.Context) (*models.StatusService, error) {
-	res, _ := s.serviceRepo.GetStatus(ctx)
-	// if err != nil {
-	//	return nil, errors.Wrap(err, "GetStatus")
-	// }
+	res, err := s.serviceRepo.GetStatus(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "GetStatus")
+	}
 
 	return res, nil
 }

@@ -25,12 +25,11 @@ func (h *serviceGetStatusHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddlewar
 }
 
 func (h *serviceGetStatusHandler) Action(w http.ResponseWriter, r *http.Request) {
-	status, _ := h.service.GetStatus(r.Context())
-
-	// if err != nil {
-	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
-	//	return
-	// }
+	status, err := h.service.GetStatus(r.Context())
+	if err != nil {
+		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+		return
+	}
 
 	response := models.NewServiceGetStatusResponse(status)
 

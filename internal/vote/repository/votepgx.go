@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
@@ -30,11 +31,11 @@ func (v votePostgres) CheckExistVote(ctx context.Context, thread *models.Thread,
 
 	errMain := sqltools.RunQuery(ctx, v.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowExist := conn.QueryRowContext(ctx, checkExists, params.Nickname, thread.ID)
-		// if rowExist.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
+		if rowExist.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %d]. Special error: [%s]",
+				checkExists, params.Nickname, thread.ID, rowExist.Err())
+		}
 
 		err := rowExist.Scan(&res)
 		if err != nil {
@@ -53,12 +54,12 @@ func (v votePostgres) CheckExistVote(ctx context.Context, thread *models.Thread,
 
 func (v votePostgres) UpdateVote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) error {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, v.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		tx.QueryRowContext(ctx, updateVote, params.Nickname, thread.ID, params.Voice)
-		// if rowVote.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
+		rowUpdate := tx.QueryRowContext(ctx, updateVote, params.Nickname, thread.ID, params.Voice)
+		if rowUpdate.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %d, %d]. Special error: [%s]",
+				updateVote, params.Nickname, thread.ID, params.Voice, rowUpdate.Err())
+		}
 
 		return nil
 	})
@@ -68,12 +69,12 @@ func (v votePostgres) UpdateVote(ctx context.Context, thread *models.Thread, par
 
 func (v votePostgres) CreateVote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) error {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, v.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		tx.QueryRowContext(ctx, createVote, params.Nickname, thread.ID, params.Voice)
-		// if rowVote.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
+		rowCreate := tx.QueryRowContext(ctx, createVote, params.Nickname, thread.ID, params.Voice)
+		if rowCreate.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %d, %d]. Special error: [%s]",
+				createVote, params.Nickname, thread.ID, params.Voice, rowCreate.Err())
+		}
 
 		return nil
 	})

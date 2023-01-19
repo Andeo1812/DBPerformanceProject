@@ -39,7 +39,7 @@ func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pk
 		}
 	}
 
-	exist, _ := v.voteRepo.CheckExistVote(ctx, threadID, params)
+	exist, err := v.voteRepo.CheckExistVote(ctx, threadID, params)
 	// if err != nil {
 	//	return nil, errors.Wrap(err, "Vote")
 	// }
@@ -49,9 +49,9 @@ func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pk
 	} else {
 		v.voteRepo.CreateVote(ctx, threadID, params)
 	}
-	// if err != nil {
-	//	return nil, errors.Wrap(err, "Vote")
-	// }
+	if err != nil {
+		return nil, errors.Wrap(err, "Vote")
+	}
 
 	threadUPD, _ := v.threadRepo.GetDetailsThreadByID(ctx, threadID)
 	// if err != nil {

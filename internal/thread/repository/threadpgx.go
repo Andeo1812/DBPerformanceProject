@@ -44,14 +44,15 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadIDBySlug, thread.Slug)
-		if errors.As(rowThread.Err(), sql.ErrNoRows) {
-			return pkg.ErrSuchThreadNotFound
+		if rowThread.Err() != nil {
+			if errors.As(rowThread.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDBySlug, thread.Slug, rowThread.Err())
 		}
-		// if rowCounters.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
 
 		err := rowThread.Scan(&res.ID)
 		if err != nil {
