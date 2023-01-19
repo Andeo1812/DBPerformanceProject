@@ -3,10 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"db-performance-project/internal/pkg"
+
 	"github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/pkg/sqltools"
 )
 

@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+
+	"github.com/pkg/errors"
+
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/service/repository"
-	"github.com/pkg/errors"
 )
 
 type Service interface {
