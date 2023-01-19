@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"github.com/pkg/errors"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/user/delivery/models"
 	"db-performance-project/internal/user/service"
-	"github.com/gorilla/mux"
 )
 
 type userCreateHandler struct {
