@@ -14,7 +14,7 @@ import (
 //go:generate easyjson -all -disallow_unknown_fields updatepost.go
 
 type PostUpdateRequest struct {
-	ID      uint32
+	ID      int64
 	Message string `json:"message"`
 }
 
@@ -40,7 +40,7 @@ func (req *PostUpdateRequest) Bind(r *http.Request) error {
 	//	return pkg.ErrBadRequestParams
 	// }
 
-	req.ID = uint32(value)
+	req.ID = int64(value)
 
 	body, _ := io.ReadAll(r.Body)
 	// if err != nil {
@@ -74,13 +74,13 @@ func (req *PostUpdateRequest) GetPost() *models.Post {
 }
 
 type PostUpdateResponse struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
+	ID       int64  `json:"id"`
+	Parent   int64  `json:"parent"`
 	Author   string `json:"author"`
 	Message  string `json:"message"`
 	IsEdited bool   `json:"isEdited"`
 	Forum    string `json:"forum"`
-	Thread   uint32 `json:"thread"`
+	Thread   int64  `json:"thread"`
 	Created  string `json:"created"`
 }
 

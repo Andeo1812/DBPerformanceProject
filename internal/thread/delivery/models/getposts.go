@@ -14,8 +14,8 @@ import (
 
 type ThreadGetPostsRequest struct {
 	SlugOrID string
-	Limit    uint32
-	Since    string
+	Limit    int64
+	Since    int64
 	Desc     bool
 	Sort     string
 }
@@ -42,7 +42,7 @@ func (req *ThreadGetPostsRequest) Bind(r *http.Request) error {
 		//	return pkg.ErrConvertQueryType
 		// }
 
-		req.Limit = uint32(value)
+		req.Limit = int64(value)
 	} else {
 		req.Limit = 100
 	}
@@ -51,10 +51,20 @@ func (req *ThreadGetPostsRequest) Bind(r *http.Request) error {
 	//	return pkg.ErrConvertQueryType
 	// }
 
-	req.Since = r.FormValue("since")
+	param = r.FormValue("since")
 	// if req.Since == "" {
 	//	return pkg.ErrBadRequestParamsEmptyRequiredFields
 	// }
+	if param != "" {
+		value, _ := strconv.Atoi(param)
+		// if err != nil {
+		//	return pkg.ErrConvertQueryType
+		// }
+
+		req.Since = int64(value)
+	} else {
+		req.Since = -1
+	}
 
 	param = r.FormValue("desc")
 	// if param == "" {
@@ -83,7 +93,7 @@ func (req *ThreadGetPostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
 		return &models.Thread{
-			ID: uint32(id),
+			ID: int64(id),
 		}
 	}
 
@@ -103,13 +113,13 @@ func (req *ThreadGetPostsRequest) GetParams() *pkg.GetPostsParams {
 
 //easyjson:json
 type ThreadGetPostsResponse struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
+	ID       int64  `json:"id"`
+	Parent   int64  `json:"parent"`
 	Author   string `json:"author"`
 	Message  string `json:"message"`
 	IsEdited bool   `json:"isEdited"`
 	Forum    string `json:"forum"`
-	Thread   uint32 `json:"thread"`
+	Thread   int64  `json:"thread"`
 	Created  string `json:"created"`
 }
 

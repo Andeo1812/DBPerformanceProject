@@ -1,27 +1,27 @@
 package pkg
 
 type GetThreadsParams struct {
-	Limit uint32
+	Limit int64
 	Since string
 	Desc  bool
 }
 
 type GetUsersParams struct {
-	Limit uint32
+	Limit int64
 	Since string
 	Desc  bool
 }
 
 type GetPostsParams struct {
-	Limit uint32
-	Since string
+	Limit int64
+	Since int64
 	Desc  bool
 	Sort  string
 }
 
 type VoteParams struct {
 	Nickname string
-	Voice    int32
+	Voice    int64
 }
 
 type PostDetailsParams struct {

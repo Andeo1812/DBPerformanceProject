@@ -41,8 +41,8 @@ type ForumGetDetailsResponse struct {
 	Title   string `json:"title"`
 	User    string `json:"user"`
 	Slug    string `json:"slug"`
-	Posts   uint32 `json:"posts"`
-	Threads uint32 `json:"threads"`
+	Posts   int64  `json:"posts"`
+	Threads int64  `json:"threads"`
 }
 
 func NewForumGetDetailsResponse(forum *models.Forum) *ForumGetDetailsResponse {

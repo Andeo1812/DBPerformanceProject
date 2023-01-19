@@ -14,7 +14,7 @@ import (
 
 type ForumGetThreadsRequest struct {
 	Slug  string
-	Limit uint32
+	Limit int64
 	Since string
 	Desc  bool
 }
@@ -41,7 +41,7 @@ func (req *ForumGetThreadsRequest) Bind(r *http.Request) error {
 		//	return pkg.ErrConvertQueryType
 		// }
 
-		req.Limit = uint32(value)
+		req.Limit = int64(value)
 	} else {
 		req.Limit = 100
 	}
@@ -89,14 +89,14 @@ func (req *ForumGetThreadsRequest) GetParams() *pkg.GetThreadsParams {
 
 //easyjson:json
 type ForumGetThreadsResponse struct {
-	ID      uint32 `json:"id"`
+	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
-	Votes   int32  `json:"votes"`
+	Votes   int64  `json:"votes"`
 }
 
 //easyjson:json

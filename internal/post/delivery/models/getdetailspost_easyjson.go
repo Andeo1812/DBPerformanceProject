@@ -37,7 +37,7 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels(in *jl
 		}
 		switch key {
 		case "id":
-			out.ID = uint32(in.Uint32())
+			out.ID = int64(in.Int64())
 		case "title":
 			out.Title = string(in.String())
 		case "author":
@@ -51,7 +51,7 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels(in *jl
 		case "created":
 			out.Created = string(in.String())
 		case "votes":
-			out.Votes = int32(in.Int32())
+			out.Votes = int64(in.Int64())
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -73,7 +73,7 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels(out *j
 	{
 		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
+		out.Int64(int64(in.ID))
 	}
 	{
 		const prefix string = ",\"title\":"
@@ -108,7 +108,7 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels(out *j
 	{
 		const prefix string = ",\"votes\":"
 		out.RawString(prefix)
-		out.Int32(int32(in.Votes))
+		out.Int64(int64(in.Votes))
 	}
 	out.RawByte('}')
 }
@@ -247,9 +247,9 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels2(in *j
 		}
 		switch key {
 		case "id":
-			out.ID = uint32(in.Uint32())
+			out.ID = int64(in.Int64())
 		case "parent":
-			out.Parent = uint32(in.Uint32())
+			out.Parent = int64(in.Int64())
 		case "author":
 			out.Author = string(in.String())
 		case "message":
@@ -259,7 +259,7 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels2(in *j
 		case "forum":
 			out.Forum = string(in.String())
 		case "thread":
-			out.Thread = uint32(in.Uint32())
+			out.Thread = int64(in.Int64())
 		case "created":
 			out.Created = string(in.String())
 		default:
@@ -283,12 +283,12 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels2(out *
 	{
 		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
+		out.Int64(int64(in.ID))
 	}
 	{
 		const prefix string = ",\"parent\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Parent))
+		out.Int64(int64(in.Parent))
 	}
 	{
 		const prefix string = ",\"author\":"
@@ -313,7 +313,7 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels2(out *
 	{
 		const prefix string = ",\"thread\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Thread))
+		out.Int64(int64(in.Thread))
 	}
 	{
 		const prefix string = ",\"created\":"
@@ -372,9 +372,9 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels3(in *j
 		case "slug":
 			out.Slug = string(in.String())
 		case "posts":
-			out.Posts = uint32(in.Uint32())
+			out.Posts = int64(in.Int64())
 		case "threads":
-			out.Threads = uint32(in.Uint32())
+			out.Threads = int64(in.Int64())
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -411,12 +411,12 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels3(out *
 	{
 		const prefix string = ",\"posts\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Posts))
+		out.Int64(int64(in.Posts))
 	}
 	{
 		const prefix string = ",\"threads\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Threads))
+		out.Int64(int64(in.Threads))
 	}
 	out.RawByte('}')
 }

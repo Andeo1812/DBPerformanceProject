@@ -35,7 +35,7 @@ func (req *ThreadGetDetailsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
 		return &models.Thread{
-			ID: uint32(id),
+			ID: int64(id),
 		}
 	}
 
@@ -46,14 +46,14 @@ func (req *ThreadGetDetailsRequest) GetThread() *models.Thread {
 
 //easyjson:json
 type ThreadGetDetailsResponse struct {
-	ID      uint32 `json:"id"`
+	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
-	Votes   int32  `json:"votes"`
+	Votes   int64  `json:"votes"`
 }
 
 func NewThreadGetDetailsResponse(thread *models.Thread) *ThreadGetDetailsResponse {

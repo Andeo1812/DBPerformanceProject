@@ -14,7 +14,7 @@ import (
 //go:generate easyjson -disallow_unknown_fields getdetailspost.go
 
 type PostGetDetailsRequest struct {
-	ID      uint32
+	ID      int64
 	Related []string
 }
 
@@ -36,7 +36,7 @@ func (req *PostGetDetailsRequest) Bind(r *http.Request) error {
 	//	return pkg.ErrBadRequestParams
 	// }
 
-	req.ID = uint32(value)
+	req.ID = int64(value)
 
 	param = r.URL.Query().Get("related")
 
@@ -72,26 +72,26 @@ type PostGetDetailsAuthorResponse struct {
 
 //easyjson:json
 type PostGetDetailsPostResponse struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
+	ID       int64  `json:"id"`
+	Parent   int64  `json:"parent"`
 	Author   string `json:"author"`
 	Message  string `json:"message"`
 	IsEdited bool   `json:"isEdited"`
 	Forum    string `json:"forum"`
-	Thread   uint32 `json:"thread"`
+	Thread   int64  `json:"thread"`
 	Created  string `json:"created"`
 }
 
 //easyjson:json
 type PostGetDetailsThreadResponse struct {
-	ID      uint32 `json:"id"`
+	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
-	Votes   int32  `json:"votes"`
+	Votes   int64  `json:"votes"`
 }
 
 //easyjson:json
@@ -99,8 +99,8 @@ type PostGetDetailsForumResponse struct {
 	Title   string `json:"title"`
 	User    string `json:"user"`
 	Slug    string `json:"slug"`
-	Posts   uint32 `json:"posts"`
-	Threads uint32 `json:"threads"`
+	Posts   int64  `json:"posts"`
+	Threads int64  `json:"threads"`
 }
 
 //easyjson:json

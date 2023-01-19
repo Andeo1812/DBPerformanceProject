@@ -72,14 +72,14 @@ func (req *ForumCreateThreadRequest) GetThread() *models.Thread {
 }
 
 type ForumCreateThreadResponse struct {
-	ID      uint32 `json:"id"`
+	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
-	Votes   int32  `json:"votes"`
+	Votes   int64  `json:"votes"`
 }
 
 func NewForumCreateThreadResponse(forum *models.Thread) *ForumCreateThreadResponse {

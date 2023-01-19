@@ -1,12 +1,12 @@
 package models
 
 type Post struct {
-	ID       uint32
-	Parent   uint32
+	ID       int64
+	Parent   int64
 	Author   User
 	Message  string
 	IsEdited bool
 	Forum    string
-	Thread   uint32
+	Thread   int64
 	Created  string
 }

@@ -17,7 +17,7 @@ import (
 type VoteRequest struct {
 	SlugOrID string
 	Nickname string `json:"nickname"`
-	Voice    int32  `json:"voice"`
+	Voice    int64  `json:"voice"`
 }
 
 func NewVoteRequest() *VoteRequest {
@@ -61,7 +61,7 @@ func (req *VoteRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
 		return &models.Thread{
-			ID: uint32(id),
+			ID: int64(id),
 		}
 	}
 
@@ -78,14 +78,14 @@ func (req *VoteRequest) GetParams() *pkg.VoteParams {
 }
 
 type VoteResponse struct {
-	ID      uint32 `json:"id"`
+	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
-	Votes   int32  `json:"votes"`
+	Votes   int64  `json:"votes"`
 }
 
 func NewVoteResponse(thread *models.Thread) *VoteResponse {

@@ -13,8 +13,8 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
-func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interface{}) (sql.Result, error) {
-	rows, err := db.ExecContext(ctx, query, values...)
+func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interface{}) (*sql.Rows, error) {
+	rows, err := db.QueryContext(ctx, query, values...)
 	if err != nil {
 		return nil, fmt.Errorf("InsertBatch: [%w] when inserting row into [%s] table \n [%+v]", err, query, values)
 	}

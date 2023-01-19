@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	ID       uint32
+	ID       int64
 	Nickname string
 	FullName string
 	About    string

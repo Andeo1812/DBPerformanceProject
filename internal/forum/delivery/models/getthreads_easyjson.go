@@ -103,7 +103,7 @@ func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(in *j
 		}
 		switch key {
 		case "id":
-			out.ID = uint32(in.Uint32())
+			out.ID = int64(in.Int64())
 		case "title":
 			out.Title = string(in.String())
 		case "author":
@@ -117,7 +117,7 @@ func easyjsonDbae79bDecodeDbPerformanceProjectInternalForumDeliveryModels1(in *j
 		case "created":
 			out.Created = string(in.String())
 		case "votes":
-			out.Votes = int32(in.Int32())
+			out.Votes = int64(in.Int64())
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -139,7 +139,7 @@ func easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(out *
 	{
 		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
+		out.Int64(int64(in.ID))
 	}
 	{
 		const prefix string = ",\"title\":"
@@ -174,7 +174,7 @@ func easyjsonDbae79bEncodeDbPerformanceProjectInternalForumDeliveryModels1(out *
 	{
 		const prefix string = ",\"votes\":"
 		out.RawString(prefix)
-		out.Int32(int32(in.Votes))
+		out.Int64(int64(in.Votes))
 	}
 	out.RawByte('}')
 }

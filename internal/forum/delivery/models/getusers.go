@@ -14,7 +14,7 @@ import (
 
 type ForumGetUsersRequest struct {
 	Slug  string
-	Limit uint32
+	Limit int64
 	Since string
 	Desc  bool
 }
@@ -41,7 +41,7 @@ func (req *ForumGetUsersRequest) Bind(r *http.Request) error {
 		//	return pkg.ErrConvertQueryType
 		// }
 
-		req.Limit = uint32(value)
+		req.Limit = int64(value)
 
 		// if req.Limit > 10000 || req.Limit < 1 {
 		//	return pkg.ErrBadRequestParams

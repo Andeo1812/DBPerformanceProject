@@ -1,10 +1,10 @@
 package models
 
 type Forum struct {
-	ID      uint32
+	ID      int64
 	Title   string
 	User    string
 	Slug    string
-	Posts   uint32
-	Threads uint32
+	Posts   int64
+	Threads int64
 }

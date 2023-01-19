@@ -43,9 +43,9 @@ func easyjsonE96e2c6bDecodeDbPerformanceProjectInternalForumDeliveryModels(in *j
 		case "slug":
 			out.Slug = string(in.String())
 		case "posts":
-			out.Posts = uint32(in.Uint32())
+			out.Posts = int64(in.Int64())
 		case "threads":
-			out.Threads = uint32(in.Uint32())
+			out.Threads = int64(in.Int64())
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -82,12 +82,12 @@ func easyjsonE96e2c6bEncodeDbPerformanceProjectInternalForumDeliveryModels(out *
 	{
 		const prefix string = ",\"posts\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Posts))
+		out.Int64(int64(in.Posts))
 	}
 	{
 		const prefix string = ",\"threads\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Threads))
+		out.Int64(int64(in.Threads))
 	}
 	out.RawByte('}')
 }

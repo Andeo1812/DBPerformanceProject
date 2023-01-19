@@ -36,6 +36,7 @@ var (
 
 	// Thread
 	ErrSuchThreadNotFound = errors.New("such thread not fount")
+	ErrSuchThreadExist    = errors.New("such thread exist")
 
 	// Post
 	ErrNoSuchRuleSortPosts = errors.New("no such rule for sort posts")

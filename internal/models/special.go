@@ -1,10 +1,10 @@
 package models
 
 type StatusService struct {
-	User   uint32
-	Forum  uint32
-	Thread uint32
-	Post   uint32
+	User   int64
+	Forum  int64
+	Thread int64
+	Post   int64
 }
 
 type PostDetails struct {

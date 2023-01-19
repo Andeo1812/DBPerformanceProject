@@ -37,9 +37,9 @@ func easyjson5cae51c1DecodeDbPerformanceProjectInternalPostDeliveryModels(in *jl
 		}
 		switch key {
 		case "id":
-			out.ID = uint32(in.Uint32())
+			out.ID = int64(in.Int64())
 		case "parent":
-			out.Parent = uint32(in.Uint32())
+			out.Parent = int64(in.Int64())
 		case "author":
 			out.Author = string(in.String())
 		case "message":
@@ -49,7 +49,7 @@ func easyjson5cae51c1DecodeDbPerformanceProjectInternalPostDeliveryModels(in *jl
 		case "forum":
 			out.Forum = string(in.String())
 		case "thread":
-			out.Thread = uint32(in.Uint32())
+			out.Thread = int64(in.Int64())
 		case "created":
 			out.Created = string(in.String())
 		default:
@@ -73,12 +73,12 @@ func easyjson5cae51c1EncodeDbPerformanceProjectInternalPostDeliveryModels(out *j
 	{
 		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
+		out.Int64(int64(in.ID))
 	}
 	{
 		const prefix string = ",\"parent\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Parent))
+		out.Int64(int64(in.Parent))
 	}
 	{
 		const prefix string = ",\"author\":"
@@ -103,7 +103,7 @@ func easyjson5cae51c1EncodeDbPerformanceProjectInternalPostDeliveryModels(out *j
 	{
 		const prefix string = ",\"thread\":"
 		out.RawString(prefix)
-		out.Uint32(uint32(in.Thread))
+		out.Int64(int64(in.Thread))
 	}
 	{
 		const prefix string = ",\"created\":"
@@ -156,7 +156,7 @@ func easyjson5cae51c1DecodeDbPerformanceProjectInternalPostDeliveryModels1(in *j
 		}
 		switch key {
 		case "ID":
-			out.ID = uint32(in.Uint32())
+			out.ID = int64(in.Int64())
 		case "message":
 			out.Message = string(in.String())
 		default:
@@ -180,7 +180,7 @@ func easyjson5cae51c1EncodeDbPerformanceProjectInternalPostDeliveryModels1(out *
 	{
 		const prefix string = ",\"ID\":"
 		out.RawString(prefix[1:])
-		out.Uint32(uint32(in.ID))
+		out.Int64(int64(in.ID))
 	}
 	{
 		const prefix string = ",\"message\":"

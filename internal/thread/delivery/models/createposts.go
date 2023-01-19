@@ -15,7 +15,7 @@ import (
 
 //easyjson:json
 type PostRequest struct {
-	Parent  uint32 `json:"parent"`
+	Parent  int64  `json:"parent"`
 	Author  string `json:"author"`
 	Message string `json:"message"`
 }
@@ -89,7 +89,7 @@ func (req *ThreadCreatePostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
 	if err != nil {
 		return &models.Thread{
-			ID: uint32(id),
+			ID: int64(id),
 		}
 	}
 
@@ -100,13 +100,13 @@ func (req *ThreadCreatePostsRequest) GetThread() *models.Thread {
 
 //easyjson:json
 type PostResponse struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
+	ID       int64  `json:"id"`
+	Parent   int64  `json:"parent"`
 	Author   string `json:"author"`
 	Message  string `json:"message"`
 	IsEdited bool   `json:"isEdited"`
 	Forum    string `json:"forum"`
-	Thread   uint32 `json:"thread"`
+	Thread   int64  `json:"thread"`
 	Created  string `json:"created"`
 }
 
