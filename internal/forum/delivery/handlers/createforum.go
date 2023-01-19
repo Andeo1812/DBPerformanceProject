@@ -52,5 +52,5 @@ func (h *forumCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	response := models.NewForumCreateResponse(forum)
 
-	pkg.Response(r.Context(), w, http.StatusOK, response)
+	pkg.Response(r.Context(), w, http.StatusCreated, response)
 }

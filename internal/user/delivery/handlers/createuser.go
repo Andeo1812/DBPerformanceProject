@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"net/http"
-
-	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
+	"net/http"
 
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/user/delivery/models"
 	"db-performance-project/internal/user/service"
+	"github.com/gorilla/mux"
 )
 
 type userCreateHandler struct {
@@ -36,10 +35,16 @@ func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	users, err := h.userService.CreateUser(r.Context(), request.GetUser())
-	if errors.Is(errors.Cause(err), pkg.ErrSuchUserExist) {
-		response := models.NewUsersCreateResponse(users)
+	if err != nil {
+		if errors.Is(errors.Cause(err), pkg.ErrSuchUserExist) {
+			response := models.NewUsersCreateResponse(users)
 
-		pkg.Response(r.Context(), w, http.StatusConflict, response)
+			pkg.Response(r.Context(), w, http.StatusConflict, response)
+
+			return
+		}
+
+		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 
 		return
 	}

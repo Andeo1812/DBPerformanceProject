@@ -37,7 +37,7 @@ func (u userService) CreateUser(ctx context.Context, user *models.User) ([]*mode
 		//	return nil, err
 		// }
 
-		return res, errors.Wrap(pkg.ErrSuchForumExist, "UpdateUser")
+		return res, errors.Wrap(pkg.ErrSuchUserExist, "UpdateUser")
 	}
 
 	res[0], _ = u.userRepo.CreateUser(ctx, user)
@@ -59,8 +59,8 @@ func (u userService) GetProfile(ctx context.Context, user *models.User) (*models
 
 func (u userService) UpdateProfile(ctx context.Context, user *models.User) (*models.User, error) {
 	_, err := u.userRepo.GetUserByNickname(ctx, user)
-	if err == nil {
-		return nil, errors.Wrap(pkg.ErrSuchUserExist, "UpdateUser")
+	if err != nil {
+		return nil, errors.Wrap(err, "UpdateUser")
 	}
 
 	resUpdate, err := u.userRepo.UpdateUser(ctx, user)
