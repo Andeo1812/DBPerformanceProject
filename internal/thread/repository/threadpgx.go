@@ -218,6 +218,8 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 
 	query := getPostsByFlatBegin
 
+	var values []interface{}
+
 	switch {
 	case params.Since != -1 && params.Desc:
 		query += " AND post_id < $2"
@@ -239,48 +241,51 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 	query += fmt.Sprintf(" LIMIT NULLIF(%d, 0)", params.Limit)
 
 	if params.Since == -1 {
-		err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-			rows, err = conn.QueryContext(ctx, query, thread.ID)
-
-			return err
-		})
+		values = []interface{}{thread.ID}
 	} else {
-		err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-			rows, err = conn.QueryContext(ctx, query, thread.ID, params.Since)
-			return err
-		})
+		values = []interface{}{thread.ID, params.Since}
 	}
+
+	res := make([]*models.Post, 0)
+
+	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rows, err = conn.QueryContext(ctx, query, values...)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			post := &models.Post{}
+
+			timeTmp := time.Time{}
+
+			err = rows.Scan(
+				&post.ID,
+				&post.Parent,
+				&post.Author,
+				&post.Message,
+				&post.IsEdited,
+				&post.Forum,
+				&timeTmp)
+			if err != nil {
+				return err
+			}
+
+			post.Thread = thread.ID
+
+			post.Created = timeTmp.Format(time.RFC3339)
+
+			res = append(res, post)
+		}
+
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	posts := make([]*models.Post, 0)
-	for rows.Next() {
-		post := &models.Post{}
-
-		timePost := time.Time{}
-
-		err = rows.Scan(
-			&post.ID,
-			&post.Parent,
-			&post.Author,
-			&post.Message,
-			&post.IsEdited,
-			&post.Forum,
-			&timePost)
-		if err != nil {
-			return nil, err
-		}
-
-		post.Thread = thread.ID
-
-		post.Created = timePost.Format(time.RFC3339)
-
-		posts = append(posts, post)
-	}
-
-	return posts, err
+	return res, nil
 }
 
 func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {

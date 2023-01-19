@@ -1,7 +1,7 @@
 -- Main
 CREATE TABLE IF NOT EXISTS users
 (
-    user_id  serial,
+    user_id  bigserial,
     nickname text NOT NULL UNIQUE PRIMARY KEY,
     fullname text NOT NULL,
     about    text,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS forums
 (
-    forum_id      serial,
+    forum_id      bigserial,
     title         text NOT NULL,
     user_nickname text NOT NULL REFERENCES users (nickname),
     slug          text NOT NULL PRIMARY KEY,
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS forums
 
 CREATE TABLE IF NOT EXISTS threads
 (
-    thread_id serial PRIMARY KEY NOT NULL,
-    title     text               NOT NULL,
-    author    text               NOT NULL REFERENCES users (nickname),
-    forum     text               NOT NULL REFERENCES forums (slug),
-    message   text               NOT NULL,
+    thread_id bigserial PRIMARY KEY NOT NULL,
+    title     text                  NOT NULL,
+    author    text                  NOT NULL REFERENCES users (nickname),
+    forum     text                  NOT NULL REFERENCES forums (slug),
+    message   text                  NOT NULL,
     votes     integer                  DEFAULT 0,
     slug      text,
     created   timestamp with time zone DEFAULT now()
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS threads
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    post_id   serial PRIMARY KEY NOT NULL UNIQUE,
+    post_id   bigserial PRIMARY KEY NOT NULL UNIQUE,
     parent    int                      DEFAULT 0,
     author    text               NOT NULL REFERENCES users (nickname),
     message   text               NOT NULL,

@@ -40,6 +40,9 @@ var (
 
 	// Post
 	ErrNoSuchRuleSortPosts = errors.New("no such rule for sort posts")
+
+	// Forum
+	ErrSuchForumNotFound = errors.New("such forum not fount")
 )
 
 type ErrHTTPClassifier struct {
@@ -80,8 +83,11 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	// Thread
 	res[ErrSuchThreadNotFound.Error()] = http.StatusNotFound
 
-	// Thread
+	// Post
 	res[ErrNoSuchRuleSortPosts.Error()] = http.StatusNotFound
+
+	// Forum
+	res[ErrSuchForumNotFound.Error()] = http.StatusNotFound
 
 	return ErrHTTPClassifier{
 		table: res,

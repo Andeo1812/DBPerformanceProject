@@ -75,8 +75,11 @@ func NewErrLogClassifier() ErrLogClassifier {
 	// Thread
 	res[ErrSuchThreadNotFound.Error()] = errLogLevel
 
-	// Thread
+	// Post
 	res[ErrNoSuchRuleSortPosts.Error()] = errLogLevel
+
+	// Forum
+	res[ErrSuchForumNotFound.Error()] = errLogLevel
 
 	return ErrLogClassifier{
 		table: res,
