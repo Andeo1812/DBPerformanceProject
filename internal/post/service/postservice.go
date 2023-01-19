@@ -19,7 +19,7 @@ type postService struct {
 	postRepo repository.PostRepository
 }
 
-func NewUserService(r repository.PostRepository) PostService {
+func NewPostService(r repository.PostRepository) PostService {
 	return &postService{
 		postRepo: r,
 	}
