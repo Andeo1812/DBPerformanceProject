@@ -13,6 +13,9 @@ import (
 )
 
 type ForumRepository interface {
+	// Support
+	CheckExistForum(ctx context.Context, forum *models.Forum) (bool, error)
+
 	CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
 	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
 	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
@@ -27,6 +30,32 @@ func NewForumPostgres(database *sqltools.Database) ForumRepository {
 	return &forumPostgres{
 		database,
 	}
+}
+
+func (f forumPostgres) CheckExistForum(ctx context.Context, forum *models.Forum) (bool, error) {
+	res := false
+
+	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, checkExistForumBySlug, forum.Slug)
+		if row.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				checkExistForumBySlug, forum.Slug, row.Err())
+		}
+
+		err := row.Scan(&res)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return res, nil
 }
 
 func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {

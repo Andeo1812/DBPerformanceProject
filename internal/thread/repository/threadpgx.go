@@ -17,6 +17,7 @@ import (
 type ThreadRepository interface {
 	// Support
 	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error)
+	CheckExistThread(ctx context.Context, thread *models.Thread) (bool, error)
 
 	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
 	CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error)
@@ -37,6 +38,32 @@ func NewThreadPostgres(database *sqltools.Database) ThreadRepository {
 	return &threadPostgres{
 		database,
 	}
+}
+
+func (t threadPostgres) CheckExistThread(ctx context.Context, thread *models.Thread) (bool, error) {
+	res := false
+
+	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowThread := conn.QueryRowContext(ctx, checkExistThreadByID, thread.ID)
+		if rowThread.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				checkExistThreadByID, thread.ID, rowThread.Err())
+		}
+
+		err := rowThread.Scan(&res)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return res, nil
 }
 
 func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
@@ -68,20 +95,17 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 	return res, nil
 }
+
 func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug)
-		if errors.Is(rowUser.Err(), sql.ErrTxDone) {
-			return pkg.ErrSuchThreadExist
+		rowThread := tx.QueryRowContext(ctx, createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug)
+		if rowThread.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %s, %s, %s, %s]. Special error: [%s]",
+				createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, rowThread.Err())
 		}
 
-		// else {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
-
-		err := rowUser.Scan(&thread.ID, &thread.Created)
+		err := rowThread.Scan(&thread.ID, &thread.Created)
 		if err != nil {
 			return err
 		}
@@ -108,7 +132,7 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 
 	values := make([]interface{}, countInserts*countAttributes)
 
-	insertTime := time.Now()
+	insertTimeString := time.Now().Format(time.RFC3339)
 
 	for i := 0; i < len(posts); i++ {
 		values[pos] = posts[i].Parent
@@ -117,11 +141,11 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 		pos++
 		values[pos] = posts[i].Message
 		pos++
-		values[pos] = posts[i].Forum
+		values[pos] = thread.Slug
 		pos++
-		values[pos] = posts[i].Thread
+		values[pos] = thread.ID
 		pos++
-		values[pos] = insertTime.Format(time.RFC3339)
+		values[pos] = insertTimeString
 		pos++
 	}
 
@@ -141,6 +165,8 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 			return nil, err
 		}
 
+		posts[i].Created = insertTimeString
+
 		i++
 	}
 
@@ -150,14 +176,15 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
-		if errors.As(rowThread.Err(), sql.ErrNoRows) {
-			return pkg.ErrSuchThreadNotFound
+		if rowThread.Err() != nil {
+			if errors.As(rowThread.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getThreadByID, thread.ID, rowThread.Err())
 		}
-		// if rowCounters.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
 
 		err := rowThread.Scan(
 			&thread.Title,
@@ -184,14 +211,11 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowThread := tx.QueryRowContext(ctx, updateThreadByID, thread.ID, thread.Title, thread.Message)
-		if errors.As(rowThread.Err(), sql.ErrNoRows) {
-			return pkg.ErrSuchThreadNotFound
+		if rowThread.Err() != nil {
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %s, %s]. Special error: [%s]",
+				getThreadByID, thread.ID, thread.Title, thread.Message, rowThread.Err())
 		}
-		// if rowCounters.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
 
 		err := rowThread.Scan(
 			&thread.Author,
@@ -252,7 +276,13 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
 		if err != nil {
-			return err
+			if errors.As(err, sql.ErrNoRows) {
+				return pkg.ErrSuchPostNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%+v]. Special error: [%s]",
+				query, values, err)
 		}
 		defer rows.Close()
 
@@ -324,7 +354,13 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, thread.ID)
 		if err != nil {
-			return err
+			if errors.As(err, sql.ErrNoRows) {
+				return pkg.ErrSuchPostNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%+v]. Special error: [%s]",
+				query, thread.ID, err)
 		}
 		defer rows.Close()
 
@@ -406,7 +442,13 @@ func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *mode
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
 		if err != nil {
-			return err
+			if errors.As(err, sql.ErrNoRows) {
+				return pkg.ErrSuchPostNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%+v]. Special error: [%s]",
+				query, values, err)
 		}
 		defer rows.Close()
 

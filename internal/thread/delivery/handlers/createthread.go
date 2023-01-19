@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/thread/delivery/models"
@@ -36,7 +37,16 @@ func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request
 
 	thread, err := h.threadService.CreateThread(r.Context(), request.GetThread())
 	if err != nil {
+		if errors.Is(errors.Cause(err), pkg.ErrSuchThreadExist) {
+			response := models.NewForumCreateThreadResponse(thread)
+
+			pkg.Response(r.Context(), w, http.StatusConflict, response)
+
+			return
+		}
+
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+
 		return
 	}
 

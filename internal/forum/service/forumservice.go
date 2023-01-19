@@ -57,9 +57,9 @@ func (f forumService) GetDetailsForum(ctx context.Context, forum *models.Forum) 
 }
 
 func (f forumService) GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error) {
-	_, err := f.forumRepo.GetDetailsForum(ctx, forum)
-	if err != nil {
-		return nil, errors.Wrap(err, "CreateForum")
+	exist, _ := f.forumRepo.CheckExistForum(ctx, forum)
+	if !exist {
+		return nil, errors.Wrap(pkg.ErrSuchForumNotFound, "GetThreads")
 	}
 
 	res, err := f.forumRepo.GetThreads(ctx, forum, params)
@@ -71,9 +71,9 @@ func (f forumService) GetThreads(ctx context.Context, forum *models.Forum, param
 }
 
 func (f forumService) GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error) {
-	_, err := f.forumRepo.GetDetailsForum(ctx, forum)
-	if err != nil {
-		return nil, errors.Wrap(err, "CreateForum")
+	exist, _ := f.forumRepo.CheckExistForum(ctx, forum)
+	if !exist {
+		return nil, errors.Wrap(pkg.ErrSuchForumNotFound, "GetThreads")
 	}
 
 	res, err := f.forumRepo.GetUsers(ctx, forum, params)

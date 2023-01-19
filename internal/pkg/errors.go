@@ -40,6 +40,9 @@ var (
 
 	// Post
 	ErrNoSuchRuleSortPosts = errors.New("no such rule for sort posts")
+	ErrSuchPostNotFound    = errors.New("such post not found")
+	ErrPostParentNotFound  = errors.New("such post parent not found")
+	ErrInvalidParent       = errors.New("parent not valid")
 
 	// Forum
 	ErrSuchForumNotFound = errors.New("such forum not fount")
@@ -86,10 +89,13 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 
 	// Post
 	res[ErrNoSuchRuleSortPosts.Error()] = http.StatusNotFound
+	res[ErrSuchPostNotFound.Error()] = http.StatusNotFound
+	res[ErrPostParentNotFound.Error()] = http.StatusNotFound
+	res[ErrPostParentNotFound.Error()] = http.StatusConflict
 
 	// Forum
 	res[ErrSuchForumNotFound.Error()] = http.StatusNotFound
-	res[ErrSuchForumExist.Error()] = http.StatusConflict
+	res[ErrInvalidParent.Error()] = http.StatusConflict
 
 	return ErrHTTPClassifier{
 		table: res,

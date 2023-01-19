@@ -27,25 +27,19 @@ func NewUserService(r repository.UserRepository) UserService {
 }
 
 func (u userService) CreateUser(ctx context.Context, user *models.User) ([]*models.User, error) {
-	var err error
-	res := make([]*models.User, 1)
-
-	_, err = u.userRepo.GetUserByNickname(ctx, user)
+	res, err := u.userRepo.GetUserByEmailOrNickname(ctx, user)
 	if err == nil {
-		res, _ = u.userRepo.GetUserByEmailOrNickname(ctx, user)
-		// if err != nil {
-		//	return nil, err
-		// }
-
 		return res, errors.Wrap(pkg.ErrSuchUserExist, "UpdateUser")
 	}
 
-	res[0], _ = u.userRepo.CreateUser(ctx, user)
+	user, _ = u.userRepo.CreateUser(ctx, user)
 	// if err != nil {
 	//	return nil, errors.Wrap(err, "CreateUser")
 	// }
 
-	return res, nil
+	resOne := []*models.User{user}
+
+	return resOne, nil
 }
 
 func (u userService) GetProfile(ctx context.Context, user *models.User) (*models.User, error) {

@@ -15,6 +15,9 @@ SELECT title, users_nickname, posts, threads
 FROM forums
 WHERE slug = $1`
 
+	checkExistForumBySlug = `
+SELECT EXISTS(SELECT 1 FROM forums WHERE slug = $1);`
+
 	getForumThreadsBegin = `
 SELECT t.thread_id,
        t.title,

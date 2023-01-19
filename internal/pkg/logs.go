@@ -77,6 +77,9 @@ func NewErrLogClassifier() ErrLogClassifier {
 
 	// Post
 	res[ErrNoSuchRuleSortPosts.Error()] = errLogLevel
+	res[ErrSuchPostNotFound.Error()] = errLogLevel
+	res[ErrPostParentNotFound.Error()] = errLogLevel
+	res[ErrInvalidParent.Error()] = errLogLevel
 
 	// Forum
 	res[ErrSuchForumNotFound.Error()] = errLogLevel

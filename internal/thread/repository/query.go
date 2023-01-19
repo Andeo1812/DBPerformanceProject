@@ -12,6 +12,9 @@ SELECT title,
 FROM threads
 WHERE thread_id = $1;`
 
+	checkExistThreadByID = `
+SELECT EXISTS(SELECT 1 FROM threads WHERE thread_id = $1);`
+
 	getThreadIDBySlug = `
 SELECT thread_id
 FROM threads

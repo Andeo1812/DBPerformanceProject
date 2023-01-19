@@ -42,4 +42,8 @@ const (
 	TypeSortFlat       = "flat"
 	TypeSortTree       = "tree"
 	TypeSortParentTree = "parent_tree"
+
+	PostDetailForum  = "forum"
+	PostDetailThread = "thread"
+	PostDetailAuthor = "user"
 )
