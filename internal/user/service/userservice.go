@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
-	"db-performance-project/internal/pkg"
 
 	"github.com/pkg/errors"
 
 	"db-performance-project/internal/models"
+	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/user/repository"
 )
 
@@ -30,17 +30,18 @@ func (u userService) CreateUser(ctx context.Context, user *models.User) ([]*mode
 	var err error
 	res := make([]*models.User, 1)
 
-	res[0], err = u.userRepo.CreateUser(ctx, user)
-	if errors.Is(errors.Cause(err), pkg.ErrSuchUserExist) {
+	_, err = u.userRepo.GetUserByNickname(ctx, user)
+	if err == nil {
 		res, _ = u.userRepo.GetUserByEmailOrNickname(ctx, user)
 		// if err != nil {
 		//	return nil, err
 		// }
 
-		return res, nil
+		return res, errors.Wrap(pkg.ErrSuchForumExist, "UpdateUser")
 	}
 
-	// else {
+	res[0], _ = u.userRepo.CreateUser(ctx, user)
+	// if err != nil {
 	//	return nil, errors.Wrap(err, "CreateUser")
 	// }
 
@@ -57,10 +58,15 @@ func (u userService) GetProfile(ctx context.Context, user *models.User) (*models
 }
 
 func (u userService) UpdateProfile(ctx context.Context, user *models.User) (*models.User, error) {
-	res, err := u.userRepo.UpdateUser(ctx, user)
-	if err != nil {
-		return nil, errors.Wrap(err, "UpdateUser")
+	_, err := u.userRepo.GetUserByNickname(ctx, user)
+	if err == nil {
+		return nil, errors.Wrap(pkg.ErrSuchUserExist, "UpdateUser")
 	}
 
-	return res, nil
+	resUpdate, err := u.userRepo.UpdateUser(ctx, user)
+	if err != nil {
+		return nil, errors.Wrap(pkg.ErrUpdateUserDataConflict, "UpdateUser")
+	}
+
+	return resUpdate, nil
 }

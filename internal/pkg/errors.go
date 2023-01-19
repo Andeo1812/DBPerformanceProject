@@ -43,6 +43,7 @@ var (
 
 	// Forum
 	ErrSuchForumNotFound = errors.New("such forum not fount")
+	ErrSuchForumExist    = errors.New("such thread exist")
 )
 
 type ErrHTTPClassifier struct {
@@ -88,6 +89,7 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 
 	// Forum
 	res[ErrSuchForumNotFound.Error()] = http.StatusNotFound
+	res[ErrSuchForumExist.Error()] = http.StatusConflict
 
 	return ErrHTTPClassifier{
 		table: res,

@@ -33,14 +33,10 @@ func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*m
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, createForum, forum.Title, forum.User, forum.Slug)
 		if row.Err() != nil {
-			return pkg.ErrUpdateUserDataConflict
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %s, %s]. Special error: [%s]",
+				createForum, forum.Title, forum.User, forum.Slug, row.Err())
 		}
-
-		// if row.err() != nil {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
 
 		return nil
 	})
@@ -51,15 +47,15 @@ func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*m
 func (f forumPostgres) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowCounters := conn.QueryRowContext(ctx, getForumBySlug, forum.Slug)
-		if errors.Is(rowCounters.Err(), sql.ErrNoRows) {
-			return pkg.ErrSuchForumNotFound
-		}
+		if rowCounters != nil {
+			if errors.Is(rowCounters.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchForumNotFound
+			}
 
-		// else {
-		//	return errors.WithMessagef(pkg.ErrWorkDatabase,
-		//		"Err: params input: query - [%s], values - [%s, %s, %s, %s]. Special error: [%s]",
-		//		createUser, user.Nickname, user.FullName, user.About, user.Email, rowUser.Err())
-		// }
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getForumBySlug, forum.Slug, rowCounters.Err())
+		}
 
 		err := rowCounters.Scan(
 			&forum.Title,
@@ -119,7 +115,13 @@ func (f forumPostgres) GetThreads(ctx context.Context, forum *models.Forum, para
 	err = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%+v]. Special error: [%s]",
+				query, values, err)
 		}
 		defer rows.Close()
 
@@ -177,7 +179,13 @@ func (f forumPostgres) GetUsers(ctx context.Context, forum *models.Forum, params
 	err = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, forum.Slug)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				query, forum.Slug, err)
 		}
 		defer rows.Close()
 

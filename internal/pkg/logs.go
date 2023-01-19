@@ -80,6 +80,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 
 	// Forum
 	res[ErrSuchForumNotFound.Error()] = errLogLevel
+	res[ErrSuchForumExist.Error()] = errLogLevel
 
 	return ErrLogClassifier{
 		table: res,

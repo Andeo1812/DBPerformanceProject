@@ -5,9 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 
+	repoForum "db-performance-project/internal/forum/repository"
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
-	"db-performance-project/internal/thread/repository"
+	repoThread "db-performance-project/internal/thread/repository"
+	repoUser "db-performance-project/internal/user/repository"
 )
 
 type ThreadService interface {
@@ -19,18 +21,39 @@ type ThreadService interface {
 }
 
 type threadService struct {
-	threadRepo repository.ThreadRepository
+	threadRepo repoThread.ThreadRepository
+	forumRepo  repoForum.ForumRepository
+	userRepo   repoUser.UserRepository
 }
 
-func NewThreadService(r repository.ThreadRepository) ThreadService {
+func NewThreadService(rt repoThread.ThreadRepository, rf repoForum.ForumRepository, ru repoUser.UserRepository) ThreadService {
 	return &threadService{
-		threadRepo: r,
+		threadRepo: rt,
+		forumRepo:  rf,
+		userRepo:   ru,
 	}
 }
 
 func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+	var err error
+
+	_, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
+	if err == nil {
+		return nil, errors.Wrap(pkg.ErrSuchThreadExist, "CreateThread")
+	}
+
 	res, err := t.threadRepo.CreateThread(ctx, thread)
 	if err != nil {
+		_, err = t.userRepo.GetUserByNickname(ctx, &models.User{Nickname: thread.Author})
+		if err != nil {
+			return nil, errors.Wrap(err, "CreateForum")
+		}
+
+		_, err = t.forumRepo.GetDetailsForum(ctx, &models.Forum{User: thread.Author})
+		if err != nil {
+			return nil, errors.Wrap(err, "CreateForum")
+		}
+
 		return nil, errors.Wrap(err, "CreateThread")
 	}
 

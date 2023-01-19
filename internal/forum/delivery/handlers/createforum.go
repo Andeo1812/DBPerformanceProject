@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 
 	"db-performance-project/internal/forum/delivery/models"
 	"db-performance-project/internal/forum/service"
@@ -36,7 +37,16 @@ func (h *forumCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	forum, err := h.forumService.CreateForum(r.Context(), request.GetForum())
 	if err != nil {
+		if errors.Is(errors.Cause(err), pkg.ErrSuchForumExist) {
+			response := models.NewForumCreateResponse(forum)
+
+			pkg.Response(r.Context(), w, http.StatusConflict, response)
+
+			return
+		}
+
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+
 		return
 	}
 
