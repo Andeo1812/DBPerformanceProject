@@ -36,7 +36,7 @@ func main() {
 	// Config
 	var configPath string
 
-	flag.StringVar(&configPath, "config-path", "cmd/api/configs/debug.toml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "./cmd/main/configs/debug.toml", "path to config file")
 
 	flag.Parse()
 
