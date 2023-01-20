@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/pkg/errors"
+
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/pkg/sqltools"
-	"github.com/pkg/errors"
 )
 
 type UserRepository interface {
