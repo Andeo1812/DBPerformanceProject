@@ -4,6 +4,10 @@ services:
   main_db:
     container_name: "main_db"
     image: postgres:latest
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=citext"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"

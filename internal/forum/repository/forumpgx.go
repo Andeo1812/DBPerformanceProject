@@ -199,12 +199,12 @@ func (f forumPostgres) GetUsers(ctx context.Context, forum *models.Forum, params
 
 	switch {
 	case params.Desc && params.Since != "":
-		query += fmt.Sprintf(" and u.nickname < '%s'", params.Since)
+		query += fmt.Sprintf(" AND LOWER(u.nickname) < LOWER('%s')", params.Since)
 	case params.Since != "":
-		query += fmt.Sprintf(" and u.nickname > '%s'", params.Since)
+		query += fmt.Sprintf(" AND LOWER(u.nickname) > LOWER('%s')", params.Since)
 	}
 
-	query += " ORDER BY u.nickname "
+	query += " ORDER BY LOWER(u.nickname) "
 
 	if params.Desc {
 		query += "DESC"

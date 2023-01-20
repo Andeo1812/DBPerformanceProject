@@ -2,20 +2,20 @@
 CREATE TABLE IF NOT EXISTS users
 (
     user_id  bigserial,
-    nickname text NOT NULL UNIQUE PRIMARY KEY,
-    fullname text NOT NULL,
+    nickname text COLLATE "ucs_basic" NOT NULL UNIQUE PRIMARY KEY,
+    fullname text                     NOT NULL,
     about    text,
-    email    text NOT NULL UNIQUE
+    email    text                     NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS forums
 (
-    forum_id      bigserial,
-    title         text NOT NULL,
+    forum_id       bigserial,
+    title          text NOT NULL,
     users_nickname text NOT NULL REFERENCES users (nickname),
-    slug          text NOT NULL PRIMARY KEY,
-    posts         int DEFAULT 0,
-    threads       int DEFAULT 0
+    slug           text NOT NULL PRIMARY KEY,
+    posts          int DEFAULT 0,
+    threads        int DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS threads
@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS posts
 (
     post_id   bigserial PRIMARY KEY NOT NULL UNIQUE,
     parent    int                      DEFAULT 0,
-    author    text               NOT NULL REFERENCES users (nickname),
-    message   text               NOT NULL,
+    author    text                  NOT NULL REFERENCES users (nickname),
+    message   text                  NOT NULL,
     is_edited bool                     DEFAULT FALSE,
     forum     text REFERENCES forums (slug),
     thread_id integer REFERENCES threads (thread_id),
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS posts
 -- M:N
 CREATE TABLE IF NOT EXISTS user_votes
 (
-    nickname  text NOT NULL REFERENCES users (nickname),
+    nickname  text  NOT NULL REFERENCES users (nickname),
     thread_id int  NOT NULL REFERENCES threads (thread_id),
     voice     int  NOT NULL
 );
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS user_votes
 CREATE TABLE IF NOT EXISTS user_forums
 (
 
-    nickname text NOT NULL REFERENCES users (nickname),
+    nickname text COLLATE "ucs_basic" NOT NULL REFERENCES users (nickname),
     forum    text NOT NULL REFERENCES forums (slug),
     fullname text,
     about    text,

@@ -70,44 +70,80 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels(out *j
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.ID))
 	}
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Title))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Forum != "" {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Forum))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
-	{
+	if in.Created != "" {
 		const prefix string = ",\"created\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Created))
 	}
-	{
+	if in.Votes != 0 {
 		const prefix string = ",\"votes\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Votes))
 	}
 	out.RawByte('}')
@@ -156,13 +192,45 @@ func easyjson5c9b8afcDecodeDbPerformanceProjectInternalPostDeliveryModels1(in *j
 		}
 		switch key {
 		case "post":
-			(out.Post).UnmarshalEasyJSON(in)
+			if in.IsNull() {
+				in.Skip()
+				out.Post = nil
+			} else {
+				if out.Post == nil {
+					out.Post = new(PostGetDetailsPostResponse)
+				}
+				(*out.Post).UnmarshalEasyJSON(in)
+			}
 		case "thread":
-			(out.Thread).UnmarshalEasyJSON(in)
+			if in.IsNull() {
+				in.Skip()
+				out.Thread = nil
+			} else {
+				if out.Thread == nil {
+					out.Thread = new(PostGetDetailsThreadResponse)
+				}
+				(*out.Thread).UnmarshalEasyJSON(in)
+			}
 		case "author":
-			(out.Author).UnmarshalEasyJSON(in)
+			if in.IsNull() {
+				in.Skip()
+				out.Author = nil
+			} else {
+				if out.Author == nil {
+					out.Author = new(PostGetDetailsAuthorResponse)
+				}
+				(*out.Author).UnmarshalEasyJSON(in)
+			}
 		case "forum":
-			(out.Forum).UnmarshalEasyJSON(in)
+			if in.IsNull() {
+				in.Skip()
+				out.Forum = nil
+			} else {
+				if out.Forum == nil {
+					out.Forum = new(PostGetDetailsForumResponse)
+				}
+				(*out.Forum).UnmarshalEasyJSON(in)
+			}
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -181,25 +249,41 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels1(out *
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Post != nil {
 		const prefix string = ",\"post\":"
+		first = false
 		out.RawString(prefix[1:])
-		(in.Post).MarshalEasyJSON(out)
+		(*in.Post).MarshalEasyJSON(out)
 	}
-	{
+	if in.Thread != nil {
 		const prefix string = ",\"thread\":"
-		out.RawString(prefix)
-		(in.Thread).MarshalEasyJSON(out)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		(*in.Thread).MarshalEasyJSON(out)
 	}
-	{
+	if in.Author != nil {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
-		(in.Author).MarshalEasyJSON(out)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		(*in.Author).MarshalEasyJSON(out)
 	}
-	{
+	if in.Forum != nil {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
-		(in.Forum).MarshalEasyJSON(out)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		(*in.Forum).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }
@@ -280,44 +364,80 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels2(out *
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.ID))
 	}
-	{
+	if in.Parent != 0 {
 		const prefix string = ",\"parent\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Parent))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
-	{
+	if in.IsEdited {
 		const prefix string = ",\"isEdited\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Bool(bool(in.IsEdited))
 	}
-	{
+	if in.Forum != "" {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Forum))
 	}
-	{
+	if in.Thread != 0 {
 		const prefix string = ",\"thread\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Thread))
 	}
-	{
+	if in.Created != "" {
 		const prefix string = ",\"created\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Created))
 	}
 	out.RawByte('}')
@@ -393,29 +513,50 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels3(out *
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
-	{
+	if in.User != "" {
 		const prefix string = ",\"user\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.User))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
-	{
+	if in.Posts != 0 {
 		const prefix string = ",\"posts\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Posts))
 	}
-	{
+	if in.Threads != 0 {
 		const prefix string = ",\"threads\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Threads))
 	}
 	out.RawByte('}')
@@ -489,24 +630,40 @@ func easyjson5c9b8afcEncodeDbPerformanceProjectInternalPostDeliveryModels4(out *
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Nickname != "" {
 		const prefix string = ",\"nickname\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Nickname))
 	}
-	{
+	if in.FullName != "" {
 		const prefix string = ",\"fullname\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.FullName))
 	}
-	{
+	if in.About != "" {
 		const prefix string = ",\"about\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.About))
 	}
-	{
+	if in.Email != "" {
 		const prefix string = ",\"email\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Email))
 	}
 	out.RawByte('}')

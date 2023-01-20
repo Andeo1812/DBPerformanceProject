@@ -100,7 +100,7 @@ func (p postPostgres) UpdatePost(ctx context.Context, post *models.Post) (*model
 
 		err := row.Scan(
 			&post.Parent,
-			&post.Author,
+			&post.Author.Nickname,
 			&post.Forum,
 			&post.Thread,
 			&postTime)
@@ -140,7 +140,7 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 
 		err := row.Scan(
 			&res.Post.Parent,
-			&res.Post.Author,
+			&res.Post.Author.Nickname,
 			&res.Post.Message,
 			&res.Post.IsEdited,
 			&res.Post.Forum,

@@ -11,7 +11,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -disallow_unknown_fields getdetailspost.go
+//go:generate easyjson -omit_empty -disallow_unknown_fields getdetailspost.go
 
 type PostGetDetailsRequest struct {
 	ID      int64
@@ -64,87 +64,95 @@ func (req *PostGetDetailsRequest) GetParams() *pkg.PostDetailsParams {
 
 //easyjson:json
 type PostGetDetailsAuthorResponse struct {
-	Nickname string `json:"nickname"`
-	FullName string `json:"fullname"`
-	About    string `json:"about"`
-	Email    string `json:"email"`
+	Nickname string `json:"nickname,omitempty"`
+	FullName string `json:"fullname,omitempty"`
+	About    string `json:"about,omitempty"`
+	Email    string `json:"email,omitempty"`
 }
 
 //easyjson:json
 type PostGetDetailsPostResponse struct {
-	ID       int64  `json:"id"`
-	Parent   int64  `json:"parent"`
-	Author   string `json:"author"`
-	Message  string `json:"message"`
-	IsEdited bool   `json:"isEdited"`
-	Forum    string `json:"forum"`
-	Thread   int64  `json:"thread"`
-	Created  string `json:"created"`
+	ID       int64  `json:"id,omitempty"`
+	Parent   int64  `json:"parent,omitempty"`
+	Author   string `json:"author,omitempty"`
+	Message  string `json:"message,omitempty"`
+	IsEdited bool   `json:"isEdited,omitempty"`
+	Forum    string `json:"forum,omitempty"`
+	Thread   int64  `json:"thread,omitempty"`
+	Created  string `json:"created,omitempty"`
 }
 
 //easyjson:json
 type PostGetDetailsThreadResponse struct {
-	ID      int64  `json:"id"`
-	Title   string `json:"title"`
-	Author  string `json:"author"`
-	Forum   string `json:"forum"`
-	Slug    string `json:"slug"`
-	Message string `json:"message"`
-	Created string `json:"created"`
-	Votes   int64  `json:"votes"`
+	ID      int64  `json:"id,omitempty"`
+	Title   string `json:"title,omitempty"`
+	Author  string `json:"author,omitempty"`
+	Forum   string `json:"forum,omitempty"`
+	Slug    string `json:"slug,omitempty"`
+	Message string `json:"message,omitempty"`
+	Created string `json:"created,omitempty"`
+	Votes   int64  `json:"votes,omitempty"`
 }
 
 //easyjson:json
 type PostGetDetailsForumResponse struct {
-	Title   string `json:"title"`
-	User    string `json:"user"`
-	Slug    string `json:"slug"`
-	Posts   int64  `json:"posts"`
-	Threads int64  `json:"threads"`
+	Title   string `json:"title,omitempty"`
+	User    string `json:"user,omitempty"`
+	Slug    string `json:"slug,omitempty"`
+	Posts   int64  `json:"posts,omitempty"`
+	Threads int64  `json:"threads,omitempty"`
 }
 
 //easyjson:json
 type PostGetDetailsResponse struct {
-	Post   PostGetDetailsPostResponse   `json:"post"`
-	Thread PostGetDetailsThreadResponse `json:"thread"`
-	Author PostGetDetailsAuthorResponse `json:"author"`
-	Forum  PostGetDetailsForumResponse  `json:"forum"`
+	Post   *PostGetDetailsPostResponse   `json:"post,omitempty"`
+	Thread *PostGetDetailsThreadResponse `json:"thread,omitempty"`
+	Author *PostGetDetailsAuthorResponse `json:"author,omitempty"`
+	Forum  *PostGetDetailsForumResponse  `json:"forum,omitempty"`
 }
 
-func NewPostDetailsResponse(postDetails *models.PostDetails) *PostGetDetailsResponse {
-	return &PostGetDetailsResponse{
-		Post: PostGetDetailsPostResponse{
-			ID:       postDetails.Post.ID,
-			Parent:   postDetails.Post.Parent,
-			Author:   postDetails.Post.Author.Nickname,
-			Forum:    postDetails.Post.Forum,
-			Thread:   postDetails.Post.Thread,
-			Message:  postDetails.Post.Message,
-			Created:  postDetails.Post.Created,
-			IsEdited: postDetails.Post.IsEdited,
-		},
-		Author: PostGetDetailsAuthorResponse{
-			Nickname: postDetails.Author.Nickname,
-			FullName: postDetails.Author.FullName,
-			About:    postDetails.Author.About,
-			Email:    postDetails.Author.Email,
-		},
-		Thread: PostGetDetailsThreadResponse{
-			ID:      postDetails.Thread.ID,
-			Title:   postDetails.Thread.Title,
-			Author:  postDetails.Thread.Author,
-			Forum:   postDetails.Thread.Forum,
-			Slug:    postDetails.Thread.Slug,
-			Message: postDetails.Thread.Message,
-			Created: postDetails.Thread.Created,
-			Votes:   postDetails.Thread.Votes,
-		},
-		Forum: PostGetDetailsForumResponse{
-			Title:   postDetails.Forum.Title,
-			User:    postDetails.Forum.User,
-			Slug:    postDetails.Forum.Slug,
-			Posts:   postDetails.Forum.Posts,
-			Threads: postDetails.Forum.Threads,
-		},
+func NewPostDetailsResponse(postDetails *models.PostDetails) PostGetDetailsResponse {
+	post := PostGetDetailsPostResponse{
+		ID:       postDetails.Post.ID,
+		Parent:   postDetails.Post.Parent,
+		Author:   postDetails.Post.Author.Nickname,
+		Forum:    postDetails.Post.Forum,
+		Thread:   postDetails.Post.Thread,
+		Message:  postDetails.Post.Message,
+		Created:  postDetails.Post.Created,
+		IsEdited: postDetails.Post.IsEdited,
+	}
+
+	author := PostGetDetailsAuthorResponse{
+		Nickname: postDetails.Author.Nickname,
+		FullName: postDetails.Author.FullName,
+		About:    postDetails.Author.About,
+		Email:    postDetails.Author.Email,
+	}
+
+	thread := PostGetDetailsThreadResponse{
+		ID:      postDetails.Thread.ID,
+		Title:   postDetails.Thread.Title,
+		Author:  postDetails.Thread.Author,
+		Forum:   postDetails.Thread.Forum,
+		Slug:    postDetails.Thread.Slug,
+		Message: postDetails.Thread.Message,
+		Created: postDetails.Thread.Created,
+		Votes:   postDetails.Thread.Votes,
+	}
+
+	forum := PostGetDetailsForumResponse{
+		Title:   postDetails.Forum.Title,
+		User:    postDetails.Forum.User,
+		Slug:    postDetails.Forum.Slug,
+		Posts:   postDetails.Forum.Posts,
+		Threads: postDetails.Forum.Threads,
+	}
+
+	return PostGetDetailsResponse{
+		Post:   &post,
+		Author: &author,
+		Thread: &thread,
+		Forum:  &forum,
 	}
 }
