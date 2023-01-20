@@ -24,7 +24,6 @@ import (
 	"flag"
 
 	"github.com/BurntSushi/toml"
-	"github.com/NYTimes/gziphandler"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
@@ -139,12 +138,12 @@ func main() {
 	voteHandler.Configure(router, mw)
 
 	// Set middleware
-	router.Use(
-		mw.SetDefaultLoggerMiddleware,
-		mw.UpdateDefaultLoggerMiddleware,
-		mw.SetSizeRequest,
-		gziphandler.GzipHandler,
-	)
+	// router.Use(
+	//	mw.SetDefaultLoggerMiddleware,
+	//	mw.UpdateDefaultLoggerMiddleware,
+	//	mw.SetSizeRequest,
+	//	gziphandler.GzipHandler,
+	// )
 
 	logrus.Info(config.ServerHTTPMain.ServiceName + " starting server at " + config.ServerHTTPMain.BindAddr + " on protocol " + config.ServerHTTPMain.Protocol)
 
