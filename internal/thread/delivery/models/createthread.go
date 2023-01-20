@@ -1,10 +1,10 @@
 package models
 
 import (
-	"github.com/gorilla/mux"
 	"io"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/mailru/easyjson"
 
 	"db-performance-project/internal/models"
