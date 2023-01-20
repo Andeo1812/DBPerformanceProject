@@ -11,5 +11,12 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# logs
+*.log
+report.html
+technopark-dbms-forum
+logs/
+.idea
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
