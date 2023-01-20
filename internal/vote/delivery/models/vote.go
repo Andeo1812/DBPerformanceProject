@@ -12,7 +12,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields vote.go
+//go:generate easyjson -all -disallow_unknown_fields -omit_empty vote.go
 
 type VoteRequest struct {
 	SlugOrID string

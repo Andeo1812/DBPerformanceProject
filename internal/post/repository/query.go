@@ -11,10 +11,13 @@ where post_id = $1;`
 
 	updatePost = `
 UPDATE posts
-SET message   = $2,
-    is_edited = true
+SET message   = COALESCE(NULLIF(TRIM($2), ''), message),
+    is_edited = CASE
+                    WHEN TRIM($2) = message THEN is_edited
+                    ELSE true
+        END
 WHERE post_id = $1
-RETURNING parent, author, forum, thread_id, created;`
+RETURNING parent, author, forum, thread_id, created, message, is_edited;`
 
 	getPost = `
 SELECT parent,
@@ -46,7 +49,7 @@ SELECT th.thread_id,
        th.slug,
        th.created
 from posts AS p
-         JOIN threads th on th.id = p.thread_id
+         JOIN threads th on th.thread_id = p.thread_id
 WHERE p.post_id = $1;`
 
 	getPostForum = `
@@ -56,6 +59,6 @@ SELECT f.title,
        f.posts,
        f.threads
 from posts AS p
-         JOIN forum f on f.slug = p.forum
+         JOIN forums f on f.slug = p.forum
 WHERE p.post_id = $1;`
 )

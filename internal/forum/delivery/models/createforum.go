@@ -9,7 +9,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields createforum.go
+//go:generate easyjson -all -disallow_unknown_fields -omit_empty createforum.go
 
 type ForumCreateRequest struct {
 	Title string `json:"title"`

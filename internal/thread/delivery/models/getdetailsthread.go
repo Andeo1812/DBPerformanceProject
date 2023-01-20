@@ -9,7 +9,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields getdetailsthread.go
+//go:generate easyjson -disallow_unknown_fields -omit_empty getdetailsthread.go
 
 type ThreadGetDetailsRequest struct {
 	SlugOrID string

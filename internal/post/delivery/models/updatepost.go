@@ -11,7 +11,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields updatepost.go
+//go:generate easyjson -all -disallow_unknown_fields -omit_empty updatepost.go
 
 type PostUpdateRequest struct {
 	ID      int64

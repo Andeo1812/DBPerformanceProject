@@ -11,7 +11,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields updatedetailsthread.go
+//go:generate easyjson -all -disallow_unknown_fields -omit_empty updatedetailsthread.go
 
 type ThreadUpdateDetailsRequest struct {
 	SlugOrID string

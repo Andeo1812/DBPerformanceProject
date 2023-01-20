@@ -8,7 +8,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields getdetailsforum.go
+//go:generate easyjson -disallow_unknown_fields -omit_empty getdetailsforum.go
 
 type ForumGetDetailsRequest struct {
 	Slug string

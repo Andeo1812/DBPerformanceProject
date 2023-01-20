@@ -94,6 +94,8 @@ func (p postPostgres) GetParentPost(ctx context.Context, post *models.Post) (*mo
 }
 
 func (p postPostgres) UpdatePost(ctx context.Context, post *models.Post) (*models.Post, error) {
+	res := &models.Post{}
+
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, p.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, updatePost, post.ID, post.Message)
 		if row.Err() != nil {
@@ -105,18 +107,20 @@ func (p postPostgres) UpdatePost(ctx context.Context, post *models.Post) (*model
 		postTime := time.Time{}
 
 		err := row.Scan(
-			&post.Parent,
-			&post.Author.Nickname,
-			&post.Forum,
-			&post.Thread,
-			&postTime)
+			&res.Parent,
+			&res.Author.Nickname,
+			&res.Forum,
+			&res.Thread,
+			&postTime,
+			&res.Message,
+			&res.IsEdited)
 		if err != nil {
 			return err
 		}
 
-		post.IsEdited = true
+		res.Created = postTime.Format(time.RFC3339)
 
-		post.Created = postTime.Format(time.RFC3339)
+		res.ID = post.ID
 
 		return nil
 	})
@@ -124,7 +128,7 @@ func (p postPostgres) UpdatePost(ctx context.Context, post *models.Post) (*model
 		return nil, errMain
 	}
 
-	return post, nil
+	return res, nil
 }
 
 func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, params *pkg.PostDetailsParams) (*models.PostDetails, error) {
@@ -153,7 +157,13 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 			&res.Post.Thread,
 			&res.Post.Created)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchPostNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getPost, post.ID, err)
 		}
 
 		return nil
@@ -185,7 +195,13 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 					&res.Forum.Posts,
 					&res.Forum.Threads)
 				if err != nil {
-					return err
+					if errors.Is(err, sql.ErrNoRows) {
+						return pkg.ErrSuchPostNotFound
+					}
+
+					return errors.WithMessagef(pkg.ErrWorkDatabase,
+						"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+						getPostForum, post.ID, err)
 				}
 
 				return nil
@@ -210,7 +226,13 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 					&res.Author.About,
 					&res.Author.Email)
 				if err != nil {
-					return err
+					if errors.Is(err, sql.ErrNoRows) {
+						return pkg.ErrSuchPostNotFound
+					}
+
+					return errors.WithMessagef(pkg.ErrWorkDatabase,
+						"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+						getPostAuthor, post.ID, err)
 				}
 
 				return nil
@@ -238,7 +260,13 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 					&res.Thread.Slug,
 					&res.Thread.Created)
 				if err != nil {
-					return err
+					if errors.Is(err, sql.ErrNoRows) {
+						return pkg.ErrSuchPostNotFound
+					}
+
+					return errors.WithMessagef(pkg.ErrWorkDatabase,
+						"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+						getPostThread, post.ID, err)
 				}
 
 				return nil

@@ -62,24 +62,40 @@ func easyjson412b83ebEncodeDbPerformanceProjectInternalUserDeliveryModels(out *j
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Nickname != "" {
 		const prefix string = ",\"nickname\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Nickname))
 	}
-	{
+	if in.FullName != "" {
 		const prefix string = ",\"fullname\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.FullName))
 	}
-	{
+	if in.About != "" {
 		const prefix string = ",\"about\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.About))
 	}
-	{
+	if in.Email != "" {
 		const prefix string = ",\"email\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Email))
 	}
 	out.RawByte('}')

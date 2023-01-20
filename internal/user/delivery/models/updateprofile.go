@@ -10,7 +10,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields updateprofile.go
+//go:generate easyjson -all -disallow_unknown_fields -omit_empty updateprofile.go
 
 type ProfileUpdateRequest struct {
 	Nickname string

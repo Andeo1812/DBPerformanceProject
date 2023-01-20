@@ -202,44 +202,80 @@ func easyjson16fc04efEncodeDbPerformanceProjectInternalThreadDeliveryModels2(out
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.ID))
 	}
-	{
+	if in.Parent != 0 {
 		const prefix string = ",\"parent\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Parent))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
-	{
+	if in.IsEdited {
 		const prefix string = ",\"isEdited\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Bool(bool(in.IsEdited))
 	}
-	{
+	if in.Forum != "" {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Forum))
 	}
-	{
+	if in.Thread != 0 {
 		const prefix string = ",\"thread\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Thread))
 	}
-	{
+	if in.Created != "" {
 		const prefix string = ",\"created\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Created))
 	}
 	out.RawByte('}')
@@ -311,19 +347,30 @@ func easyjson16fc04efEncodeDbPerformanceProjectInternalThreadDeliveryModels3(out
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Parent != 0 {
 		const prefix string = ",\"parent\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.Parent))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
 	out.RawByte('}')

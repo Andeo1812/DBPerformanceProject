@@ -31,6 +31,15 @@ func (p postService) UpdatePost(ctx context.Context, post *models.Post) (*models
 		return nil, errors.Wrap(pkg.ErrSuchPostNotFound, "UpdatePost")
 	}
 
+	if post.Message == "" {
+		res, err := p.postRepo.GetDetailsPost(ctx, post, &pkg.PostDetailsParams{})
+		if err != nil {
+			return nil, errors.Wrap(err, "GetDetailsPost")
+		}
+
+		return &res.Post, nil
+	}
+
 	res, err := p.postRepo.UpdatePost(ctx, post)
 	if err != nil {
 		return nil, errors.Wrap(err, "UpdatePost")

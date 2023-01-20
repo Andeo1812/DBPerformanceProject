@@ -10,7 +10,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields createthread.go
+//go:generate easyjson -disallow_unknown_fields -omit_empty createthread.go
 
 //easyjson:json
 type ForumCreateThreadRequest struct {

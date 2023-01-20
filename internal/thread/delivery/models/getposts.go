@@ -10,7 +10,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -disallow_unknown_fields getposts.go
+//go:generate easyjson -disallow_unknown_fields -omit_empty getposts.go
 
 type ThreadGetPostsRequest struct {
 	SlugOrID string

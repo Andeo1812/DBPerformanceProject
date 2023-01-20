@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-//go:generate easyjson  -disallow_unknown_fields wrapper.go
+//go:generate easyjson  -disallow_unknown_fields -omit_empty wrapper.go
 
 //easyjson:json
 type ErrResponse struct {

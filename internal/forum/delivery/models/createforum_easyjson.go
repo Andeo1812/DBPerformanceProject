@@ -64,29 +64,50 @@ func easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels(out *
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
-	{
+	if in.User != "" {
 		const prefix string = ",\"user\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.User))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
 	if in.Posts != 0 {
 		const prefix string = ",\"posts\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Posts))
 	}
 	if in.Threads != 0 {
 		const prefix string = ",\"threads\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Threads))
 	}
 	out.RawByte('}')
@@ -158,19 +179,30 @@ func easyjson369c8e19EncodeDbPerformanceProjectInternalForumDeliveryModels1(out 
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
-	{
+	if in.User != "" {
 		const prefix string = ",\"user\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.User))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
 	out.RawByte('}')

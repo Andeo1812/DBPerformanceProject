@@ -62,24 +62,40 @@ func easyjsonB703cb64EncodeDbPerformanceProjectInternalServiceDeliveryModels(out
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.User != 0 {
 		const prefix string = ",\"user\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.User))
 	}
-	{
+	if in.Forum != 0 {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Forum))
 	}
-	{
+	if in.Thread != 0 {
 		const prefix string = ",\"thread\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Thread))
 	}
-	{
+	if in.Post != 0 {
 		const prefix string = ",\"post\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Post))
 	}
 	out.RawByte('}')

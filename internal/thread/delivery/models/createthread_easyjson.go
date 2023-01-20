@@ -70,44 +70,80 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(out 
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Int64(int64(in.ID))
 	}
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Title))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Forum != "" {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Forum))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
-	{
+	if in.Created != "" {
 		const prefix string = ",\"created\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Created))
 	}
-	{
+	if in.Votes != 0 {
 		const prefix string = ",\"votes\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.Votes))
 	}
 	out.RawByte('}')
@@ -185,34 +221,60 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Title != "" {
 		const prefix string = ",\"title\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
-	{
+	if in.Author != "" {
 		const prefix string = ",\"author\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Author))
 	}
-	{
+	if in.Message != "" {
 		const prefix string = ",\"message\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Message))
 	}
-	{
+	if in.Created != "" {
 		const prefix string = ",\"created\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Created))
 	}
-	{
+	if in.Forum != "" {
 		const prefix string = ",\"forum\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Forum))
 	}
-	{
+	if in.Slug != "" {
 		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Slug))
 	}
 	out.RawByte('}')

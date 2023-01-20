@@ -10,7 +10,7 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -disallow_unknown_fields createuser.go
+//go:generate easyjson -disallow_unknown_fields -omit_empty createuser.go
 
 //easyjson:json
 type UserCreateRequest struct {
