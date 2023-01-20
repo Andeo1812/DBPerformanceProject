@@ -72,9 +72,15 @@ func (p postPostgres) GetParentPost(ctx context.Context, post *models.Post) (*mo
 				getPostParent, post.Parent, row.Err())
 		}
 
-		err := row.Scan(&res.Parent)
+		err := row.Scan(&res.Thread)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrPostParentNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getPostParent, post.Parent, err)
 		}
 
 		return nil

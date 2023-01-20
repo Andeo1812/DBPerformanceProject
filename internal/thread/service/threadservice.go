@@ -100,18 +100,19 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 		posts[idx].Author.Nickname = resUser.Nickname
 	}
 
-	// if posts[0].Parent != 0 {
-	//	var postWithParent *models.Post
-	//
-	//	postWithParent, err = t.postRepo.GetParentPost(ctx, posts[0])
-	//	if err != nil {
-	//		return []models.Post{}, errors.Wrap(err, "CreatePosts")
-	//	}
-	//
-	//	if postWithParent.Parent != thread.ID {
-	//		return nil, errors.Wrap(pkg.ErrInvalidParent, "CreatePosts")
-	//	}
-	// }
+	// CheckParent
+	if posts[0].Parent != 0 {
+		var postWithParent *models.Post
+
+		postWithParent, err = t.postRepo.GetParentPost(ctx, posts[0])
+		if err != nil {
+			return []models.Post{}, errors.Wrap(err, "CreatePosts")
+		}
+
+		if postWithParent.Thread != resThread.ID {
+			return nil, errors.Wrap(pkg.ErrInvalidParent, "CreatePosts")
+		}
+	}
 
 	res, err := t.threadRepo.CreatePostsByID(ctx, &resThread, posts)
 	if err != nil {
