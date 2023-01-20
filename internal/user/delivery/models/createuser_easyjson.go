@@ -17,7 +17,73 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(in *jlexer.Lexer, out *UserCreateResponse) {
+func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(in *jlexer.Lexer, out *UsersList) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		in.Skip()
+		*out = nil
+	} else {
+		in.Delim('[')
+		if *out == nil {
+			if !in.IsDelim(']') {
+				*out = make(UsersList, 0, 1)
+			} else {
+				*out = UsersList{}
+			}
+		} else {
+			*out = (*out)[:0]
+		}
+		for !in.IsDelim(']') {
+			var v1 UserCreateResponse
+			(v1).UnmarshalEasyJSON(in)
+			*out = append(*out, v1)
+			in.WantComma()
+		}
+		in.Delim(']')
+	}
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(out *jwriter.Writer, in UsersList) {
+	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+		out.RawString("null")
+	} else {
+		out.RawByte('[')
+		for v2, v3 := range in {
+			if v2 > 0 {
+				out.RawByte(',')
+			}
+			(v3).MarshalEasyJSON(out)
+		}
+		out.RawByte(']')
+	}
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v UsersList) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v UsersList) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *UsersList) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *UsersList) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(l, v)
+}
+func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(in *jlexer.Lexer, out *UserCreateResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -58,7 +124,7 @@ func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(in *jl
 		in.Consumed()
 	}
 }
-func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(out *jwriter.Writer, in UserCreateResponse) {
+func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(out *jwriter.Writer, in UserCreateResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -88,27 +154,27 @@ func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(out *j
 // MarshalJSON supports json.Marshaler interface
 func (v UserCreateResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(&w, v)
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v UserCreateResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels(w, v)
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *UserCreateResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(&r, v)
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *UserCreateResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels(l, v)
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(l, v)
 }
-func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(in *jlexer.Lexer, out *UserCreateRequest) {
+func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels2(in *jlexer.Lexer, out *UserCreateRequest) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -149,7 +215,7 @@ func easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(in *j
 		in.Consumed()
 	}
 }
-func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(out *jwriter.Writer, in UserCreateRequest) {
+func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels2(out *jwriter.Writer, in UserCreateRequest) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -179,23 +245,23 @@ func easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(out *
 // MarshalJSON supports json.Marshaler interface
 func (v UserCreateRequest) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(&w, v)
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v UserCreateRequest) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels1(w, v)
+	easyjson30bd9105EncodeDbPerformanceProjectInternalUserDeliveryModels2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *UserCreateRequest) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(&r, v)
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *UserCreateRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels1(l, v)
+	easyjson30bd9105DecodeDbPerformanceProjectInternalUserDeliveryModels2(l, v)
 }

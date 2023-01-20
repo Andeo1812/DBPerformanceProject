@@ -21,8 +21,8 @@ FROM threads
 WHERE slug = $1;`
 
 	createForumThread = `
-INSERT INTO threads(title, author, forum, message, slug)
-VALUES ($1, $2, $3, $4, $5) RETURNING thread_id, created;`
+INSERT INTO threads(title, author, forum, message, slug, created)
+VALUES ($1, $2, $3, $4, $5, $6) RETURNING thread_id;`
 
 	updateThreadByID = `
 UPDATE threads

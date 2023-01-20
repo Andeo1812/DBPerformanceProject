@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS forums
 (
     forum_id      bigserial,
     title         text NOT NULL,
-    user_nickname text NOT NULL REFERENCES users (nickname),
+    users_nickname text NOT NULL REFERENCES users (nickname),
     slug          text NOT NULL PRIMARY KEY,
     posts         int DEFAULT 0,
     threads       int DEFAULT 0

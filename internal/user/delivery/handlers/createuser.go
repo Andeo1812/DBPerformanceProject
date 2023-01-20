@@ -28,12 +28,11 @@ func (h *userCreateHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 	request := models.NewUserCreateRequest()
 
-	request.Bind(r)
-	// err := request.Bind(r)
-	// if err != nil {
-	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
-	//	return
-	// }
+	err := request.Bind(r)
+	if err != nil {
+		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+		return
+	}
 
 	users, err := h.userService.CreateUser(r.Context(), request.GetUser())
 	if err != nil {
@@ -50,7 +49,7 @@ func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := models.NewUserCreateResponse(users[0])
+	response := models.NewUserCreateResponse(&users[0])
 
 	pkg.Response(r.Context(), w, http.StatusCreated, response)
 }

@@ -66,8 +66,8 @@ type ForumCreateResponse struct {
 	Title   string `json:"title"`
 	User    string `json:"user"`
 	Slug    string `json:"slug"`
-	Posts   int64  `json:"posts"`
-	Threads int64  `json:"threads"`
+	Posts   int64  `json:"posts,omitempty"`
+	Threads int64  `json:"threads,omitempty"`
 }
 
 func NewForumCreateResponse(forum *models.Forum) *ForumCreateResponse {

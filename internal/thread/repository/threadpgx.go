@@ -98,16 +98,18 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowThread := tx.QueryRowContext(ctx, createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug)
+		rowThread := tx.QueryRowContext(ctx, createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, thread.Created)
 		if rowThread.Err() != nil {
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%s, %s, %s, %s, %s]. Special error: [%s]",
-				createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, rowThread.Err())
+				"Err: params input: query - [%s], values - [%s, %s, %s, %s, %s, %s]. Special error: [%s]",
+				createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, thread.Created, rowThread.Err())
 		}
 
-		err := rowThread.Scan(&thread.ID, &thread.Created)
+		err := rowThread.Scan(&thread.ID)
 		if err != nil {
-			return err
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s, %s, %s, %s, %s, %s]. Special error: [%s]",
+				createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, thread.Created, err)
 		}
 
 		return nil

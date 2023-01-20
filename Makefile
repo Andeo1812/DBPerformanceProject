@@ -19,10 +19,23 @@ generate:
 build-docker:
 	docker build -t forum-tp .
 
+run-tests:
+	./technopark-dbms-forum func -u http://localhost:5000/ -r report.html
+
 run:
 	docker run  --memory 2G --log-opt max-size=5M --log-opt max-file=3 -p 80:80 -p 5432:5432 --name forum-tp -t forum-tp
 
 run-build: build-docker run
+
+restart-app:
+	make build
+	./main.out
+
+restart-global:
+	mkdir logs
+	docker stop forum-tp
+	make rm-docker
+	make run-build
 
 # Utils
 rm-docker:

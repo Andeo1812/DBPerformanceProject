@@ -40,7 +40,7 @@ func (h *userUpdateProfileHandler) Action(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	response := models.NewProfileUpdateResponse(user)
+	response := models.NewProfileUpdateResponse(&user)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

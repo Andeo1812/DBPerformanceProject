@@ -10,8 +10,9 @@ import (
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields createuser.go
+//go:generate easyjson -disallow_unknown_fields createuser.go
 
+//easyjson:json
 type UserCreateRequest struct {
 	Nickname string
 	FullName string `json:"fullname"`
@@ -69,6 +70,7 @@ func (req *UserCreateRequest) GetUser() *models.User {
 	}
 }
 
+//easyjson:json
 type UserCreateResponse struct {
 	Nickname string `json:"nickname"`
 	FullName string `json:"fullname"`
@@ -76,6 +78,7 @@ type UserCreateResponse struct {
 	Email    string `json:"email"`
 }
 
+//easyjson:json
 type UsersList []UserCreateResponse
 
 func NewUserCreateResponse(user *models.User) *UserCreateResponse {
@@ -87,14 +90,16 @@ func NewUserCreateResponse(user *models.User) *UserCreateResponse {
 	}
 }
 
-func NewUsersCreateResponse(users []*models.User) UsersList {
+func NewUsersCreateResponse(users []models.User) UsersList {
 	res := make([]UserCreateResponse, len(users))
 
 	for idx, value := range users {
-		res[idx].Nickname = value.Nickname
-		res[idx].FullName = value.FullName
-		res[idx].About = value.About
-		res[idx].Email = value.Email
+		res[idx] = UserCreateResponse{
+			Nickname: value.Nickname,
+			FullName: value.FullName,
+			About:    value.About,
+			Email:    value.Email,
+		}
 	}
 
 	return res

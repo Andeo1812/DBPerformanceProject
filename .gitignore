@@ -13,6 +13,9 @@
 
 # logs
 *.log
+report.html
+technopark-dbms-forum
+logs/
 
 # Dependency directories (remove the comment below to include it)
 # vendor/

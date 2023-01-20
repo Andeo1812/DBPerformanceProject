@@ -79,12 +79,12 @@ func easyjsonE96e2c6bEncodeDbPerformanceProjectInternalForumDeliveryModels(out *
 		out.RawString(prefix)
 		out.String(string(in.Slug))
 	}
-	{
+	if in.Posts != 0 {
 		const prefix string = ",\"posts\":"
 		out.RawString(prefix)
 		out.Int64(int64(in.Posts))
 	}
-	{
+	if in.Threads != 0 {
 		const prefix string = ",\"threads\":"
 		out.RawString(prefix)
 		out.Int64(int64(in.Threads))

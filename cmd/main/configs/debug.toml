@@ -1,13 +1,13 @@
 [server_http_main]
 service_name = "main"
-bind_addr_http = ":80"
+bind_addr_http = ":5000"
 read_timeout = 10 # seconds
 write_timeout = 10 # seconds
 protocol = "http"
 
 [logger]
 log_level = "debug"
-log_path = "logs/api/prod/"
+log_path = "logs/main/bebug/"
 
 [database_params]
 max_open_cons = 100

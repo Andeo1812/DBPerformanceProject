@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
 
 	repoForum "db-performance-project/internal/forum/repository"
@@ -40,9 +39,11 @@ func NewThreadService(rt repoThread.ThreadRepository, rf repoForum.ForumReposito
 func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
 	threadExist, err := t.threadRepo.GetThreadIDBySlug(ctx, thread)
 	if err == nil {
-		_, err = t.forumRepo.GetDetailsForum(ctx, &models.Forum{User: thread.Author})
+		var res *models.Thread
+
+		res, err = t.threadRepo.GetDetailsThreadByID(ctx, threadExist)
 		if err != nil {
-			return threadExist, errors.Wrap(pkg.ErrSuchThreadExist, "CreateForum")
+			return res, errors.Wrap(pkg.ErrSuchThreadExist, "CreateForum")
 		}
 
 		return nil, errors.Wrap(err, "CreateThread")

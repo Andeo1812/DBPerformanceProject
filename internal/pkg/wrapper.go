@@ -12,7 +12,7 @@ import (
 
 //easyjson:json
 type ErrResponse struct {
-	ErrMassage string `json:"message,omitempty" example:"some message"`
+	ErrMassage string `json:"message,omitempty"`
 }
 
 // DefaultHandlerHTTPError is error handler that detects the type of error and gives an error response.

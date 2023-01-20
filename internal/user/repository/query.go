@@ -1,6 +1,9 @@
 package repository
 
 const (
+	checkFreeEmail = `
+SELECT EXISTS(SELECT 1 FROM users WHERE LOWER(email) = LOWER($1));`
+
 	createUser = `
 INSERT INTO users(nickname, fullname, about, email)
 VALUES ($1, $2, $3, $4);`
@@ -8,19 +11,18 @@ VALUES ($1, $2, $3, $4);`
 	getUserByEmailOrNickname = `
 SELECT nickname, fullname, about, email
 FROM users
-WHERE nickname = $1
-   OR email = $2;`
+WHERE LOWER(nickname) = LOWER($1)
+   OR LOWER(email) = LOWER($2);`
 
 	getUserByNickname = `
-SELECT fullname, about, email
+SELECT fullname, about, email, nickname
 FROM users
-where nickname = $1;`
+WHERE LOWER(nickname) = LOWER($1);`
 
 	updateUser = `
 UPDATE users
 SET fullname = COALESCE(NULLIF(TRIM($1), ''), fullname),
     about    = COALESCE(NULLIF(TRIM($2), ''), about),
     email    = COALESCE(NULLIF(TRIM($3), ''), email)
-where nickname = $4
-RETURNING fullname, about, email;`
+WHERE LOWER(nickname) = LOWER($4) RETURNING fullname, about, email, nickname;`
 )

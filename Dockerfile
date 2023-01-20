@@ -9,8 +9,6 @@ FROM ubuntu:20.04
 COPY . .
 
 # Настройка даты
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get -y update && apt-get install -y tzdata
 ENV TZ=Russia/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

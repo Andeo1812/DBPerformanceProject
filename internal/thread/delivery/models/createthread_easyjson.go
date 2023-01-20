@@ -44,8 +44,6 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *
 			out.Author = string(in.String())
 		case "forum":
 			out.Forum = string(in.String())
-		case "slug":
-			out.Slug = string(in.String())
 		case "message":
 			out.Message = string(in.String())
 		case "created":
@@ -89,11 +87,6 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(out 
 		const prefix string = ",\"forum\":"
 		out.RawString(prefix)
 		out.String(string(in.Forum))
-	}
-	{
-		const prefix string = ",\"slug\":"
-		out.RawString(prefix)
-		out.String(string(in.Slug))
 	}
 	{
 		const prefix string = ",\"message\":"
@@ -155,8 +148,6 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in 
 			continue
 		}
 		switch key {
-		case "Slug":
-			out.Slug = string(in.String())
 		case "title":
 			out.Title = string(in.String())
 		case "author":
@@ -165,6 +156,10 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in 
 			out.Message = string(in.String())
 		case "created":
 			out.Created = string(in.String())
+		case "forum":
+			out.Forum = string(in.String())
+		case "Slug":
+			out.Slug = string(in.String())
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -184,13 +179,8 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out
 	first := true
 	_ = first
 	{
-		const prefix string = ",\"Slug\":"
-		out.RawString(prefix[1:])
-		out.String(string(in.Slug))
-	}
-	{
 		const prefix string = ",\"title\":"
-		out.RawString(prefix)
+		out.RawString(prefix[1:])
 		out.String(string(in.Title))
 	}
 	{
@@ -207,6 +197,16 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out
 		const prefix string = ",\"created\":"
 		out.RawString(prefix)
 		out.String(string(in.Created))
+	}
+	{
+		const prefix string = ",\"forum\":"
+		out.RawString(prefix)
+		out.String(string(in.Forum))
+	}
+	{
+		const prefix string = ",\"Slug\":"
+		out.RawString(prefix)
+		out.String(string(in.Slug))
 	}
 	out.RawByte('}')
 }

@@ -1,23 +1,25 @@
 package models
 
 import (
+	"github.com/gorilla/mux"
 	"io"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/mailru/easyjson"
 
 	"db-performance-project/internal/models"
 )
 
-//go:generate easyjson -all -disallow_unknown_fields createthread.go
+//go:generate easyjson -disallow_unknown_fields createthread.go
 
+//easyjson:json
 type ForumCreateThreadRequest struct {
-	Slug    string
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Message string `json:"message"`
 	Created string `json:"created"`
+	Forum   string `json:"forum"`
+	Slug    string
 }
 
 func NewForumCreateThreadRequest() *ForumCreateThreadRequest {
@@ -32,10 +34,6 @@ func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 	// if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
 	//	return pkg.ErrUnsupportedMediaType
 	// }
-
-	vars := mux.Vars(r)
-
-	req.Slug = vars["slug"]
 
 	body, _ := io.ReadAll(r.Body)
 	// if err != nil {
@@ -58,6 +56,10 @@ func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 	//	return pkg.ErrJSONUnexpectedEnd
 	// }
 
+	vars := mux.Vars(r)
+
+	req.Slug = vars["slug"]
+
 	return nil
 }
 
@@ -68,29 +70,29 @@ func (req *ForumCreateThreadRequest) GetThread() *models.Thread {
 		Author:  req.Author,
 		Message: req.Message,
 		Created: req.Created,
+		Forum:   req.Forum,
 	}
 }
 
+//easyjson:json
 type ForumCreateThreadResponse struct {
 	ID      int64  `json:"id"`
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
-	Slug    string `json:"slug"`
 	Message string `json:"message"`
 	Created string `json:"created"`
 	Votes   int64  `json:"votes"`
 }
 
-func NewForumCreateThreadResponse(forum *models.Thread) *ForumCreateThreadResponse {
+func NewForumCreateThreadResponse(thread *models.Thread) *ForumCreateThreadResponse {
 	return &ForumCreateThreadResponse{
-		ID:      forum.ID,
-		Title:   forum.Title,
-		Author:  forum.Author,
-		Forum:   forum.Forum,
-		Slug:    forum.Slug,
-		Message: forum.Message,
-		Created: forum.Created,
-		Votes:   forum.Votes,
+		ID:      thread.ID,
+		Title:   thread.Title,
+		Author:  thread.Author,
+		Forum:   thread.Forum,
+		Message: thread.Message,
+		Created: thread.Created,
+		Votes:   thread.Votes,
 	}
 }

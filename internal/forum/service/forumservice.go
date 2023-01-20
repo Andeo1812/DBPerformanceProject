@@ -36,6 +36,13 @@ func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*mo
 		return res, errors.Wrap(pkg.ErrSuchForumExist, "CreateForum")
 	}
 
+	user, err := f.userRepo.GetUserByNickname(ctx, &models.User{Nickname: forum.User})
+	if err != nil {
+		return res, errors.Wrap(err, "CreateForum")
+	}
+
+	forum.User = user.Nickname
+
 	res, err = f.forumRepo.CreateForum(ctx, forum)
 	if err != nil {
 		_, err = f.userRepo.GetUserByNickname(ctx, &models.User{Nickname: forum.User})

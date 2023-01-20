@@ -75,24 +75,31 @@ func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*m
 
 func (f forumPostgres) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowCounters := conn.QueryRowContext(ctx, getForumBySlug, forum.Slug)
-		if rowCounters != nil {
-			if errors.Is(rowCounters.Err(), sql.ErrNoRows) {
+		row := conn.QueryRowContext(ctx, getForumBySlug, forum.Slug)
+		if row.Err() != nil {
+			if errors.Is(row.Err(), sql.ErrNoRows) {
 				return pkg.ErrSuchForumNotFound
 			}
 
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
-				getForumBySlug, forum.Slug, rowCounters.Err())
+				getForumBySlug, forum.Slug, row.Err())
 		}
 
-		err := rowCounters.Scan(
+		err := row.Scan(
 			&forum.Title,
 			&forum.User,
 			&forum.Posts,
-			&forum.Threads)
+			&forum.Threads,
+			&forum.Slug)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchUserNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getForumBySlug, forum.Slug, err)
 		}
 
 		return nil
