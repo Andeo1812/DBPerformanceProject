@@ -1,9 +1,6 @@
 package repository
 
 const (
-	checkExistPost = `
-SELECT EXISTS(SELECT 1 FROM posts WHERE post_id = $1);`
-
 	getPostParent = `
 SELECT thread_id
 from posts

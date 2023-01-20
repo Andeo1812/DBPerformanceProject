@@ -17,6 +17,7 @@ type ErrResponse struct {
 
 // DefaultHandlerHTTPError is error handler that detects the type of error and gives an error response.
 func DefaultHandlerHTTPError(ctx context.Context, w http.ResponseWriter, err error) {
+	//  Logs ! important
 	//  CreateLog(ctx, err)
 
 	errCause := errors.Cause(err)

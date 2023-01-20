@@ -26,11 +26,6 @@ func NewPostService(r repository.PostRepository) PostService {
 }
 
 func (p postService) UpdatePost(ctx context.Context, post *models.Post) (*models.Post, error) {
-	exist, _ := p.postRepo.CheckExistPost(ctx, post)
-	if !exist {
-		return nil, errors.Wrap(pkg.ErrSuchPostNotFound, "UpdatePost")
-	}
-
 	if post.Message == "" {
 		res, err := p.postRepo.GetDetailsPost(ctx, post, &pkg.PostDetailsParams{})
 		if err != nil {

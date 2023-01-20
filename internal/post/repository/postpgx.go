@@ -14,7 +14,6 @@ import (
 
 type PostRepository interface {
 	// Support
-	CheckExistPost(ctx context.Context, post *models.Post) (bool, error)
 	GetParentPost(ctx context.Context, post *models.Post) (*models.Post, error)
 
 	UpdatePost(ctx context.Context, post *models.Post) (*models.Post, error)
@@ -29,32 +28,6 @@ func NewPostPostgres(database *sqltools.Database) PostRepository {
 	return &postPostgres{
 		database,
 	}
-}
-
-func (p postPostgres) CheckExistPost(ctx context.Context, post *models.Post) (bool, error) {
-	res := false
-
-	errMain := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		row := conn.QueryRowContext(ctx, checkExistPost, post.ID)
-		if row.Err() != nil {
-			return errors.WithMessagef(pkg.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
-				checkExistPost, post.ID, row.Err())
-		}
-
-		err := row.Scan(&res)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-
-	if errMain != nil {
-		return false, errMain
-	}
-
-	return res, nil
 }
 
 func (p postPostgres) GetParentPost(ctx context.Context, post *models.Post) (*models.Post, error) {
@@ -115,7 +88,13 @@ func (p postPostgres) UpdatePost(ctx context.Context, post *models.Post) (*model
 			&res.Message,
 			&res.IsEdited)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchPostNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				updatePost, post.Message, err)
 		}
 
 		res.Created = postTime.Format(time.RFC3339)
@@ -206,7 +185,6 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 
 				return nil
 			})
-
 		case pkg.PostDetailAuthor:
 			sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 				row := conn.QueryRowContext(ctx, getPostAuthor, post.ID)
