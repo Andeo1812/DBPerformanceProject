@@ -33,7 +33,7 @@ func (req *ThreadGetDetailsRequest) Bind(r *http.Request) error {
 
 func (req *ThreadGetDetailsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
-	if err != nil {
+	if err == nil {
 		return &models.Thread{
 			ID: int64(id),
 		}

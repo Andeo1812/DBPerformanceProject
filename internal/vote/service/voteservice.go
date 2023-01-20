@@ -8,6 +8,7 @@ import (
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
 	threadRepo "db-performance-project/internal/thread/repository"
+	userRepo "db-performance-project/internal/user/repository"
 	voteRepo "db-performance-project/internal/vote/repository"
 )
 
@@ -18,45 +19,58 @@ type VoteService interface {
 type voteService struct {
 	voteRepo   voteRepo.VoteRepository
 	threadRepo threadRepo.ThreadRepository
+	userRepo   userRepo.UserRepository
 }
 
-func NewVoteService(vr voteRepo.VoteRepository, tr threadRepo.ThreadRepository) VoteService {
+func NewVoteService(vr voteRepo.VoteRepository, tr threadRepo.ThreadRepository, ur userRepo.UserRepository) VoteService {
 	return &voteService{
 		voteRepo:   vr,
 		threadRepo: tr,
+		userRepo:   ur,
 	}
 }
 
 func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (models.Thread, error) {
 	var err error
 
-	threadID := models.Thread{Slug: thread.Slug}
+	resThread := models.Thread{}
 
+	// CheckAndGetThread
 	if thread.Slug != "" {
-		threadID, err = v.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
-		if err != nil {
-			return models.Thread{}, errors.Wrap(err, "Vote")
-		}
-	}
-
-	exist, err := v.voteRepo.CheckExistVote(ctx, &threadID, params)
-	// if err != nil {
-	//	return nil, errors.Wrap(err, "Vote")
-	// }
-
-	if exist {
-		v.voteRepo.UpdateVote(ctx, &threadID, params)
+		resThread, err = v.threadRepo.GetDetailsThreadBySlug(ctx, thread)
 	} else {
-		v.voteRepo.CreateVote(ctx, &threadID, params)
+		resThread, err = v.threadRepo.GetDetailsThreadByID(ctx, thread)
 	}
 	if err != nil {
 		return models.Thread{}, errors.Wrap(err, "Vote")
 	}
 
-	threadUPD, _ := v.threadRepo.GetDetailsThreadByID(ctx, &threadID)
-	// if err != nil {
-	//	return nil, errors.Wrap(err, "Vote")
-	// }
+	// CheckUser
+	resUser, err := v.userRepo.GetUserByNickname(ctx, &models.User{Nickname: params.Nickname})
+	if err != nil {
+		return models.Thread{}, errors.Wrap(err, "Vote")
+	}
+	params.Nickname = resUser.Nickname
+
+	// CheckVote
+	exist, err := v.voteRepo.CheckExistVote(ctx, &resThread, params)
+	if err != nil {
+		return models.Thread{}, errors.Wrap(err, "Vote CheckExistVote")
+	}
+
+	if exist {
+		err = v.voteRepo.UpdateVote(ctx, &resThread, params)
+	} else {
+		err = v.voteRepo.CreateVote(ctx, &resThread, params)
+	}
+	if err != nil {
+		return models.Thread{}, errors.Wrap(err, "Vote exist")
+	}
+
+	threadUPD, err := v.threadRepo.GetDetailsThreadByID(ctx, &resThread)
+	if err != nil {
+		return models.Thread{}, errors.Wrap(err, "Vote GetDetailsThreadByID")
+	}
 
 	return threadUPD, nil
 }

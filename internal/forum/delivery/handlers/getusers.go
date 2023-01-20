@@ -22,11 +22,7 @@ func NewForumGetUsersHandler(s service.ForumService) pkg.Handler {
 
 func (h *forumGetUsersHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 	r.HandleFunc("/forum/{slug}/users", h.Action).
-		Methods(http.MethodGet).
-		Queries(
-			"limit", "{limit}",
-			"since", "{since}",
-			"desc", "{desc}")
+		Methods(http.MethodGet)
 }
 
 func (h *forumGetUsersHandler) Action(w http.ResponseWriter, r *http.Request) {

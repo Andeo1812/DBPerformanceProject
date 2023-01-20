@@ -31,7 +31,7 @@ func NewForumService(rf repoForum.ForumRepository, ru repoUser.UserRepository) F
 }
 
 func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
-	res, err := f.forumRepo.GetDetailsForum(ctx, forum)
+	res, err := f.forumRepo.GetDetailsForumBySlug(ctx, forum)
 	if err == nil {
 		return res, errors.Wrap(pkg.ErrSuchForumExist, "CreateForum")
 	}
@@ -55,9 +55,9 @@ func (f forumService) CreateForum(ctx context.Context, forum *models.Forum) (*mo
 }
 
 func (f forumService) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
-	res, err := f.forumRepo.GetDetailsForum(ctx, forum)
+	res, err := f.forumRepo.GetDetailsForumBySlug(ctx, forum)
 	if err != nil {
-		return nil, errors.Wrap(err, "GetDetailsForum")
+		return nil, errors.Wrap(err, "GetDetailsForumBySlug")
 	}
 
 	return res, nil

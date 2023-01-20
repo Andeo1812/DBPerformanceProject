@@ -62,14 +62,18 @@ func (req *ThreadUpdateDetailsRequest) Bind(r *http.Request) error {
 
 func (req *ThreadUpdateDetailsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
-	if err != nil {
+	if err == nil {
 		return &models.Thread{
-			ID: int64(id),
+			ID:      int64(id),
+			Message: req.Message,
+			Title:   req.Title,
 		}
 	}
 
 	return &models.Thread{
-		Slug: req.SlugOrID,
+		Slug:    req.SlugOrID,
+		Message: req.Message,
+		Title:   req.Title,
 	}
 }
 

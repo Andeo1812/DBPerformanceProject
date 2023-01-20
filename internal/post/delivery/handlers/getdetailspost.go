@@ -22,8 +22,7 @@ func NewPostGetDetailsHandler(s service.PostService) pkg.Handler {
 
 func (h *postGetDetailsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 	r.HandleFunc("/post/{id}/details", h.Action).
-		Methods(http.MethodGet).
-		Queries("related", "{related}")
+		Methods(http.MethodGet)
 }
 
 func (h *postGetDetailsHandler) Action(w http.ResponseWriter, r *http.Request) {

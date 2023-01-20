@@ -12,6 +12,18 @@ SELECT title,
 FROM threads
 WHERE thread_id = $1;`
 
+	getThreadBySlug = `
+SELECT thread_id,
+       title,
+       author,
+       forum,
+       message,
+       votes,
+       slug,
+       created
+FROM threads
+WHERE LOWER(slug) = LOWER($1);`
+
 	checkExistThreadByID = `
 SELECT EXISTS(SELECT 1 FROM threads WHERE thread_id = $1);`
 

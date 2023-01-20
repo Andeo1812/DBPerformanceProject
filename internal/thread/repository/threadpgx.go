@@ -16,14 +16,15 @@ import (
 
 type ThreadRepository interface {
 	// Support
-	GetThreadIDByForumAndSlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	CheckExistThread(ctx context.Context, thread *models.Thread) (bool, error)
 	GetThreadForumByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
-	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetThreadIDByForumAndSlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 
 	CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error)
 	GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetDetailsThreadBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	UpdateThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
 
 	// Posts
@@ -271,6 +272,8 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 }
 
 func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
+
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
 		if rowThread.Err() != nil {
@@ -284,15 +287,67 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 		}
 
 		err := rowThread.Scan(
-			&thread.Title,
-			&thread.Author,
-			&thread.Forum,
-			&thread.Message,
-			&thread.Votes,
-			&thread.Slug,
-			&thread.Created)
+			&res.Title,
+			&res.Author,
+			&res.Forum,
+			&res.Message,
+			&res.Votes,
+			&res.Slug,
+			&res.Created)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getThreadByID, thread.ID, err)
+		}
+
+		res.ID = thread.ID
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.Thread{}, errMain
+	}
+
+	return res, nil
+}
+
+func (t threadPostgres) GetDetailsThreadBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
+
+	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, getThreadBySlug, thread.Slug)
+		if row.Err() != nil {
+			if errors.Is(row.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getThreadBySlug, thread.ID, row.Err())
+		}
+
+		err := row.Scan(
+			&res.ID,
+			&res.Title,
+			&res.Author,
+			&res.Forum,
+			&res.Message,
+			&res.Votes,
+			&res.Slug,
+			&res.Created)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
+				getThreadBySlug, thread.ID, err)
 		}
 
 		return nil
@@ -302,10 +357,12 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 		return models.Thread{}, errMain
 	}
 
-	return *thread, nil
+	return res, nil
 }
 
 func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
+
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowThread := tx.QueryRowContext(ctx, updateThreadByID, thread.ID, thread.Title, thread.Message)
 		if rowThread.Err() != nil {
@@ -315,14 +372,18 @@ func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thr
 		}
 
 		err := rowThread.Scan(
-			&thread.Author,
-			&thread.Forum,
-			&thread.Votes,
-			&thread.Slug,
-			&thread.Created)
+			&res.Author,
+			&res.Forum,
+			&res.Votes,
+			&res.Slug,
+			&res.Created)
 		if err != nil {
 			return err
 		}
+
+		res.ID = thread.ID
+		res.Title = thread.Title
+		res.Message = thread.Message
 
 		return nil
 	})
@@ -331,7 +392,7 @@ func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thr
 		return models.Thread{}, errMain
 	}
 
-	return *thread, nil
+	return res, nil
 }
 
 func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error) {
@@ -391,7 +452,7 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 			err = rows.Scan(
 				&post.ID,
 				&post.Parent,
-				&post.Author,
+				&post.Author.Nickname,
 				&post.Message,
 				&post.IsEdited,
 				&post.Forum,
@@ -432,7 +493,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 	}
 
 	if params.Since != -1 {
-		query += fmt.Sprintf(` (SELECT path FROM post WHERE post_id = %d) `, params.Since)
+		query += fmt.Sprintf(` (SELECT path FROM posts WHERE post_id = %d) `, params.Since)
 	}
 
 	switch {
@@ -469,7 +530,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 			err = rows.Scan(
 				&post.ID,
 				&post.Parent,
-				&post.Author,
+				&post.Author.Nickname,
 				&post.Message,
 				&post.IsEdited,
 				&post.Forum,
@@ -557,7 +618,7 @@ func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *mode
 			err = rows.Scan(
 				&post.ID,
 				&post.Parent,
-				&post.Author,
+				&post.Author.Nickname,
 				&post.Message,
 				&post.IsEdited,
 				&post.Forum,

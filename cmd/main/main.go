@@ -78,7 +78,7 @@ func main() {
 	userService := serviceUser.NewUserService(userStorage)
 	postService := servicePost.NewPostService(postStorage)
 	threadService := serviceThread.NewThreadService(threadStorage, forumStorage, userStorage, postStorage)
-	voteService := serviceVote.NewVoteService(voteStorage, threadStorage)
+	voteService := serviceVote.NewVoteService(voteStorage, threadStorage, userStorage)
 	serivceService := serviceSerivce.NewService(serviceStorage)
 
 	// Delivery Forum

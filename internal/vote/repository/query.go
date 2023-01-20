@@ -9,8 +9,8 @@ VALUES ($1, $2, $3);`
 UPDATE user_votes
 SET voice = $3
 WHERE thread_id = $1
-  and nickname = $2
-  and voice != $3;`
+  AND nickname = $2
+  AND voice != $3;`
 
 	checkExists = `SELECT EXISTS(SELECT 1 FROM user_votes WHERE nickname = $1 AND thread_id = $2);`
 )

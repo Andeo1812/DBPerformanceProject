@@ -91,7 +91,7 @@ func (req *ThreadGetPostsRequest) Bind(r *http.Request) error {
 
 func (req *ThreadGetPostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
-	if err != nil {
+	if err == nil {
 		return &models.Thread{
 			ID: int64(id),
 		}

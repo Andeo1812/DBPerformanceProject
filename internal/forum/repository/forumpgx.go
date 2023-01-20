@@ -17,7 +17,7 @@ type ForumRepository interface {
 	CheckExistForum(ctx context.Context, forum *models.Forum) (bool, error)
 
 	CreateForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
-	GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error)
+	GetDetailsForumBySlug(ctx context.Context, forum *models.Forum) (*models.Forum, error)
 	GetThreads(ctx context.Context, forum *models.Forum, params *pkg.GetThreadsParams) ([]*models.Thread, error)
 	GetUsers(ctx context.Context, forum *models.Forum, params *pkg.GetUsersParams) ([]*models.User, error)
 }
@@ -73,7 +73,7 @@ func (f forumPostgres) CreateForum(ctx context.Context, forum *models.Forum) (*m
 	return forum, errMain
 }
 
-func (f forumPostgres) GetDetailsForum(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
+func (f forumPostgres) GetDetailsForumBySlug(ctx context.Context, forum *models.Forum) (*models.Forum, error) {
 	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		row := conn.QueryRowContext(ctx, getForumBySlug, forum.Slug)
 		if row.Err() != nil {

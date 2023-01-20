@@ -59,7 +59,7 @@ func (req *VoteRequest) Bind(r *http.Request) error {
 
 func (req *VoteRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
-	if err != nil {
+	if err == nil {
 		return &models.Thread{
 			ID: int64(id),
 		}

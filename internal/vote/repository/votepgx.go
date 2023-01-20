@@ -55,7 +55,7 @@ func (v votePostgres) CheckExistVote(ctx context.Context, thread *models.Thread,
 
 func (v votePostgres) UpdateVote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) error {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, v.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUpdate := tx.QueryRowContext(ctx, updateVote, params.Nickname, thread.ID, params.Voice)
+		rowUpdate := tx.QueryRowContext(ctx, updateVote, thread.ID, params.Nickname, params.Voice)
 		if rowUpdate.Err() != nil {
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s, %d, %d]. Special error: [%s]",
