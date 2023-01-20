@@ -40,7 +40,7 @@ func (h *threadGetDetailsHandler) Action(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	response := models.NewThreadGetDetailsResponse(thread)
+	response := models.NewThreadGetDetailsResponse(&thread)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

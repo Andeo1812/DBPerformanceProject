@@ -126,7 +126,7 @@ type ThreadGetPostsResponse struct {
 //easyjson:json
 type PostsList []ThreadGetPostsResponse
 
-func NewThreadGetPostsResponse(posts []*models.Post) PostsList {
+func NewThreadGetPostsResponse(posts []models.Post) PostsList {
 	res := make([]ThreadGetPostsResponse, len(posts))
 
 	for idx, value := range posts {

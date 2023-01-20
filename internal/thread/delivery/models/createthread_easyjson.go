@@ -46,6 +46,8 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels(in *
 			out.Forum = string(in.String())
 		case "message":
 			out.Message = string(in.String())
+		case "slug":
+			out.Slug = string(in.String())
 		case "created":
 			out.Created = string(in.String())
 		case "votes":
@@ -92,6 +94,11 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels(out 
 		const prefix string = ",\"message\":"
 		out.RawString(prefix)
 		out.String(string(in.Message))
+	}
+	{
+		const prefix string = ",\"slug\":"
+		out.RawString(prefix)
+		out.String(string(in.Slug))
 	}
 	{
 		const prefix string = ",\"created\":"
@@ -158,7 +165,7 @@ func easyjson9d4b6d10DecodeDbPerformanceProjectInternalThreadDeliveryModels1(in 
 			out.Created = string(in.String())
 		case "forum":
 			out.Forum = string(in.String())
-		case "Slug":
+		case "slug":
 			out.Slug = string(in.String())
 		default:
 			in.AddError(&jlexer.LexerError{
@@ -204,7 +211,7 @@ func easyjson9d4b6d10EncodeDbPerformanceProjectInternalThreadDeliveryModels1(out
 		out.String(string(in.Forum))
 	}
 	{
-		const prefix string = ",\"Slug\":"
+		const prefix string = ",\"slug\":"
 		out.RawString(prefix)
 		out.String(string(in.Slug))
 	}

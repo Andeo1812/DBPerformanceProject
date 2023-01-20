@@ -38,7 +38,7 @@ func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request
 	thread, err := h.threadService.CreateThread(r.Context(), request.GetThread())
 	if err != nil {
 		if errors.Is(errors.Cause(err), pkg.ErrSuchThreadExist) {
-			response := models.NewForumCreateThreadResponse(thread)
+			response := models.NewForumCreateThreadResponse(&thread)
 
 			pkg.Response(r.Context(), w, http.StatusConflict, response)
 
@@ -50,7 +50,7 @@ func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	response := models.NewForumCreateThreadResponse(thread)
+	response := models.NewForumCreateThreadResponse(&thread)
 
 	pkg.Response(r.Context(), w, http.StatusCreated, response)
 }

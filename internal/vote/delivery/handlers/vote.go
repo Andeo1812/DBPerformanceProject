@@ -40,7 +40,7 @@ func (h *voteHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := models.NewVoteResponse(thread)
+	response := models.NewVoteResponse(&thread)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

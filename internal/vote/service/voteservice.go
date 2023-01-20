@@ -12,7 +12,7 @@ import (
 )
 
 type VoteService interface {
-	Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error)
+	Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (models.Thread, error)
 }
 
 type voteService struct {
@@ -27,33 +27,33 @@ func NewVoteService(vr voteRepo.VoteRepository, tr threadRepo.ThreadRepository) 
 	}
 }
 
-func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (*models.Thread, error) {
+func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pkg.VoteParams) (models.Thread, error) {
 	var err error
 
-	threadID := thread
+	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
 		threadID, err = v.threadRepo.GetThreadIDBySlug(ctx, thread)
 		if err != nil {
-			return nil, errors.Wrap(err, "Vote")
+			return models.Thread{}, errors.Wrap(err, "Vote")
 		}
 	}
 
-	exist, err := v.voteRepo.CheckExistVote(ctx, threadID, params)
+	exist, err := v.voteRepo.CheckExistVote(ctx, &threadID, params)
 	// if err != nil {
 	//	return nil, errors.Wrap(err, "Vote")
 	// }
 
 	if exist {
-		v.voteRepo.UpdateVote(ctx, threadID, params)
+		v.voteRepo.UpdateVote(ctx, &threadID, params)
 	} else {
-		v.voteRepo.CreateVote(ctx, threadID, params)
+		v.voteRepo.CreateVote(ctx, &threadID, params)
 	}
 	if err != nil {
-		return nil, errors.Wrap(err, "Vote")
+		return models.Thread{}, errors.Wrap(err, "Vote")
 	}
 
-	threadUPD, _ := v.threadRepo.GetDetailsThreadByID(ctx, threadID)
+	threadUPD, _ := v.threadRepo.GetDetailsThreadByID(ctx, &threadID)
 	// if err != nil {
 	//	return nil, errors.Wrap(err, "Vote")
 	// }

@@ -30,7 +30,7 @@ func (h *threadUpdateDetailsHandler) Action(w http.ResponseWriter, r *http.Reque
 	request.Bind(r)
 	// err := request.Bind(r)
 	// if err != nil {
-	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)
+	//	pkg.DefaultHandlerHTTPError(r.Context(), w, err)make
 	//	return
 	// }
 
@@ -40,7 +40,7 @@ func (h *threadUpdateDetailsHandler) Action(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	response := models.NewThreadUpdateDetailsResponse(thread)
+	response := models.NewThreadUpdateDetailsResponse(&thread)
 
 	pkg.Response(r.Context(), w, http.StatusOK, response)
 }

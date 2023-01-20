@@ -16,18 +16,18 @@ import (
 
 type ThreadRepository interface {
 	// Support
-	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error)
+	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	CheckExistThread(ctx context.Context, thread *models.Thread) (bool, error)
 
-	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error)
-	GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	UpdateThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error)
+	CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error)
+	GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	UpdateThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
 
 	// Posts
-	GetPostsByIDFlat(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
-	GetPostsByIDTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
-	GetPostsByIDParentTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
+	GetPostsByIDFlat(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error)
+	GetPostsByIDTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error)
+	GetPostsByIDParentTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error)
 }
 
 type threadPostgres struct {
@@ -66,8 +66,8 @@ func (t threadPostgres) CheckExistThread(ctx context.Context, thread *models.Thr
 	return res, nil
 }
 
-func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
-	res := &models.Thread{}
+func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
 
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadIDBySlug, thread.Slug)
@@ -90,13 +90,17 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 	})
 
 	if errMain != nil {
-		return nil, errMain
+		return models.Thread{}, errMain
 	}
 
 	return res, nil
 }
 
-func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	if thread.Created == "" {
+		thread.Created = time.Now().Format(time.RFC3339)
+	}
+
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowThread := tx.QueryRowContext(ctx, createForumThread, thread.Title, thread.Author, thread.Forum, thread.Message, thread.Slug, thread.Created)
 		if rowThread.Err() != nil {
@@ -116,13 +120,13 @@ func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread)
 	})
 
 	if errMain != nil {
-		return nil, errMain
+		return models.Thread{}, errMain
 	}
 
-	return thread, nil
+	return *thread, nil
 }
 
-func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error) {
+func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error) {
 	// Defining sending parameters
 	query := insertPosts
 
@@ -160,22 +164,29 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 		return nil, err
 	}
 
+	res := make([]models.Post, len(posts))
+
 	i := 0
 	for rows.Next() {
-		err = rows.Scan(&posts[i].ID)
+		err = rows.Scan(&res[i].ID)
 		if err != nil {
 			return nil, err
 		}
 
-		posts[i].Created = insertTimeString
+		res[i].Created = insertTimeString
+		res[i].Parent = posts[i].Parent
+		res[i].Author = posts[i].Author
+		res[i].Message = posts[i].Message
+		res[i].Forum = thread.Slug
+		res[i].Thread = thread.ID
 
 		i++
 	}
 
-	return posts, nil
+	return res, nil
 }
 
-func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error) {
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
 		if rowThread.Err() != nil {
@@ -204,13 +215,13 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 	})
 
 	if errMain != nil {
-		return nil, errMain
+		return models.Thread{}, errMain
 	}
 
-	return thread, nil
+	return *thread, nil
 }
 
-func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thread) (models.Thread, error) {
 	errMain := sqltools.RunTxOnConn(ctx, pkg.TxInsertOptions, t.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowThread := tx.QueryRowContext(ctx, updateThreadByID, thread.ID, thread.Title, thread.Message)
 		if rowThread.Err() != nil {
@@ -233,13 +244,13 @@ func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thr
 	})
 
 	if errMain != nil {
-		return nil, errMain
+		return models.Thread{}, errMain
 	}
 
-	return thread, nil
+	return *thread, nil
 }
 
-func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {
+func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error) {
 	var rows *sql.Rows
 	var err error
 
@@ -273,7 +284,7 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 		values = []interface{}{thread.ID, params.Since}
 	}
 
-	res := make([]*models.Post, 0)
+	res := make([]models.Post, 0)
 
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
@@ -289,7 +300,7 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 		defer rows.Close()
 
 		for rows.Next() {
-			post := &models.Post{}
+			post := models.Post{}
 
 			timeTmp := time.Time{}
 
@@ -321,7 +332,7 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 	return res, nil
 }
 
-func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {
+func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error) {
 	var rows *sql.Rows
 	var err error
 
@@ -351,7 +362,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 
 	query += fmt.Sprintf(" LIMIT NULLIF(%d, 0)", params.Limit)
 
-	res := make([]*models.Post, 0)
+	res := make([]models.Post, 0)
 
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, thread.ID)
@@ -367,7 +378,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 		defer rows.Close()
 
 		for rows.Next() {
-			post := &models.Post{}
+			post := models.Post{}
 
 			timeTmp := time.Time{}
 
@@ -399,7 +410,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 	return res, nil
 }
 
-func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {
+func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error) {
 	var rows *sql.Rows
 	var err error
 
@@ -439,7 +450,7 @@ func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *mode
 		values = []interface{}{thread.ID, params.Since, params.Limit}
 	}
 
-	res := make([]*models.Post, 0)
+	res := make([]models.Post, 0)
 
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
@@ -455,7 +466,7 @@ func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *mode
 		defer rows.Close()
 
 		for rows.Next() {
-			post := &models.Post{}
+			post := models.Post{}
 
 			timeTmp := time.Time{}
 

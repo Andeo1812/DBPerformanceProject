@@ -113,7 +113,7 @@ type PostResponse struct {
 //easyjson:json
 type PostsResponseList []PostResponse
 
-func NewThreadCreatePostsResponse(posts []*models.Post) PostsResponseList {
+func NewThreadCreatePostsResponse(posts []models.Post) PostsResponseList {
 	res := make([]PostResponse, len(posts))
 
 	for idx, value := range posts {

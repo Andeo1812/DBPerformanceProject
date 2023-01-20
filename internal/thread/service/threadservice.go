@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/pkg/errors"
 
 	repoForum "db-performance-project/internal/forum/repository"
@@ -14,11 +16,11 @@ import (
 )
 
 type ThreadService interface {
-	CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error)
-	GetDetailsThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
-	GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error)
-	UpdateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error)
+	CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error)
+	GetDetailsThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error)
+	UpdateThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
 }
 
 type threadService struct {
@@ -37,51 +39,43 @@ func NewThreadService(rt repoThread.ThreadRepository, rf repoForum.ForumReposito
 	}
 }
 
-func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error) {
 	threadExist, err := t.threadRepo.GetThreadIDBySlug(ctx, thread)
 	if err == nil {
-		var res *models.Thread
+		var res models.Thread
 
-		res, err = t.threadRepo.GetDetailsThreadByID(ctx, threadExist)
+		res, err = t.threadRepo.GetDetailsThreadByID(ctx, &threadExist)
 		if err != nil {
 			return res, errors.Wrap(pkg.ErrSuchThreadExist, "CreateForum")
 		}
 
-		return nil, errors.Wrap(err, "CreateThread")
+		return models.Thread{}, errors.Wrap(err, "CreateThread")
 	}
 
-	_, err = t.forumRepo.GetDetailsForum(ctx, &models.Forum{Slug: thread.Slug})
-	if err != nil {
-		return nil, errors.Wrap(err, "CreateThread")
-	}
-
-	_, err = t.userRepo.GetUserByNickname(ctx, &models.User{Nickname: thread.Author})
-	if err != nil {
-		return nil, errors.Wrap(err, "CreateThread")
-	}
+	logrus.Info(thread)
 
 	res, err := t.threadRepo.CreateThread(ctx, thread)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreateThread")
+		return models.Thread{}, errors.Wrap(err, "CreateThread")
 	}
 
 	return res, err
 }
 
-func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]*models.Post, error) {
+func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error) {
 	var err error
 
-	threadID := thread
+	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
 		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
 		if err != nil {
-			return nil, errors.Wrap(err, "CreatePosts")
+			return []models.Post{}, errors.Wrap(err, "CreatePosts")
 		}
 	} else {
-		exist, _ := t.threadRepo.CheckExistThread(ctx, threadID)
+		exist, _ := t.threadRepo.CheckExistThread(ctx, &threadID)
 		if !exist {
-			return nil, errors.Wrap(pkg.ErrSuchThreadNotFound, "CreatePosts")
+			return []models.Post{}, errors.Wrap(pkg.ErrSuchThreadNotFound, "CreatePosts")
 		}
 	}
 
@@ -90,7 +84,7 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 
 		postWithParent, err = t.postRepo.GetParentPost(ctx, posts[0])
 		if err != nil {
-			return nil, errors.Wrap(err, "CreatePosts")
+			return []models.Post{}, errors.Wrap(err, "CreatePosts")
 		}
 
 		if postWithParent.Parent != thread.ID {
@@ -98,64 +92,64 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 		}
 	}
 
-	res, err := t.threadRepo.CreatePostsByID(ctx, threadID, posts)
+	res, err := t.threadRepo.CreatePostsByID(ctx, &threadID, posts)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreatePosts")
+		return []models.Post{}, errors.Wrap(err, "CreatePosts")
 	}
 
 	return res, nil
 }
 
-func (t threadService) GetDetailsThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadService) GetDetailsThread(ctx context.Context, thread *models.Thread) (models.Thread, error) {
 	var err error
 
-	threadID := thread
+	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
 		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
 		if err != nil {
-			return nil, errors.Wrap(err, "GetDetailsThread")
+			return models.Thread{}, errors.Wrap(err, "GetDetailsThread")
 		}
 	}
 
-	res, err := t.threadRepo.GetDetailsThreadByID(ctx, threadID)
+	res, err := t.threadRepo.GetDetailsThreadByID(ctx, &threadID)
 	if err != nil {
-		return nil, errors.Wrap(err, "GetDetailsThread")
+		return models.Thread{}, errors.Wrap(err, "GetDetailsThread")
 	}
 
 	return res, nil
 }
 
-func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) (*models.Thread, error) {
+func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) (models.Thread, error) {
 	var err error
 
-	threadID := thread
+	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
 		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
 		if err != nil {
-			return nil, errors.Wrap(err, "UpdateThread")
+			return models.Thread{}, errors.Wrap(err, "UpdateThread")
 		}
 	} else {
-		exist, _ := t.threadRepo.CheckExistThread(ctx, threadID)
+		exist, _ := t.threadRepo.CheckExistThread(ctx, &threadID)
 		if !exist {
-			return nil, errors.Wrap(pkg.ErrSuchThreadNotFound, "UpdateThread")
+			return models.Thread{}, errors.Wrap(pkg.ErrSuchThreadNotFound, "UpdateThread")
 		}
 	}
 
-	res, err := t.threadRepo.UpdateThreadByID(ctx, threadID)
+	res, err := t.threadRepo.UpdateThreadByID(ctx, &threadID)
 	if err != nil {
-		return nil, errors.Wrap(err, "UpdateThread")
+		return models.Thread{}, errors.Wrap(err, "UpdateThread")
 	}
 
 	return res, nil
 }
 
-func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]*models.Post, error) {
-	var res []*models.Post
+func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, params *pkg.GetPostsParams) ([]models.Post, error) {
+	var res []models.Post
 	var err error
 
-	threadID := thread
+	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
 		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
@@ -163,7 +157,7 @@ func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, para
 			return nil, errors.Wrap(err, "GetPosts")
 		}
 	} else {
-		exist, _ := t.threadRepo.CheckExistThread(ctx, threadID)
+		exist, _ := t.threadRepo.CheckExistThread(ctx, &threadID)
 		if !exist {
 			return nil, errors.Wrap(pkg.ErrSuchThreadNotFound, "GetPosts")
 		}
@@ -171,11 +165,11 @@ func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, para
 
 	switch params.Sort {
 	case pkg.TypeSortFlat:
-		res, err = t.threadRepo.GetPostsByIDFlat(ctx, threadID, params)
+		res, err = t.threadRepo.GetPostsByIDFlat(ctx, &threadID, params)
 	case pkg.TypeSortTree:
-		res, err = t.threadRepo.GetPostsByIDTree(ctx, threadID, params)
+		res, err = t.threadRepo.GetPostsByIDTree(ctx, &threadID, params)
 	case pkg.TypeSortParentTree:
-		res, err = t.threadRepo.GetPostsByIDParentTree(ctx, threadID, params)
+		res, err = t.threadRepo.GetPostsByIDParentTree(ctx, &threadID, params)
 	default:
 		return nil, errors.Wrap(pkg.ErrNoSuchRuleSortPosts, "GetPosts")
 	}

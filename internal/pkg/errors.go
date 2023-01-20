@@ -46,7 +46,7 @@ var (
 
 	// Forum
 	ErrSuchForumNotFound = errors.New("such forum not fount")
-	ErrSuchForumExist    = errors.New("such thread exist")
+	ErrSuchForumExist    = errors.New("such forum exist")
 )
 
 type ErrHTTPClassifier struct {

@@ -19,7 +19,7 @@ type ForumCreateThreadRequest struct {
 	Message string `json:"message"`
 	Created string `json:"created"`
 	Forum   string `json:"forum"`
-	Slug    string
+	Slug    string `json:"slug"`
 }
 
 func NewForumCreateThreadRequest() *ForumCreateThreadRequest {
@@ -58,7 +58,7 @@ func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	req.Slug = vars["slug"]
+	req.Forum = vars["slug"]
 
 	return nil
 }
@@ -81,6 +81,7 @@ type ForumCreateThreadResponse struct {
 	Author  string `json:"author"`
 	Forum   string `json:"forum"`
 	Message string `json:"message"`
+	Slug    string `json:"slug"`
 	Created string `json:"created"`
 	Votes   int64  `json:"votes"`
 }
@@ -94,5 +95,6 @@ func NewForumCreateThreadResponse(thread *models.Thread) *ForumCreateThreadRespo
 		Message: thread.Message,
 		Created: thread.Created,
 		Votes:   thread.Votes,
+		Slug:    thread.Slug,
 	}
 }
