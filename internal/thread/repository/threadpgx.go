@@ -72,7 +72,7 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadIDBySlug, thread.Slug)
 		if rowThread.Err() != nil {
-			if errors.As(rowThread.Err(), sql.ErrNoRows) {
+			if errors.Is(rowThread.Err(), sql.ErrNoRows) {
 				return pkg.ErrSuchThreadNotFound
 			}
 
@@ -83,7 +83,13 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 		err := rowThread.Scan(&res.ID)
 		if err != nil {
-			return err
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDBySlug, thread.Slug, err)
 		}
 
 		return nil
@@ -190,7 +196,7 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowThread := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
 		if rowThread.Err() != nil {
-			if errors.As(rowThread.Err(), sql.ErrNoRows) {
+			if errors.Is(rowThread.Err(), sql.ErrNoRows) {
 				return pkg.ErrSuchThreadNotFound
 			}
 
@@ -289,7 +295,7 @@ func (t threadPostgres) GetPostsByIDFlat(ctx context.Context, thread *models.Thr
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
 		if err != nil {
-			if errors.As(err, sql.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return pkg.ErrSuchPostNotFound
 			}
 
@@ -367,7 +373,7 @@ func (t threadPostgres) GetPostsByIDTree(ctx context.Context, thread *models.Thr
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, thread.ID)
 		if err != nil {
-			if errors.As(err, sql.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return pkg.ErrSuchPostNotFound
 			}
 
@@ -455,7 +461,7 @@ func (t threadPostgres) GetPostsByIDParentTree(ctx context.Context, thread *mode
 	err = sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rows, err = conn.QueryContext(ctx, query, values...)
 		if err != nil {
-			if errors.As(err, sql.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return pkg.ErrSuchPostNotFound
 			}
 

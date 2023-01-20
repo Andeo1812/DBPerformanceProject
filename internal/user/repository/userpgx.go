@@ -4,12 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-
 	"db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/pkg/sqltools"
+	"github.com/pkg/errors"
 )
 
 type UserRepository interface {
@@ -83,8 +81,6 @@ func (u userPostgres) GetUserByEmailOrNickname(ctx context.Context, user *models
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowsUsers, err := conn.QueryContext(ctx, getUserByEmailOrNickname, user.Nickname, user.Email)
 		if err != nil {
-			logrus.Error(err.Error())
-
 			if errors.Is(err, sql.ErrNoRows) {
 				return pkg.ErrSuchUserNotFound
 			}

@@ -3,8 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/pkg/errors"
 
 	repoForum "db-performance-project/internal/forum/repository"
@@ -51,8 +49,6 @@ func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) 
 
 		return models.Thread{}, errors.Wrap(err, "CreateThread")
 	}
-
-	logrus.Info(thread)
 
 	res, err := t.threadRepo.CreateThread(ctx, thread)
 	if err != nil {
