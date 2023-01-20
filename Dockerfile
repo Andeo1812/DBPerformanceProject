@@ -50,4 +50,4 @@ ENV POSTGRES_SSLMODE disable
 USER root
 RUN mkdir -p ./logs/
 RUN chmod -R 777 ./logs/
-CMD service postgresql start && ./main
+CMD service postgresql start && ./main -config-path=./cmd/main/configs/prod.toml

@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS forums
 (
     forum_id       bigserial,
-    title          text NOT NULL,
     users_nickname text NOT NULL REFERENCES users (nickname),
     slug           text NOT NULL PRIMARY KEY,
+    title          text NOT NULL,
     posts          int DEFAULT 0,
     threads        int DEFAULT 0
 );
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS forums
 CREATE TABLE IF NOT EXISTS threads
 (
     thread_id bigserial PRIMARY KEY NOT NULL,
-    title     text                  NOT NULL,
     author    text                  NOT NULL REFERENCES users (nickname),
     forum     text                  NOT NULL REFERENCES forums (slug),
+    title     text                  NOT NULL,
     message   text                  NOT NULL,
     votes     integer                  DEFAULT 0,
     slug      text,
@@ -33,12 +33,12 @@ CREATE TABLE IF NOT EXISTS threads
 CREATE TABLE IF NOT EXISTS posts
 (
     post_id   bigserial PRIMARY KEY NOT NULL UNIQUE,
-    parent    int                      DEFAULT 0,
-    author    text                  NOT NULL REFERENCES users (nickname),
-    message   text                  NOT NULL,
-    is_edited bool                     DEFAULT FALSE,
     forum     text REFERENCES forums (slug),
     thread_id integer REFERENCES threads (thread_id),
+    author    text                  NOT NULL REFERENCES users (nickname),
+    parent    int                      DEFAULT 0,
+    message   text                  NOT NULL,
+    is_edited bool                     DEFAULT FALSE,
     created   timestamp with time zone DEFAULT now(),
     path      bigint[]                 DEFAULT ARRAY []::INTEGER[]
 );
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS posts
 -- M:N
 CREATE TABLE IF NOT EXISTS user_votes
 (
-    nickname  text  NOT NULL REFERENCES users (nickname),
+    nickname  text NOT NULL REFERENCES users (nickname),
     thread_id int  NOT NULL REFERENCES threads (thread_id),
     voice     int  NOT NULL
 );
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS user_forums
 (
 
     nickname text COLLATE "ucs_basic" NOT NULL REFERENCES users (nickname),
-    forum    text NOT NULL REFERENCES forums (slug),
+    forum    text                     NOT NULL REFERENCES forums (slug),
     fullname text,
     about    text,
     email    text,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS user_forums
 );
 
 -- Storage features
-CREATE OR REPLACE FUNCTION path_update() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION function_path_update() RETURNS TRIGGER AS
 $$
 BEGIN
     new.path = (SELECT path FROM posts WHERE post_id = new.parent) || new.post_id;
@@ -75,11 +75,11 @@ CREATE TRIGGER path_upd
     BEFORE INSERT
     ON posts
     FOR EACH ROW
-EXECUTE PROCEDURE path_update();
+EXECUTE PROCEDURE function_path_update();
 
 -- Update denormal fields
 -- For votes
-CREATE OR REPLACE FUNCTION insert_votes_into_threads()
+CREATE OR REPLACE FUNCTION function_insert_votes_into_threads()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -94,9 +94,9 @@ CREATE TRIGGER insert_votes
     AFTER INSERT
     ON user_votes
     FOR EACH ROW
-EXECUTE PROCEDURE insert_votes_into_threads();
+EXECUTE PROCEDURE function_insert_votes_into_threads();
 
-CREATE OR REPLACE FUNCTION update_votes_in_threads()
+CREATE OR REPLACE FUNCTION function_update_votes_in_threads()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -111,10 +111,10 @@ CREATE TRIGGER update_votes
     AFTER UPDATE
     ON user_votes
     FOR EACH ROW
-EXECUTE PROCEDURE update_votes_in_threads();
+EXECUTE PROCEDURE function_update_votes_in_threads();
 
 -- For counters
-CREATE OR REPLACE FUNCTION count_posts()
+CREATE OR REPLACE FUNCTION function_count_posts()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -129,9 +129,9 @@ CREATE TRIGGER update_count_posts
     AFTER INSERT
     ON posts
     FOR EACH ROW
-EXECUTE PROCEDURE count_posts();
+EXECUTE PROCEDURE function_count_posts();
 
-CREATE OR REPLACE FUNCTION count_threads()
+CREATE OR REPLACE FUNCTION function_count_threads()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -146,9 +146,9 @@ CREATE TRIGGER update_count_threads
     AFTER INSERT
     ON threads
     FOR EACH ROW
-EXECUTE PROCEDURE count_threads();
+EXECUTE PROCEDURE function_count_threads();
 
-CREATE OR REPLACE FUNCTION update_user_forum()
+CREATE OR REPLACE FUNCTION function_update_user_forum()
     RETURNS TRIGGER AS
 
 -- info posts, threads
@@ -176,10 +176,10 @@ CREATE TRIGGER update_user_forum
     AFTER INSERT
     ON threads
     FOR EACH ROW
-EXECUTE PROCEDURE update_user_forum();
+EXECUTE PROCEDURE function_update_user_forum();
 
 CREATE TRIGGER update_users_forum
     AFTER INSERT
     ON posts
     FOR EACH ROW
-EXECUTE PROCEDURE update_user_forum();
+EXECUTE PROCEDURE function_update_user_forum();
