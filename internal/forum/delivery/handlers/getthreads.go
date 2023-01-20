@@ -22,11 +22,7 @@ func NewForumGetThreadsHandler(s service.ForumService) pkg.Handler {
 
 func (h *forumGetThreadsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
 	r.HandleFunc("/forum/{slug}/threads", h.Action).
-		Methods(http.MethodGet).
-		Queries(
-			"limit", "{limit}",
-			"since", "{since}",
-			"desc", "{desc}")
+		Methods(http.MethodGet)
 }
 
 func (h *forumGetThreadsHandler) Action(w http.ResponseWriter, r *http.Request) {

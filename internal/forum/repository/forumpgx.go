@@ -125,13 +125,15 @@ func (f forumPostgres) GetThreads(ctx context.Context, forum *models.Forum, para
 		orderBy += "DESC"
 	}
 
-	orderBy += fmt.Sprintf(" LIMIT %d", params.Limit)
+	if params.Limit > 0 {
+		orderBy += fmt.Sprintf(" LIMIT %d", params.Limit)
+	}
 
 	switch {
 	case params.Since != "" && params.Desc:
-		querySince = " and t.created <= $2 "
+		querySince = " AND t.created <= $2 "
 	case params.Since != "" && !params.Desc:
-		querySince = " and t.created >= $2 "
+		querySince = " AND t.created >= $2 "
 	}
 
 	var values []interface{}

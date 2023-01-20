@@ -87,7 +87,7 @@ func (req *ThreadCreatePostsRequest) GetPosts() []*models.Post {
 
 func (req *ThreadCreatePostsRequest) GetThread() *models.Thread {
 	id, err := strconv.Atoi(req.SlugOrID)
-	if err != nil {
+	if err == nil {
 		return &models.Thread{
 			ID: int64(id),
 		}

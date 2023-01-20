@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 
+	globalModels "db-performance-project/internal/models"
 	"db-performance-project/internal/pkg"
 	"db-performance-project/internal/thread/delivery/models"
 	"db-performance-project/internal/thread/service"
@@ -34,7 +35,16 @@ func (h *threadCreatePostsHandler) Action(w http.ResponseWriter, r *http.Request
 	//	return
 	// }
 
-	posts, err := h.threadService.CreatePosts(r.Context(), request.GetThread(), request.GetPosts())
+	postsReq := request.GetPosts()
+	if len(postsReq) == 0 {
+		response := models.NewThreadCreatePostsResponse([]globalModels.Post{})
+
+		pkg.Response(r.Context(), w, http.StatusCreated, response)
+
+		return
+	}
+
+	posts, err := h.threadService.CreatePosts(r.Context(), request.GetThread(), postsReq)
 	if err != nil {
 		pkg.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
@@ -42,5 +52,5 @@ func (h *threadCreatePostsHandler) Action(w http.ResponseWriter, r *http.Request
 
 	response := models.NewThreadCreatePostsResponse(posts)
 
-	pkg.Response(r.Context(), w, http.StatusOK, response)
+	pkg.Response(r.Context(), w, http.StatusCreated, response)
 }

@@ -34,7 +34,8 @@ func (req *ForumGetThreadsRequest) Bind(r *http.Request) error {
 
 	param := ""
 
-	param = r.FormValue("limit")
+	param = r.URL.Query().Get("limit")
+
 	if param != "" {
 		value, _ := strconv.Atoi(param)
 		// if err != nil {

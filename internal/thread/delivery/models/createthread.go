@@ -58,7 +58,9 @@ func (req *ForumCreateThreadRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	req.Forum = vars["slug"]
+	if req.Forum == "" {
+		req.Forum = vars["slug"]
+	}
 
 	return nil
 }

@@ -15,10 +15,20 @@ WHERE thread_id = $1;`
 	checkExistThreadByID = `
 SELECT EXISTS(SELECT 1 FROM threads WHERE thread_id = $1);`
 
+	getThreadIDByForumAndSlug = `
+SELECT thread_id
+FROM threads
+WHERE LOWER(forum) = LOWER($1) AND LOWER(slug) = LOWER($2);`
+
+	getThreadForumByID = `
+SELECT forum
+FROM threads
+WHERE thread_id = $1;`
+
 	getThreadIDBySlug = `
 SELECT thread_id
 FROM threads
-WHERE slug = $1;`
+WHERE LOWER(slug) = LOWER($1);`
 
 	createForumThread = `
 INSERT INTO threads(title, author, forum, message, slug, created)

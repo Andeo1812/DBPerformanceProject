@@ -33,7 +33,7 @@ func (v voteService) Vote(ctx context.Context, thread *models.Thread, params *pk
 	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
-		threadID, err = v.threadRepo.GetThreadIDBySlug(ctx, thread)
+		threadID, err = v.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
 		if err != nil {
 			return models.Thread{}, errors.Wrap(err, "Vote")
 		}

@@ -4,7 +4,7 @@ const (
 	getForumUsersBegin = `
 SELECT u.nickname, u.fullname, u.about, u.email
 FROM user_forums u
-WHERE u.forum = $1 `
+WHERE LOWER(u.forum) = LOWER($1) `
 
 	createForum = `
 INSERT INTO forums(title, users_nickname, slug)
@@ -16,7 +16,7 @@ FROM forums
 WHERE LOWER(slug) = LOWER($1)`
 
 	checkExistForumBySlug = `
-SELECT EXISTS(SELECT 1 FROM forums WHERE slug = $1);`
+SELECT EXISTS(SELECT 1 FROM forums WHERE LOWER(slug) = LOWER($1));`
 
 	getForumThreadsBegin = `
 SELECT t.thread_id,
@@ -29,5 +29,5 @@ SELECT t.thread_id,
        t.created
 FROM threads AS t
          LEFT JOIN forums f ON t.forum = f.slug
-WHERE f.slug = $1 "`
+WHERE LOWER(f.slug) = LOWER($1) `
 )

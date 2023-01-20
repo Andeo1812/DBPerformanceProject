@@ -16,8 +16,10 @@ import (
 
 type ThreadRepository interface {
 	// Support
-	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetThreadIDByForumAndSlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	CheckExistThread(ctx context.Context, thread *models.Thread) (bool, error)
+	GetThreadForumByID(ctx context.Context, thread *models.Thread) (models.Thread, error)
+	GetThreadIDBySlug(ctx context.Context, thread *models.Thread) (models.Thread, error)
 
 	CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error)
 	CreatePostsByID(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error)
@@ -78,7 +80,7 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
-				getThreadIDBySlug, thread.Slug, rowThread.Err())
+				getThreadIDByForumAndSlug, thread.Slug, rowThread.Err())
 		}
 
 		err := rowThread.Scan(&res.ID)
@@ -89,7 +91,79 @@ func (t threadPostgres) GetThreadIDBySlug(ctx context.Context, thread *models.Th
 
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
-				getThreadIDBySlug, thread.Slug, err)
+				getThreadIDByForumAndSlug, thread.Slug, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.Thread{}, errMain
+	}
+
+	return res, nil
+}
+
+func (t threadPostgres) GetThreadForumByID(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
+
+	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowThread := conn.QueryRowContext(ctx, getThreadForumByID, thread.ID)
+		if rowThread.Err() != nil {
+			if errors.Is(rowThread.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDByForumAndSlug, thread.Slug, rowThread.Err())
+		}
+
+		err := rowThread.Scan(&res.Forum)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDByForumAndSlug, thread.Slug, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.Thread{}, errMain
+	}
+
+	return res, nil
+}
+
+func (t threadPostgres) GetThreadIDByForumAndSlug(ctx context.Context, thread *models.Thread) (models.Thread, error) {
+	res := models.Thread{}
+
+	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowThread := conn.QueryRowContext(ctx, getThreadIDByForumAndSlug, thread.Forum, thread.Slug)
+		if rowThread.Err() != nil {
+			if errors.Is(rowThread.Err(), sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDByForumAndSlug, thread.Slug, rowThread.Err())
+		}
+
+		err := rowThread.Scan(&res.ID)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return pkg.ErrSuchThreadNotFound
+			}
+
+			return errors.WithMessagef(pkg.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%s]. Special error: [%s]",
+				getThreadIDByForumAndSlug, thread.Slug, err)
 		}
 
 		return nil
@@ -129,6 +203,10 @@ func (t threadPostgres) CreateThread(ctx context.Context, thread *models.Thread)
 		return models.Thread{}, errMain
 	}
 
+	if thread.Forum == thread.Slug {
+		thread.Slug = ""
+	}
+
 	return *thread, nil
 }
 
@@ -149,11 +227,11 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 	for i := 0; i < len(posts); i++ {
 		values[pos] = posts[i].Parent
 		pos++
-		values[pos] = posts[i].Author
+		values[pos] = posts[i].Author.Nickname
 		pos++
 		values[pos] = posts[i].Message
 		pos++
-		values[pos] = thread.Slug
+		values[pos] = thread.Forum
 		pos++
 		values[pos] = thread.ID
 		pos++
@@ -181,9 +259,9 @@ func (t threadPostgres) CreatePostsByID(ctx context.Context, thread *models.Thre
 
 		res[i].Created = insertTimeString
 		res[i].Parent = posts[i].Parent
-		res[i].Author = posts[i].Author
+		res[i].Author.Nickname = posts[i].Author.Nickname
 		res[i].Message = posts[i].Message
-		res[i].Forum = thread.Slug
+		res[i].Forum = thread.Forum
 		res[i].Thread = thread.ID
 
 		i++

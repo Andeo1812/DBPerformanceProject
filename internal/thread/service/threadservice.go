@@ -38,7 +38,7 @@ func NewThreadService(rt repoThread.ThreadRepository, rf repoForum.ForumReposito
 }
 
 func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) (models.Thread, error) {
-	threadExist, err := t.threadRepo.GetThreadIDBySlug(ctx, thread)
+	threadExist, err := t.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
 	if err == nil {
 		var res models.Thread
 
@@ -61,19 +61,28 @@ func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) 
 func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error) {
 	var err error
 
-	threadID := models.Thread{Slug: thread.Slug}
+	threadSum := models.Thread{ID: thread.ID, Slug: thread.Slug}
 
+	// Получаем ID по слагу
 	if thread.Slug != "" {
+		var threadID models.Thread
+
 		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
 		if err != nil {
 			return []models.Post{}, errors.Wrap(err, "CreatePosts")
 		}
-	} else {
-		exist, _ := t.threadRepo.CheckExistThread(ctx, &threadID)
-		if !exist {
-			return []models.Post{}, errors.Wrap(pkg.ErrSuchThreadNotFound, "CreatePosts")
-		}
+
+		threadSum.ID = threadID.ID
 	}
+
+	var threadForum models.Thread
+
+	threadForum, err = t.threadRepo.GetThreadForumByID(ctx, &threadSum)
+	if err != nil {
+		return []models.Post{}, errors.Wrap(err, "CreatePosts")
+	}
+
+	threadSum.Forum = threadForum.Forum
 
 	if posts[0].Parent != 0 {
 		var postWithParent *models.Post
@@ -88,7 +97,7 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 		}
 	}
 
-	res, err := t.threadRepo.CreatePostsByID(ctx, &threadID, posts)
+	res, err := t.threadRepo.CreatePostsByID(ctx, &threadSum, posts)
 	if err != nil {
 		return []models.Post{}, errors.Wrap(err, "CreatePosts")
 	}
@@ -102,7 +111,7 @@ func (t threadService) GetDetailsThread(ctx context.Context, thread *models.Thre
 	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
-		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
+		threadID, err = t.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
 		if err != nil {
 			return models.Thread{}, errors.Wrap(err, "GetDetailsThread")
 		}
@@ -122,7 +131,7 @@ func (t threadService) UpdateThread(ctx context.Context, thread *models.Thread) 
 	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
-		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
+		threadID, err = t.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
 		if err != nil {
 			return models.Thread{}, errors.Wrap(err, "UpdateThread")
 		}
@@ -148,7 +157,7 @@ func (t threadService) GetPosts(ctx context.Context, thread *models.Thread, para
 	threadID := models.Thread{Slug: thread.Slug}
 
 	if thread.Slug != "" {
-		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
+		threadID, err = t.threadRepo.GetThreadIDByForumAndSlug(ctx, thread)
 		if err != nil {
 			return nil, errors.Wrap(err, "GetPosts")
 		}
