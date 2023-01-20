@@ -21,7 +21,7 @@ build-docker:
 
 run-tests:
 	curl -vvv -X POST http://localhost:5000/service/clear
-	./technopark-dbms-forum func -u http://localhost:5000/ -r report.html
+	./technopark-dbms-forum func -u http://localhost:5000/ -r report.html -k
 
 run:
 	docker run  --memory 2G --log-opt max-size=5M --log-opt max-file=3 -p 80:80 -p 5432:5432 --name forum-tp -t forum-tp

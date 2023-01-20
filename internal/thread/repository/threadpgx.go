@@ -275,18 +275,18 @@ func (t threadPostgres) GetDetailsThreadByID(ctx context.Context, thread *models
 	res := models.Thread{}
 
 	errMain := sqltools.RunQuery(ctx, t.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowThread := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
-		if rowThread.Err() != nil {
-			if errors.Is(rowThread.Err(), sql.ErrNoRows) {
+		row := conn.QueryRowContext(ctx, getThreadByID, thread.ID)
+		if row.Err() != nil {
+			if errors.Is(row.Err(), sql.ErrNoRows) {
 				return pkg.ErrSuchThreadNotFound
 			}
 
 			return errors.WithMessagef(pkg.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d]. Special error: [%s]",
-				getThreadByID, thread.ID, rowThread.Err())
+				getThreadByID, thread.ID, row.Err())
 		}
 
-		err := rowThread.Scan(
+		err := row.Scan(
 			&res.Title,
 			&res.Author,
 			&res.Forum,
@@ -376,14 +376,14 @@ func (t threadPostgres) UpdateThreadByID(ctx context.Context, thread *models.Thr
 			&res.Forum,
 			&res.Votes,
 			&res.Slug,
-			&res.Created)
+			&res.Created,
+			&res.Title,
+			&res.Message)
 		if err != nil {
 			return err
 		}
 
 		res.ID = thread.ID
-		res.Title = thread.Title
-		res.Message = thread.Message
 
 		return nil
 	})

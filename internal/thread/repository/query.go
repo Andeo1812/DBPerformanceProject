@@ -48,10 +48,10 @@ VALUES ($1, $2, $3, $4, $5, $6) RETURNING thread_id;`
 
 	updateThreadByID = `
 UPDATE threads
-SET title   = $2,
-    message = $3
+SET title   = COALESCE(NULLIF(TRIM($2), ''), title),
+    message = COALESCE(NULLIF(TRIM($3), ''), message)
 WHERE thread_id = $1
-RETURNING author, forum, votes, slug, created;`
+RETURNING author, forum, votes, slug, created, title, message;`
 
 	insertPosts = "INSERT INTO posts(parent, author, message, forum, thread_id, created) VALUES "
 

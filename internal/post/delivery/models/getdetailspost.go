@@ -11,7 +11,7 @@ import (
 	"db-performance-project/internal/pkg"
 )
 
-//go:generate easyjson -omit_empty -disallow_unknown_fields getdetailspost.go
+//go:generate easyjson -disallow_unknown_fields getdetailspost.go
 
 type PostGetDetailsRequest struct {
 	ID      int64
@@ -111,7 +111,7 @@ type PostGetDetailsResponse struct {
 	Forum  *PostGetDetailsForumResponse  `json:"forum,omitempty"`
 }
 
-func NewPostDetailsResponse(postDetails *models.PostDetails) PostGetDetailsResponse {
+func NewPostDetailsResponse(postDetails *models.PostDetails) *PostGetDetailsResponse {
 	post := PostGetDetailsPostResponse{
 		ID:       postDetails.Post.ID,
 		Parent:   postDetails.Post.Parent,
@@ -149,10 +149,10 @@ func NewPostDetailsResponse(postDetails *models.PostDetails) PostGetDetailsRespo
 		Threads: postDetails.Forum.Threads,
 	}
 
-	return PostGetDetailsResponse{
-		Post:   &post,
+	return &PostGetDetailsResponse{
 		Author: &author,
 		Thread: &thread,
 		Forum:  &forum,
+		Post:   &post,
 	}
 }

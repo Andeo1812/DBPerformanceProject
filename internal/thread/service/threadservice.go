@@ -74,28 +74,31 @@ func (t threadService) CreateThread(ctx context.Context, thread *models.Thread) 
 func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, posts []*models.Post) ([]models.Post, error) {
 	var err error
 
-	threadSum := models.Thread{ID: thread.ID, Slug: thread.Slug}
+	var resThread models.Thread
 
-	// Получаем ID по слагу
+	// CheckAndGetThread
 	if thread.Slug != "" {
-		var threadID models.Thread
-
-		threadID, err = t.threadRepo.GetThreadIDBySlug(ctx, thread)
-		if err != nil {
-			return []models.Post{}, errors.Wrap(err, "CreatePosts")
-		}
-
-		threadSum.ID = threadID.ID
+		resThread, err = t.threadRepo.GetDetailsThreadBySlug(ctx, thread)
+	} else {
+		resThread, err = t.threadRepo.GetDetailsThreadByID(ctx, thread)
 	}
-
-	var threadForum models.Thread
-
-	threadForum, err = t.threadRepo.GetThreadForumByID(ctx, &threadSum)
 	if err != nil {
 		return []models.Post{}, errors.Wrap(err, "CreatePosts")
 	}
 
-	threadSum.Forum = threadForum.Forum
+	if len(posts) == 0 {
+		return []models.Post{}, nil
+	}
+
+	// CheckUser
+	resUser, err := t.userRepo.GetUserByNickname(ctx, &models.User{Nickname: posts[0].Author.Nickname})
+	if err != nil {
+		return []models.Post{}, errors.Wrap(err, "CreatePosts")
+	}
+
+	for idx := range posts {
+		posts[idx].Author.Nickname = resUser.Nickname
+	}
 
 	// if posts[0].Parent != 0 {
 	//	var postWithParent *models.Post
@@ -110,7 +113,7 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 	//	}
 	// }
 
-	res, err := t.threadRepo.CreatePostsByID(ctx, &threadSum, posts)
+	res, err := t.threadRepo.CreatePostsByID(ctx, &resThread, posts)
 	if err != nil {
 		return []models.Post{}, errors.Wrap(err, "CreatePosts")
 	}

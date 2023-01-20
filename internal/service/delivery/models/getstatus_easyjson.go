@@ -16,3 +16,95 @@ var (
 	_ *jwriter.Writer
 	_ easyjson.Marshaler
 )
+
+func easyjsonB703cb64DecodeDbPerformanceProjectInternalServiceDeliveryModels(in *jlexer.Lexer, out *ServiceGetStatusResponse) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "user":
+			out.User = int64(in.Int64())
+		case "forum":
+			out.Forum = int64(in.Int64())
+		case "thread":
+			out.Thread = int64(in.Int64())
+		case "post":
+			out.Post = int64(in.Int64())
+		default:
+			in.AddError(&jlexer.LexerError{
+				Offset: in.GetPos(),
+				Reason: "unknown field",
+				Data:   key,
+			})
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonB703cb64EncodeDbPerformanceProjectInternalServiceDeliveryModels(out *jwriter.Writer, in ServiceGetStatusResponse) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"user\":"
+		out.RawString(prefix[1:])
+		out.Int64(int64(in.User))
+	}
+	{
+		const prefix string = ",\"forum\":"
+		out.RawString(prefix)
+		out.Int64(int64(in.Forum))
+	}
+	{
+		const prefix string = ",\"thread\":"
+		out.RawString(prefix)
+		out.Int64(int64(in.Thread))
+	}
+	{
+		const prefix string = ",\"post\":"
+		out.RawString(prefix)
+		out.Int64(int64(in.Post))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v ServiceGetStatusResponse) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonB703cb64EncodeDbPerformanceProjectInternalServiceDeliveryModels(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v ServiceGetStatusResponse) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonB703cb64EncodeDbPerformanceProjectInternalServiceDeliveryModels(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *ServiceGetStatusResponse) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonB703cb64DecodeDbPerformanceProjectInternalServiceDeliveryModels(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *ServiceGetStatusResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonB703cb64DecodeDbPerformanceProjectInternalServiceDeliveryModels(l, v)
+}

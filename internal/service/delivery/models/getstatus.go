@@ -2,7 +2,7 @@ package models
 
 import "db-performance-project/internal/models"
 
-//go:generate easyjson -disallow_unknown_fields getstatus.go
+//go:generate easyjson -all -disallow_unknown_fields getstatus.go
 
 type ServiceGetStatusResponse struct {
 	User   int64 `json:"user"`
