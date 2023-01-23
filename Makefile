@@ -33,12 +33,16 @@ run:
 
 run-build: build-docker run
 
+create-env:
+	go get -u -v github.com/mailcourses/technopark-dbms-forum@master
+	go build github.com/mailcourses/technopark-dbms-forum
+
 restart-app:
 	make stop
 	docker-compose up -d
 	make clear
 	make build
-	sleep 2
+	sleep 3
 	./main.out
 
 restart-global:

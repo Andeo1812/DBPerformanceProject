@@ -1,41 +1,43 @@
+CREATE EXTENSION IF NOT EXISTS citext;
+
 -- Main
-CREATE TABLE IF NOT EXISTS users
+CREATE UNLOGGED TABLE IF NOT EXISTS users
 (
     user_id  bigserial,
-    nickname text COLLATE "ucs_basic" NOT NULL UNIQUE PRIMARY KEY,
-    fullname text                     NOT NULL,
+    nickname citext COLLATE "ucs_basic" NOT NULL UNIQUE PRIMARY KEY,
+    fullname text                       NOT NULL,
     about    text,
-    email    text                     NOT NULL UNIQUE
+    email    citext                     NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS forums
+CREATE UNLOGGED TABLE IF NOT EXISTS forums
 (
     forum_id       bigserial,
-    users_nickname text NOT NULL REFERENCES users (nickname),
-    slug           text NOT NULL PRIMARY KEY,
-    title          text NOT NULL,
+    users_nickname citext NOT NULL REFERENCES users (nickname),
+    slug           citext NOT NULL PRIMARY KEY,
+    title          text   NOT NULL,
     posts          int DEFAULT 0,
     threads        int DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS threads
+CREATE UNLOGGED TABLE IF NOT EXISTS threads
 (
     thread_id bigserial PRIMARY KEY NOT NULL,
-    author    text                  NOT NULL REFERENCES users (nickname),
-    forum     text                  NOT NULL REFERENCES forums (slug),
+    author    citext                NOT NULL REFERENCES users (nickname),
+    forum     citext                NOT NULL REFERENCES forums (slug),
     title     text                  NOT NULL,
     message   text                  NOT NULL,
     votes     integer                  DEFAULT 0,
-    slug      text,
+    slug      citext,
     created   timestamp with time zone DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS posts
+CREATE UNLOGGED TABLE IF NOT EXISTS posts
 (
     post_id   bigserial PRIMARY KEY NOT NULL UNIQUE,
-    forum     text REFERENCES forums (slug),
+    forum     citext REFERENCES forums (slug),
     thread_id integer REFERENCES threads (thread_id),
-    author    text                  NOT NULL REFERENCES users (nickname),
+    author    citext                NOT NULL REFERENCES users (nickname),
     parent    int                      DEFAULT 0,
     message   text                  NOT NULL,
     is_edited bool                     DEFAULT FALSE,
@@ -44,21 +46,21 @@ CREATE TABLE IF NOT EXISTS posts
 );
 
 -- M:N
-CREATE TABLE IF NOT EXISTS user_votes
+CREATE UNLOGGED TABLE IF NOT EXISTS user_votes
 (
-    nickname  text NOT NULL REFERENCES users (nickname),
-    thread_id int  NOT NULL REFERENCES threads (thread_id),
-    voice     int  NOT NULL
+    nickname  citext NOT NULL REFERENCES users (nickname),
+    thread_id int    NOT NULL REFERENCES threads (thread_id),
+    voice     int    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS user_forums
+CREATE UNLOGGED TABLE IF NOT EXISTS user_forums
 (
 
-    nickname text COLLATE "ucs_basic" NOT NULL REFERENCES users (nickname),
-    forum    text                     NOT NULL REFERENCES forums (slug),
+    nickname citext COLLATE "ucs_basic" NOT NULL REFERENCES users (nickname),
+    forum    citext                     NOT NULL REFERENCES forums (slug),
     fullname text,
     about    text,
-    email    text,
+    email    citext,
     CONSTRAINT user_forum_key unique (nickname, forum)
 );
 
@@ -154,10 +156,10 @@ CREATE OR REPLACE FUNCTION function_update_user_forum()
 -- info posts, threads
 $$
 DECLARE
-    _nickname text;
+    _nickname citext;
     _fullname text;
     _about    text;
-    _email    text;
+    _email    citext;
 BEGIN
     SELECT u.nickname, u.fullname, u.about, u.email
     FROM users u
@@ -183,3 +185,33 @@ CREATE TRIGGER update_users_forum
     ON posts
     FOR EACH ROW
 EXECUTE PROCEDURE function_update_user_forum();
+
+-- Optimization
+-- forums
+-- Хеши для быстрого доступа и полного сравнение на равенство
+CREATE INDEX IF NOT EXISTS forum_slug_hash ON forums USING hash (slug);
+CREATE INDEX IF NOT EXISTS forum_user_hash ON forums USING hash (users_nickname);
+-- user_forums
+CREATE INDEX IF NOT EXISTS users_to_forums_forum_compare ON user_forums (forum);
+CREATE INDEX IF NOT EXISTS users_to_forums_nickname_compare ON user_forums (nickname);
+CREATE INDEX IF NOT EXISTS users_to_forums_forum_nickname ON user_forums (forum, nickname);
+CREATE INDEX IF NOT EXISTS users_to_forum_nickname_forum ON user_forums (nickname, fullname, about, email);
+-- users
+CREATE INDEX IF NOT EXISTS user_nickname_compare ON users (nickname);
+CREATE INDEX IF NOT EXISTS user_all ON users (nickname, fullname, about, email);
+-- posts
+CREATE INDEX IF NOT EXISTS post_thread ON posts USING hash (thread_id);
+CREATE INDEX IF NOT EXISTS post_parent ON posts (thread_id, post_id, (path[1]), parent);
+CREATE INDEX IF NOT EXISTS post_path_1_path ON posts ((path[1]), path);
+CREATE INDEX IF NOT EXISTS post_thread_path ON posts (thread_id, path);
+-- votes
+CREATE UNIQUE INDEX IF NOT EXISTS votes_all ON user_votes (nickname, thread_id, voice);
+CREATE UNIQUE INDEX IF NOT EXISTS votes ON user_votes (nickname, thread_id);
+-- threads
+CREATE INDEX IF NOT EXISTS th_slug_hash ON threads USING hash (slug);
+CREATE INDEX IF NOT EXISTS th_user_hash ON threads USING hash (author);
+CREATE INDEX IF NOT EXISTS th_created ON threads (created);
+CREATE INDEX IF NOT EXISTS th_forum ON threads USING hash (forum);
+CREATE INDEX IF NOT EXISTS th_forum_created ON threads (forum, created);
+
+VACUUM ANALYSE;
