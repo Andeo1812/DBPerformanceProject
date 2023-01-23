@@ -22,7 +22,7 @@ SELECT thread_id,
        slug,
        created
 FROM threads
-WHERE LOWER(slug) = LOWER($1);`
+WHERE slug = $1;`
 
 	createForumThread = `
 INSERT INTO threads(title, author, forum, message, slug, created)

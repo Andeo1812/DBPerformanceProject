@@ -7,7 +7,7 @@ protocol = "http"
 
 [logger]
 log_level = "debug"
-log_path = "logs/main/bebug/"
+log_path = "logs/main/prod/"
 
 [database_params]
 max_open_cons = 100

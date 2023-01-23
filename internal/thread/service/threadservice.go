@@ -96,9 +96,7 @@ func (t threadService) CreatePosts(ctx context.Context, thread *models.Thread, p
 		return []models.Post{}, errors.Wrap(err, "CreatePosts")
 	}
 
-	for idx := range posts {
-		posts[idx].Author.Nickname = resUser.Nickname
-	}
+	posts[0].Author.Nickname = resUser.Nickname
 
 	// CheckParent
 	if posts[0].Parent != 0 {

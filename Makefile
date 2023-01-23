@@ -19,21 +19,30 @@ generate:
 build-docker:
 	docker build -t forum-tp .
 
-run-tests:
-	curl -vvv -X POST http://localhost:80/service/clear
-	./technopark-dbms-forum func -u http://localhost:80/ -r report.html
+run-tests-func:
+	curl -vvv -X POST http://localhost:5000/service/clear
+	./technopark-dbms-forum func -u http://localhost:5000/ -r report.html
+
+run-tests-perf:
+	curl -vvv -X POST http://localhost:5000/service/clear
+	./technopark-dbms-forum fill --url=http://localhost:5000/ --timeout=900
+	./technopark-dbms-forum perf -url http://localhost:5000/  --duration=600 --step=60
 
 run:
 	docker run  --memory 2G --log-opt max-size=5M --log-opt max-file=3 -p 80:80 -p 5432:5432 --name forum-tp -t forum-tp
 
 run-build: build-docker run
 
+create-env:
+	go get -u -v github.com/mailcourses/technopark-dbms-forum@master
+	go build github.com/mailcourses/technopark-dbms-forum
+
 restart-app:
 	make stop
 	docker-compose up -d
 	make clear
 	make build
-	sleep 2
+	sleep 3
 	./main.out
 
 restart-global:
