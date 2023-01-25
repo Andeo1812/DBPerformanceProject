@@ -156,7 +156,7 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 		switch value {
 		case pkg.PostDetailForum:
 			sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-				row := conn.QueryRowContext(ctx, getPostForum, post.ID)
+				row := conn.QueryRowContext(ctx, getPostForum, res.Post.Forum)
 				if row.Err() != nil {
 					if errors.Is(row.Err(), sql.ErrNoRows) {
 						return pkg.ErrSuchPostNotFound
@@ -187,7 +187,7 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 			})
 		case pkg.PostDetailAuthor:
 			sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-				row := conn.QueryRowContext(ctx, getPostAuthor, post.ID)
+				row := conn.QueryRowContext(ctx, getPostAuthor, res.Post.Author.Nickname)
 				if row.Err() != nil {
 					if errors.Is(row.Err(), sql.ErrNoRows) {
 						return pkg.ErrSuchPostNotFound
@@ -217,7 +217,7 @@ func (p postPostgres) GetDetailsPost(ctx context.Context, post *models.Post, par
 			})
 		case pkg.PostDetailThread:
 			sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-				row := conn.QueryRowContext(ctx, getPostThread, post.ID)
+				row := conn.QueryRowContext(ctx, getPostThread, res.Post.Thread)
 				if row.Err() != nil {
 					if errors.Is(row.Err(), sql.ErrNoRows) {
 						return pkg.ErrSuchPostNotFound

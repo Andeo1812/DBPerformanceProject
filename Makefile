@@ -25,11 +25,11 @@ run-tests-func:
 
 run-tests-perf:
 	curl -vvv -X POST http://localhost:5000/api/service/clear
-	./technopark-dbms-forum fill --url=http://localhost:5000/api/ --timeout=900
-	./technopark-dbms-forum perf -url http://localhost:5000/api/  --duration=600 --step=60
+	./technopark-dbms-forum fill -u http://localhost:5000/api/ --timeout=900
+	./technopark-dbms-forum perf -u http://localhost:5000/api/  --duration=600 --step=60
 
 run:
-	docker run  --memory 2G --log-opt max-size=5M --log-opt max-file=3 -p 80:80 -p 5432:5432 --name forum-tp -t forum-tp
+	docker run  --memory 2G --log-opt max-size=5M --log-opt max-file=3 -p 5000:5000 --name forum-tp -t forum-tp
 
 run-build: build-docker run
 

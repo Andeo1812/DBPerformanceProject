@@ -28,34 +28,31 @@ from posts
 WHERE post_id = $1;`
 
 	getPostAuthor = `
-SELECT u.nickname,
-       u.fullname,
-       u.about,
-       u.email
-from posts AS p
-         JOIN users u on u.nickname = p.author
-WHERE p.post_id = $1;`
+SELECT nickname,
+       fullname,
+       about,
+       email
+FROM users 
+WHERE nickname = $1;`
 
 	getPostThread = `
-SELECT th.thread_id,
-       th.title,
-       th.author,
-       th.forum,
-       th.message,
-       th.votes,
-       th.slug,
-       th.created
-from posts AS p
-         JOIN threads th on th.thread_id = p.thread_id
-WHERE p.post_id = $1;`
+SELECT thread_id,
+       title,
+       author,
+       forum,
+       message,
+       votes,
+       slug,
+       created
+FROM threads
+WHERE thread_id = $1;`
 
 	getPostForum = `
-SELECT f.title,
-       f.users_nickname,
-       f.slug,
-       f.posts,
-       f.threads
-from posts AS p
-         JOIN forums f on f.slug = p.forum
-WHERE p.post_id = $1;`
+SELECT title,
+       users_nickname,
+       slug,
+       posts,
+       threads
+FROM forums 
+WHERE slug = $1;`
 )
