@@ -21,7 +21,7 @@ func NewThreadGetDetailsHandler(s service.ThreadService) pkg.Handler {
 }
 
 func (h *threadGetDetailsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/thread/{slug_or_id}/details", h.Action).Methods(http.MethodGet)
+	r.HandleFunc("/api/thread/{slug_or_id}/details", h.Action).Methods(http.MethodGet)
 }
 
 func (h *threadGetDetailsHandler) Action(w http.ResponseWriter, r *http.Request) {

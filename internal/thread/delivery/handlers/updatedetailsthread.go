@@ -21,7 +21,7 @@ func NewThreadUpdateDetailsHandler(s service.ThreadService) pkg.Handler {
 }
 
 func (h *threadUpdateDetailsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/thread/{slug_or_id}/details", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/thread/{slug_or_id}/details", h.Action).Methods(http.MethodPost)
 }
 
 func (h *threadUpdateDetailsHandler) Action(w http.ResponseWriter, r *http.Request) {

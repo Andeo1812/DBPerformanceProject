@@ -21,7 +21,7 @@ func NewForumGetThreadsHandler(s service.ForumService) pkg.Handler {
 }
 
 func (h *forumGetThreadsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/forum/{slug}/threads", h.Action).
+	r.HandleFunc("/api/forum/{slug}/threads", h.Action).
 		Methods(http.MethodGet)
 }
 

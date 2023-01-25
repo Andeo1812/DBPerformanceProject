@@ -21,7 +21,7 @@ func NewForumGetUsersHandler(s service.ForumService) pkg.Handler {
 }
 
 func (h *forumGetUsersHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/forum/{slug}/users", h.Action).
+	r.HandleFunc("/api/forum/{slug}/users", h.Action).
 		Methods(http.MethodGet)
 }
 

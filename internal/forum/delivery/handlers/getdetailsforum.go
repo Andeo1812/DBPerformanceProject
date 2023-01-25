@@ -21,7 +21,7 @@ func NewForumGetDetailsHandler(s service.ForumService) pkg.Handler {
 }
 
 func (h *forumGetDetailsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/forum/{slug}/details", h.Action).Methods(http.MethodGet)
+	r.HandleFunc("/api/forum/{slug}/details", h.Action).Methods(http.MethodGet)
 }
 
 func (h *forumGetDetailsHandler) Action(w http.ResponseWriter, r *http.Request) {

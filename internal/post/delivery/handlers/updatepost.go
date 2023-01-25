@@ -21,7 +21,7 @@ func NewPostUpdateHandler(s service.PostService) pkg.Handler {
 }
 
 func (h *postUpdateHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/post/{id}/details", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/post/{id}/details", h.Action).Methods(http.MethodPost)
 }
 
 func (h *postUpdateHandler) Action(w http.ResponseWriter, r *http.Request) {

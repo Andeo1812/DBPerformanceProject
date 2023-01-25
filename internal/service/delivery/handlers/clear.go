@@ -20,7 +20,7 @@ func NewServiceClearHandler(s service.Service) pkg.Handler {
 }
 
 func (h *serviceClearHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/service/clear", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/service/clear", h.Action).Methods(http.MethodPost)
 }
 
 func (h *serviceClearHandler) Action(w http.ResponseWriter, r *http.Request) {

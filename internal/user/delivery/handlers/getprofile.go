@@ -21,7 +21,7 @@ func NewUserGetProfileHandler(s service.UserService) pkg.Handler {
 }
 
 func (h *userGetProfileHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/user/{nickname}/profile", h.Action).Methods(http.MethodGet)
+	r.HandleFunc("/api/user/{nickname}/profile", h.Action).Methods(http.MethodGet)
 }
 
 func (h *userGetProfileHandler) Action(w http.ResponseWriter, r *http.Request) {

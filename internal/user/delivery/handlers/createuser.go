@@ -22,7 +22,7 @@ func NewUserCreateHandler(s service.UserService) pkg.Handler {
 }
 
 func (h *userCreateHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/user/{nickname}/create", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/user/{nickname}/create", h.Action).Methods(http.MethodPost)
 }
 
 func (h *userCreateHandler) Action(w http.ResponseWriter, r *http.Request) {

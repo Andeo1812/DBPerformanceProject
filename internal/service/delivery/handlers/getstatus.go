@@ -21,7 +21,7 @@ func NewServiceGetStatusHandler(s service.Service) pkg.Handler {
 }
 
 func (h *serviceGetStatusHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/service/status", h.Action).Methods(http.MethodGet)
+	r.HandleFunc("/api/service/status", h.Action).Methods(http.MethodGet)
 }
 
 func (h *serviceGetStatusHandler) Action(w http.ResponseWriter, r *http.Request) {

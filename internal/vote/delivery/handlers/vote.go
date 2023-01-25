@@ -21,7 +21,7 @@ func NewThreadProfileHandler(s service.VoteService) pkg.Handler {
 }
 
 func (h *voteHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/thread/{slug_or_id}/vote", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/thread/{slug_or_id}/vote", h.Action).Methods(http.MethodPost)
 }
 
 func (h *voteHandler) Action(w http.ResponseWriter, r *http.Request) {

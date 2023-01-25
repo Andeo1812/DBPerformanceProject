@@ -21,7 +21,7 @@ func NewThreadCreatePostsHandler(s service.ThreadService) pkg.Handler {
 }
 
 func (h *threadCreatePostsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/thread/{slug_or_id}/create", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/thread/{slug_or_id}/create", h.Action).Methods(http.MethodPost)
 }
 
 func (h *threadCreatePostsHandler) Action(w http.ResponseWriter, r *http.Request) {

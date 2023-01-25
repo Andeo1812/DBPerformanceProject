@@ -22,7 +22,7 @@ func NewForumCreateThreadHandler(s service.ThreadService) pkg.Handler {
 }
 
 func (h *forumCreateThreadHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/forum/{slug}/create", h.Action).Methods(http.MethodPost)
+	r.HandleFunc("/api/forum/{slug}/create", h.Action).Methods(http.MethodPost)
 }
 
 func (h *forumCreateThreadHandler) Action(w http.ResponseWriter, r *http.Request) {

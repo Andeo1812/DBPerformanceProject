@@ -21,7 +21,7 @@ func NewThreadGetPostsHandler(s service.ThreadService) pkg.Handler {
 }
 
 func (h *threadGetPostsHandler) Configure(r *mux.Router, mw *pkg.HTTPMiddleware) {
-	r.HandleFunc("/thread/{slug_or_id}/posts", h.Action).
+	r.HandleFunc("/api/thread/{slug_or_id}/posts", h.Action).
 		Methods(http.MethodGet)
 }
 
