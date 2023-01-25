@@ -29,7 +29,6 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/$PGVER/main/pg_hba
 RUN echo "listen_addresses='*'" >> /etc/postgresql/$PGVER/main/postgresql.conf
 
 # Настройка конейтейра
-EXPOSE 5432
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "./logs"]
 
 WORKDIR /usr/src/app
@@ -37,7 +36,7 @@ WORKDIR /usr/src/app
 COPY . .
 COPY --from=build /app/main .
 
-EXPOSE 80
+EXPOSE 5000
 
 ENV POSTGRES_USER andeo
 ENV POSTGRES_DB andeo
